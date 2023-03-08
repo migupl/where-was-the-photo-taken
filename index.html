@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <title>Where was the photo taken?</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <script type="module" src="./js/drop-photos.js"></script>
+    <script type="module" src="./js/components/drop-photo-for-exif-component/drop-photo-for-exif.js"></script>
+
+    <style>
+        header {
+            border-radius: 10px;
+            border-style: dashed;
+            margin-bottom: 10px;
+            display: flex;
+            flex-flow: row;
+            justify-content: start;
+            align-items: flex-start;
+        }
+
+        drop-photo-for-exif {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <drop-photo-for-exif></drop-photo-for-exif>
+    </header>
+</body>
+
+</html>
