@@ -14,18 +14,36 @@
     <script type="module" src="./js/components/leaflet-map-component/leaflet-map.js"></script>
 
     <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
         header {
+            height: 7%;
+            min-height: 50px;
             border-radius: 10px;
             border-style: dashed;
-            margin-bottom: 10px;
             display: flex;
             flex-flow: row;
             justify-content: start;
             align-items: flex-start;
         }
 
+        section {
+            height: 91%;
+            border-radius: 10px;
+        }
+
         drop-photo-for-exif {
             width: 100%;
+        }
+
+        leaflet-map {
+            display: block;
+            position: relative;
+            min-height: 100%;
         }
     </style>
 </head>
@@ -34,6 +52,9 @@
     <header>
         <drop-photo-for-exif></drop-photo-for-exif>
     </header>
+    <section>
+        <leaflet-map></leaflet-map>
+    </section>
 </body>
 
 </html>
