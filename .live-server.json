@@ -1,0 +1,8 @@
+var liveServer = require("live-server");
+
+var params = {
+    open: false,
+    logLevel: 2,
+    file: "./index.html"
+};
+liveServer.start(params);
