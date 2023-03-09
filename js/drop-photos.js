@@ -6,6 +6,19 @@ const getGeoJSONPoint = (metadata) => {
     const lnglatalt = [lng, lat, altitude]
         .filter((value) => !isNaN(value));
 
+    const template = document.getElementById('card-template');
+    const clone = template.content.cloneNode(true);
+
+    const img = clone.querySelector('img');
+    img.src = URL.createObjectURL(image);
+    img.alt = name;
+
+    const title = clone.querySelector('h4');
+    title.innerHTML = `<strong>${name}</strong>`;
+
+    const trick = document.createElement('div');
+    trick.appendChild(clone);
+
     return {
         type: "Feature",
         geometry: {
@@ -13,15 +26,7 @@ const getGeoJSONPoint = (metadata) => {
             coordinates: lnglatalt
         },
         properties: {
-            popupContent: `
-<div>
-    <img src="${URL.createObjectURL(image) }" alt="${name}" style="width:100%">
-    <div>
-        <h4><strong>${name}</strong></h4>
-        <p>A description about the image</p>
-    </div>
-</div>
-`
+            popupContent: trick.innerHTML
         }
     }
 }
