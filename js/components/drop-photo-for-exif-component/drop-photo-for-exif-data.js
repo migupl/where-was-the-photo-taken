@@ -13,6 +13,11 @@ class DropPhotoForExifData {
             }
         }
 
+        if (exif.GPSAltitude) {
+            const [value, divisor] = exif.GPSAltitude.value;
+            data.location.altitude = value / divisor;
+        }
+
         return data;
     }
 }
