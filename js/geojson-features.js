@@ -1,3 +1,5 @@
+import { SaveFeatures } from "./save-features.js";
+
 class GeoJSONFeatures {
 
     pointsMap = new Map();
@@ -40,6 +42,11 @@ class GeoJSONFeatures {
         this.pointsMap.set(image.name, geojson);
 
         return geojson;
+    }
+
+    saveAllPoints = async () => {
+        const points = this.pointsMap.values();
+        await SaveFeatures.toFile(points);
     }
 
     #extractNumeric = text => text.match(/[0-9.]/g).join('')

@@ -16,3 +16,9 @@ document.addEventListener("drop-photo-for-exif:data", (event) => {
         alert(`The added photo '${data.name}' has no geolocation data`);
     }
 });
+
+const save = document.getElementById('save-all');
+save.addEventListener('click', (event) => {
+    event.stopPropagation();
+    GeoJSONFeatures.saveAllPoints();
+});
