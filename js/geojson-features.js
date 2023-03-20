@@ -1,5 +1,7 @@
 class GeoJSONFeatures {
 
+    pointsMap = new Map();
+
     getGeoJSONPoint = (metadata) => {
         const { image, name, location, exif } = metadata;
         const { latitude, longitude, altitude } = location;
@@ -16,12 +18,12 @@ class GeoJSONFeatures {
         img.alt = name;
 
         const title = clone.querySelector('h4');
-        title.innerHTML = `<strong>${name}</strong>`;
+        title.innerHTML = name;
 
         const container = document.createElement('div');
         container.appendChild(clone);
 
-        return {
+        const geojson = {
             type: "Feature",
             geometry: {
                 type: "Point",
@@ -29,8 +31,15 @@ class GeoJSONFeatures {
             },
             properties: {
                 popupContent: container
+            },
+            data: {
+                exif: exif
             }
-        }
+        };
+
+        this.pointsMap.set(image.name, geojson);
+
+        return geojson;
     }
 
     #extractNumeric = text => text.match(/[0-9.]/g).join('')
