@@ -1,7 +1,7 @@
 class GeoJSONFeatures {
 
     getGeoJSONPoint = (metadata) => {
-        const { image, name, location } = metadata;
+        const { image, name, location, exif } = metadata;
         const { latitude, longitude, altitude } = location;
         const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
 
