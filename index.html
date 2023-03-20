@@ -33,14 +33,38 @@
 
         section {
             height: 92%;
+            width: 100%;
             border-radius: 10px;
+            display: inline-block;
+            position: relative;
         }
 
         drop-photo-for-exif {
             width: 100%;
         }
 
+        #save-all {
+            z-index: 2;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: blue;
+            padding: 6px 9px;
+            border-radius: 10px;
+            color: whitesmoke;
+            text-decoration: none;
+            vertical-align: middle;
+            opacity: 0.6;
+        }
+
+        #save-all:hover {
+            border-top-color: #146fac;
+            background: #146fac;
+            color: #ccc;
+        }
+
         leaflet-map {
+            z-index: 1;
             display: block;
             position: relative;
             min-height: 100%;
@@ -54,6 +78,7 @@
     </header>
     <section>
         <leaflet-map flyToBounds></leaflet-map>
+        <a id="save-all" href="#">Save all points</a>
     </section>
 
     <template id="card-template">
