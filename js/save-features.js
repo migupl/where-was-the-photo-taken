@@ -50,6 +50,10 @@ class SaveFeatures {
             }
         }
 
+        this.#saveFileAsClassicIs(blob, filename);
+    }
+
+    #saveFileAsClassicIs = (blob, filename) => {
         const blobURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobURL;
