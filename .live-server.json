@@ -3,6 +3,7 @@ var liveServer = require("live-server");
 var params = {
     open: false,
     logLevel: 2,
-    file: "./index.html"
+    file: "./index.html",
+    ignore: "README.md,assets,js/components"
 };
 liveServer.start(params);
