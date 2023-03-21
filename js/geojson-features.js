@@ -26,7 +26,8 @@ class GeoJSONFeatures {
                 popupContent: card.el
             },
             data: {
-                exif: exif
+                exif: exif,
+                card: card.properties
             }
         };
 
