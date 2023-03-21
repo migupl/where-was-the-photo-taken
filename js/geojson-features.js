@@ -1,3 +1,4 @@
+import { Card } from "./card.js";
 import { SaveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
@@ -12,18 +13,8 @@ class GeoJSONFeatures {
         const lnglatalt = [lng, lat, altitude]
             .filter((value) => !isNaN(value));
 
-        const template = document.getElementById('card-template');
-        const clone = template.content.cloneNode(true);
-
-        const img = clone.querySelector('img');
-        img.src = URL.createObjectURL(image);
-        img.alt = name;
-
-        const title = clone.querySelector('h4');
-        title.innerHTML = name;
-
-        const container = document.createElement('div');
-        container.appendChild(clone);
+        const card = new Card(image);
+        card.add();
 
         const geojson = {
             type: "Feature",
@@ -32,7 +23,7 @@ class GeoJSONFeatures {
                 coordinates: lnglatalt
             },
             properties: {
-                popupContent: container
+                popupContent: card.getDOMElement()
             },
             data: {
                 exif: exif
