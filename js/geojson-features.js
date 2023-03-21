@@ -46,7 +46,7 @@ class GeoJSONFeatures {
 
     saveAllPoints = async () => {
         const title = document.getElementById('title').value;
-        const points = this.pointsMap.values();
+        const points = Array.from(this.pointsMap.values());
         await SaveFeatures.toFile(points, title);
     }
 

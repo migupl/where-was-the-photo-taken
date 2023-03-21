@@ -4,8 +4,8 @@ class SaveFeatures {
         this._supportsApi = this.#allowsFileSystemAccess();
     }
 
-    toFile = (geojsonPoints, filename) => {
-        this.#saveFiles(geojsonPoints, filename);
+    toFile = (features, filename) => {
+        this.#saveFiles(features, filename);
     }
 
     #allowsFileSystemAccess = () => {
@@ -19,8 +19,7 @@ class SaveFeatures {
             })();
     }
 
-    #saveFiles = async (geojsonPoints, filename) => {
-        const features = Array.from(geojsonPoints);
+    #saveFiles = async (features, filename) => {
         const featureCollection = {
             type: "FeatureCollection",
             features: features
