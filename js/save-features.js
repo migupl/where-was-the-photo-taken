@@ -31,7 +31,7 @@ class SaveFeatures {
         this.#saveFile(blob);
     }
 
-    #saveFile = async (blob, suggestedName = 'test.geojson') => {
+    #saveFile = async (blob, suggestedName = 'photos.geojson') => {
         if (this._supportsApi) {
             try {
                 const handle = await showSaveFilePicker({
