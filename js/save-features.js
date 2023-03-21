@@ -32,22 +32,9 @@ class SaveFeatures {
         this.#saveFile(blob, filename);
     }
 
-    #saveFile = async (blob, filename) => {
+    #saveFile = (blob, filename) => {
         if (this._supportsApi) {
-            try {
-                const handle = await showSaveFilePicker({
-                    filename,
-                });
-                const writable = await handle.createWritable();
-                await writable.write(blob);
-                await writable.close();
-                return;
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    console.error(err.name, err.message);
-                    return;
-                }
-            }
+            this.#saveFileUsingFSAApi(blob, filename);
         }
 
         this.#saveFileAsClassicIs(blob, filename);
@@ -66,6 +53,23 @@ class SaveFeatures {
             URL.revokeObjectURL(blobURL);
             a.remove();
         }, 1000);
+    }
+
+    #saveFileUsingFSAApi = async (blob, filename) => {
+        try {
+            const handle = await showSaveFilePicker({
+                filename,
+            });
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            return;
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error(err.name, err.message);
+                return;
+            }
+        }
     }
 }
 
