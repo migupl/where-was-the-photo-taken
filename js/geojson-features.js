@@ -23,7 +23,7 @@ class GeoJSONFeatures {
                 coordinates: lnglatalt
             },
             properties: {
-                popupContent: card.getDOMElement()
+                popupContent: card.el
             },
             data: {
                 exif: exif

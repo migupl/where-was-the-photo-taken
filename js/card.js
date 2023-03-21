@@ -17,12 +17,8 @@ class Card {
         const title = card.querySelector('h4');
         title.innerHTML = name;
 
-        this._container = document.createElement('div');
-        this._container.appendChild(card);
-    }
-
-    getDOMElement = () => {
-        return this._container;
+        this.el = document.createElement('div');
+        this.el.appendChild(card);
     }
 }
 
