@@ -5,7 +5,7 @@ class SaveFeatures {
     }
 
     toFile = (features, filename) => {
-        this.#saveFiles(features, filename);
+        this.#saveGeoJsonFile(features, filename);
     }
 
     #allowsFileSystemAccess = () => {
@@ -19,19 +19,20 @@ class SaveFeatures {
             })();
     }
 
-    #saveFiles = async (features, filename) => {
+    #saveGeoJsonFile = async (features, suggestedName = 'photos.geojson') => {
         const featureCollection = {
             type: "FeatureCollection",
             features: features
         };
 
         const text = JSON.stringify(featureCollection);
+
+        const filename = suggestedName.endsWith('.geojson') ? suggestedName : (suggestedName + '.geojson');
         const blob = new Blob([text], { type: 'text/plain' });
         this.#saveFile(blob, filename);
     }
 
-    #saveFile = async (blob, suggestedName = 'photos.geojson') => {
-        const filename = suggestedName.endsWith('.geojson') ? suggestedName : (suggestedName + '.geojson');
+    #saveFile = async (blob, filename) => {
         if (this._supportsApi) {
             try {
                 const handle = await showSaveFilePicker({
