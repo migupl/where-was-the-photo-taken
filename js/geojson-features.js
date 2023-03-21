@@ -45,8 +45,9 @@ class GeoJSONFeatures {
     }
 
     saveAllPoints = async () => {
+        const title = document.getElementById('title').value;
         const points = this.pointsMap.values();
-        await SaveFeatures.toFile(points);
+        await SaveFeatures.toFile(points, title);
     }
 
     #extractNumeric = text => text.match(/[0-9.]/g).join('')

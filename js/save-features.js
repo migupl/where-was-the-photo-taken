@@ -4,8 +4,8 @@ class SaveFeatures {
         this._supportsApi = this.#allowsFileSystemAccess();
     }
 
-    toFile = geojsonPoints => {
-        this.#saveFiles(geojsonPoints);
+    toFile = (geojsonPoints, filename) => {
+        this.#saveFiles(geojsonPoints, filename);
     }
 
     #allowsFileSystemAccess = () => {
@@ -19,7 +19,7 @@ class SaveFeatures {
             })();
     }
 
-    #saveFiles = async (geojsonPoints) => {
+    #saveFiles = async (geojsonPoints, filename) => {
         const features = Array.from(geojsonPoints);
         const featureCollection = {
             type: "FeatureCollection",
@@ -28,14 +28,15 @@ class SaveFeatures {
 
         const text = JSON.stringify(featureCollection);
         const blob = new Blob([text], { type: 'text/plain' });
-        this.#saveFile(blob);
+        this.#saveFile(blob, filename);
     }
 
     #saveFile = async (blob, suggestedName = 'photos.geojson') => {
+        const filename = suggestedName.endsWith('.geojson') ? suggestedName : (suggestedName + '.geojson');
         if (this._supportsApi) {
             try {
                 const handle = await showSaveFilePicker({
-                    suggestedName,
+                    filename,
                 });
                 const writable = await handle.createWritable();
                 await writable.write(blob);
@@ -52,7 +53,7 @@ class SaveFeatures {
         const blobURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobURL;
-        a.download = suggestedName;
+        a.download = filename;
         a.style.display = 'none';
         document.body.append(a);
         a.click();
