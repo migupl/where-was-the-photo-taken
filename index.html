@@ -31,7 +31,6 @@
             height: 92%;
             width: 100%;
             border-radius: 10px;
-            display: inline-block;
             position: relative;
         }
 
@@ -39,11 +38,49 @@
             width: 100%;
         }
 
-        #save-all {
-            z-index: 2;
+        .container {
             position: absolute;
+            z-index: 2;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+            align-items: center;
             top: 5px;
-            right: 5px;
+            font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+            width: 90%;
+        }
+
+        .item {
+            margin-right: 10px;
+            flex-grow: 1;
+        }
+
+        .offset-1 {
+            margin-right: calc(25% + 5px);
+        }
+
+        .item:nth-child(2) {
+            flex-grow: 7; 
+        }
+
+        input {
+            width: 90%;
+            border: 1px solid blue;
+            border-radius: 10px;
+            -webkit-box-shadow:
+                inset 0 0 8px rgba(0, 0, 0, 0.1),
+                0 0 16px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow:
+                inset 0 0 8px rgba(0, 0, 0, 0.1),
+                0 0 16px rgba(0, 0, 0, 0.1);
+            box-shadow:
+                inset 0 0 8px rgba(0, 0, 0, 0.1),
+                0 0 16px rgba(0, 0, 0, 0.1);
+            padding: 6px 9px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        #save-all {
             background-color: blue;
             padding: 6px 9px;
             border-radius: 10px;
@@ -51,7 +88,6 @@
             text-decoration: none;
             vertical-align: middle;
             opacity: 0.6;
-            font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
         }
 
         #save-all:hover {
@@ -75,7 +111,15 @@
     </header>
     <section>
         <leaflet-map flyToBounds></leaflet-map>
-        <a id="save-all" href="#">Save all points</a>
+        <div class="container">
+            <div class="item offset-1"></div>
+            <div class="item">
+                <input type="text" id="title" name="title" value="A title to group all photos">
+            </div>
+            <div class="item">
+                <a id="save-all" href="#">Save all points</a>
+            </div>
+        </div>
     </section>
 
     <template id="card-template">
