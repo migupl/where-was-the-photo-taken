@@ -37,10 +37,10 @@ class SaveFeatures {
             this.#saveFileUsingFSAApi(blob, filename);
         }
 
-        this.#saveFileAsClassicIs(blob, filename);
+        this.#saveFileWithoutFSAApi(blob, filename);
     }
 
-    #saveFileAsClassicIs = (blob, filename) => {
+    #saveFileWithoutFSAApi = (blob, filename) => {
         const blobURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobURL;
