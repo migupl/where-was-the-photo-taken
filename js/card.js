@@ -1,8 +1,8 @@
 class Card {
 
     constructor(image) {
-        this._image = image;
         this.properties = {
+            image: image,
             filename: image.name,
             title: image.name,
             description: null
@@ -16,7 +16,7 @@ class Card {
         const name = this.properties.filename;
 
         const img = card.querySelector('img');
-        img.src = URL.createObjectURL(this._image);
+        img.src = URL.createObjectURL(this.properties.image);
         img.alt = name;
 
         const title = card.querySelector('h4');

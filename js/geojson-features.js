@@ -39,7 +39,13 @@ class GeoJSONFeatures {
     saveAllPoints = async () => {
         const title = document.getElementById('title').value;
         const points = Array.from(this.pointsMap.values());
-        await SaveFeatures.toFile(points, title);
+        const images = points.reduce((arr, point) => {
+            const card = point.data.card;
+            arr.push(card.image);
+            return arr;
+        }, []);
+
+        await SaveFeatures.toFile(points, images, title);
     }
 
     #extractNumeric = text => text.match(/[0-9.]/g).join('')

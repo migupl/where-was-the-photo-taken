@@ -4,8 +4,9 @@ class SaveFeatures {
         this._supportsApi = this.#allowsFileSystemAccess();
     }
 
-    toFile = (features, filename) => {
+    toFile = (features, images, filename) => {
         this.#saveGeoJsonFile(features, filename);
+        this.#saveImages(images);
     }
 
     #allowsFileSystemAccess = () => {
@@ -70,6 +71,12 @@ class SaveFeatures {
                 return;
             }
         }
+    }
+
+    #saveImages = images => {
+        images.forEach(async (image) => {
+            await this.#saveFileWithoutFSAApi(image, image.name);
+        });
     }
 }
 
