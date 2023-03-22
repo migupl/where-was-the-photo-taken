@@ -19,7 +19,7 @@ class SaveFeatures {
             })();
     }
 
-    #saveGeoJsonFile = async (features, suggestedName = 'photos.geojson') => {
+    #saveGeoJsonFile = (features, suggestedName = 'photos.geojson') => {
         const featureCollection = {
             type: "FeatureCollection",
             features: features
