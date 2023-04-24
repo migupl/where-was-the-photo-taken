@@ -1,7 +1,5 @@
 import { dropFiles } from "./drop-photo-for-exif-files.js";
-import { exifData } from "./drop-photo-for-exif-data.js";
 import { svgCss } from "./drop-photo-for-exif-dom.js";
-import { getDirname } from "./utils.js";
 import { getExifReaderScript } from "./drop-photo-for-exif-load.js";
 
 class DropPhotoForExif extends HTMLElement {
@@ -43,32 +41,42 @@ class DropPhotoForExif extends HTMLElement {
     #extractExifDataOnDrop = () => this.addEventListener('drop', (event) => {
         event.preventDefault();
 
-        dropFiles.collectImages(event)
-            .forEach((image) => {
-                exifData.extractExif(image)
-                    .then((exif) => {
-                        this.#fireExifData({
-                            name: image.name,
-                            image: image,
-                            location: exif.location,
-                            exif: exif.details
-                        });
-                    });
-            });
-    });
+        const { items } = event.dataTransfer;
+        dropFiles.process(items, this.#fireImageEvent, this.#fireFileEvent);
+    })
 
-    #fireExifData = imageData => {
+    #fireImageEvent = (image, exif) => {
         const evt = new CustomEvent('drop-photo-for-exif:data', {
             bubbles: true,
             composed: true,
-            detail: imageData
+            detail: {
+                name: image.name,
+                image: image,
+                location: exif.location,
+                exif: exif.details
+            }
+        });
+        this.shadowRoot.dispatchEvent(evt);
+    }
+
+    #fireFileEvent = file => {
+        const evt = new CustomEvent('drop-photo-for-exif:file', {
+            bubbles: true,
+            composed: true,
+            detail: file
         });
         this.shadowRoot.dispatchEvent(evt);
     }
 
     #getDirname = () => {
-        const dirname = getDirname('drop-photo-for-exif.js');
-        return dirname || './components/drop-photo-for-exif-component/';
+        const src = 'drop-photo-for-exif.js';
+        const scripts = document.getElementsByTagName("script");
+
+        for (let script of scripts) {
+            if (script.src.endsWith(src)) return script.src.replace(src, '');
+        }
+
+        return './components/drop-photo-for-exif-component/';
     }
 
     #stopBehaviorOnDragOver = () => this.addEventListener('dragover', (event) => {
