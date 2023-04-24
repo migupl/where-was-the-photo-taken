@@ -1,7 +1,19 @@
 class DropPhotoForExifData {
 
-    async extractExif(file) {
-        let exif = await ExifReader.load(file);
+    static ALLOWED_MIMETYPES = new Map([
+        ['jpg', 'image/jpeg'],
+        ['jpeg', 'image/jpeg'],
+        ['jfif', 'image/jpeg'],
+        ['pjpeg', 'image/jpeg'],
+        ['pjp', 'image/jpeg'],
+        ['webp', 'image/webp'],
+        ['png', 'image/png'],
+        ['tif', 'image/tiff'],
+        ['tiff', 'image/tiff']
+    ]);
+
+    extractExif = async (file) => {
+        const exif = await ExifReader.load(file);
         let data = {
             details: exif
         };
@@ -19,6 +31,10 @@ class DropPhotoForExifData {
         }
 
         return data;
+    }
+
+    getAllowedMimetype = ext => {
+        return DropPhotoForExifData.ALLOWED_MIMETYPES.get(ext) || ''
     }
 }
 
