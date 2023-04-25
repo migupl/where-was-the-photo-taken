@@ -1,6 +1,6 @@
-import { GeoJSONFeatures } from "./geojson-features.js";
+import { GeoJSONFeatures } from './geojson-features.js';
 
-document.addEventListener("drop-photo-for-exif:data", (event) => {
+document.addEventListener('drop-photo-for-exif:data', (event) => {
     event.preventDefault();
 
     const data = event.detail;
