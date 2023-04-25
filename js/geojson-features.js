@@ -53,6 +53,14 @@ class GeoJSONFeatures {
         await SaveFeatures.toFile(points, images, title);
     }
 
+    #error = message => {
+        throw {
+            toString() {
+                return message;
+            },
+        }
+    }
+
     #extractNumeric = text => text.match(/[0-9.]/g).join('')
 
     #DMS2Decimal = (latitude, longitude) => {
@@ -70,6 +78,7 @@ class GeoJSONFeatures {
         reader.addEventListener('loadend', () => {
             try {
                 const json = JSON.parse(reader.result);
+                this.#simpleCheck(json);
                 this.geojson = json;
 
             } catch (err) {
@@ -78,6 +87,10 @@ class GeoJSONFeatures {
         });
 
         reader.readAsText(geojsonFile);
+    }
+
+    #simpleCheck = geojsonFile => {
+        if (!geojsonFile.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
     }
 }
 
