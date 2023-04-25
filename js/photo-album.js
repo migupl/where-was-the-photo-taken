@@ -23,9 +23,7 @@ document.addEventListener('drop-photo-for-exif:file', (event) => {
     const isGeojson = file => 'application/geo+json' === file.type;
 
     const file = event.detail;
-    if (isGeojson(file)) {
-        console.log('GeoJSON file:', file);
-    }
+    if (isGeojson(file)) GeoJSONFeatures.add(file)
 });
 
 const save = document.getElementById('save-all');

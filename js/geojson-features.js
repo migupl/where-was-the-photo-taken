@@ -4,6 +4,11 @@ import { SaveFeatures } from "./save-features.js";
 class GeoJSONFeatures {
 
     pointsMap = new Map();
+    geojson;
+
+    add = geojsonFile => {
+        this.#read(geojsonFile);
+    }
 
     getGeoJSONPoint = (metadata) => {
         const { image, name, location, exif } = metadata;
@@ -58,6 +63,21 @@ class GeoJSONFeatures {
         if (longitude.toUpperCase().indexOf('W') > -1) lng = -lng;
 
         return [lat, lng];
+    }
+
+    #read = geojsonFile => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+            try {
+                const json = JSON.parse(reader.result);
+                this.geojson = json;
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        reader.readAsText(geojsonFile);
     }
 }
 
