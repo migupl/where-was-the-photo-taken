@@ -77,6 +77,8 @@ class GeoJSONFeatures {
         const reader = new FileReader();
         reader.addEventListener('loadend', () => {
             try {
+                if (this.geojson) this.#error('Only a GeoJSON file is allowed');
+
                 const json = JSON.parse(reader.result);
                 this.#simpleCheck(json);
                 this.geojson = json;
