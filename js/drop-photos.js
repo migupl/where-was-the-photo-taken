@@ -17,6 +17,17 @@ document.addEventListener('drop-photo-for-exif:data', (event) => {
     }
 });
 
+document.addEventListener('drop-photo-for-exif:file', (event) => {
+    event.preventDefault();
+
+    const isGeojson = file => 'application/geo+json' === file.type;
+
+    const file = event.detail;
+    if (isGeojson(file)) {
+        console.log('GeoJSON file:', file);
+    }
+});
+
 const save = document.getElementById('save-all');
 save.addEventListener('click', (event) => {
     event.stopPropagation();
