@@ -42,7 +42,7 @@ class DropPhotoForExif extends HTMLElement {
         event.preventDefault();
 
         const { items } = event.dataTransfer;
-        dropFiles.process(items, this.#fireImageEvent, this.#fireFileEvent);
+        dropFiles.process(items, this.#fireImageEvent, this.#fireFileEvent, this.#fireOnCompleted);
     })
 
     #fireImageEvent = (image, exif) => {
@@ -64,6 +64,14 @@ class DropPhotoForExif extends HTMLElement {
             bubbles: true,
             composed: true,
             detail: file
+        });
+        this.shadowRoot.dispatchEvent(evt);
+    }
+
+    #fireOnCompleted = () => {
+        const evt = new CustomEvent('drop-photo-for-exif:completed-batch', {
+            bubbles: true,
+            composed: true,
         });
         this.shadowRoot.dispatchEvent(evt);
     }

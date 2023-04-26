@@ -4,6 +4,11 @@ import { SaveFeatures } from "./save-features.js";
 class GeoJSONFeatures {
 
     pointsMap = new Map();
+    geojson;
+
+    add = geojsonFile => {
+        this.#read(geojsonFile);
+    }
 
     getGeoJSONPoint = (metadata) => {
         const { image, name, location, exif } = metadata;
@@ -48,6 +53,14 @@ class GeoJSONFeatures {
         await SaveFeatures.toFile(points, images, title);
     }
 
+    #error = message => {
+        throw {
+            toString() {
+                return message;
+            },
+        }
+    }
+
     #extractNumeric = text => text.match(/[0-9.]/g).join('')
 
     #DMS2Decimal = (latitude, longitude) => {
@@ -58,6 +71,28 @@ class GeoJSONFeatures {
         if (longitude.toUpperCase().indexOf('W') > -1) lng = -lng;
 
         return [lat, lng];
+    }
+
+    #read = geojsonFile => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+            try {
+                if (this.geojson) this.#error('Only a GeoJSON file is allowed');
+
+                const json = JSON.parse(reader.result);
+                this.#simpleCheck(json);
+                this.geojson = json;
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        reader.readAsText(geojsonFile);
+    }
+
+    #simpleCheck = geojsonFile => {
+        if (!geojsonFile.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
     }
 }
 
