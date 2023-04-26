@@ -10,7 +10,28 @@ class GeoJSONFeatures {
         this.#read(geojsonFile);
     }
 
-    getGeoJSONPoint = (metadata) => {
+    getGeoJSONPoint = metadata => {
+        const { name } = metadata;
+
+        this.#addImage(metadata);
+
+        const geojson = this.pointsMap.get(name);
+        return geojson;
+    }
+
+    saveAllPoints = async () => {
+        const title = document.getElementById('title').value;
+        const points = Array.from(this.pointsMap.values());
+        const images = points.reduce((arr, point) => {
+            const card = point.data.card;
+            arr.push(card.image);
+            return arr;
+        }, []);
+
+        await SaveFeatures.toFile(points, images, title);
+    }
+
+    #addImage = metadata => {
         const { image, name, location, exif } = metadata;
         const { latitude, longitude, altitude } = location;
         const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
@@ -37,20 +58,6 @@ class GeoJSONFeatures {
         };
 
         this.pointsMap.set(name, geojson);
-
-        return geojson;
-    }
-
-    saveAllPoints = async () => {
-        const title = document.getElementById('title').value;
-        const points = Array.from(this.pointsMap.values());
-        const images = points.reduce((arr, point) => {
-            const card = point.data.card;
-            arr.push(card.image);
-            return arr;
-        }, []);
-
-        await SaveFeatures.toFile(points, images, title);
     }
 
     #error = message => {
