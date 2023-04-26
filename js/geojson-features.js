@@ -10,7 +10,7 @@ class GeoJSONFeatures {
         this.#read(geojsonFile);
     }
 
-    addImage = metadata => {
+    addPhoto = metadata => {
         const { image, name, location, exif } = metadata;
         const { latitude, longitude, altitude } = location;
         const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
@@ -44,7 +44,7 @@ class GeoJSONFeatures {
     getGeoJSONPoint = metadata => {
         const { name } = metadata;
 
-        this.addImage(metadata);
+        this.addPhoto(metadata);
 
         const geojson = this.pointsMap.get(name);
         return geojson;
