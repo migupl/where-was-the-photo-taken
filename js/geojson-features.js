@@ -10,30 +10,7 @@ class GeoJSONFeatures {
         this.#read(geojsonFile);
     }
 
-    isGeojson = file => 'application/geo+json' === file.type;
-
-    getGeoJSONPoint = metadata => {
-        const { name } = metadata;
-
-        this.#addImage(metadata);
-
-        const geojson = this.pointsMap.get(name);
-        return geojson;
-    }
-
-    saveAllPoints = async () => {
-        const title = document.getElementById('title').value;
-        const points = Array.from(this.pointsMap.values());
-        const images = points.reduce((arr, point) => {
-            const card = point.data.card;
-            arr.push(card.image);
-            return arr;
-        }, []);
-
-        await SaveFeatures.toFile(points, images, title);
-    }
-
-    #addImage = metadata => {
+    addImage = metadata => {
         const { image, name, location, exif } = metadata;
         const { latitude, longitude, altitude } = location;
         const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
@@ -60,6 +37,29 @@ class GeoJSONFeatures {
         };
 
         this.pointsMap.set(name, geojson);
+    }
+
+    isGeojson = file => 'application/geo+json' === file.type;
+
+    getGeoJSONPoint = metadata => {
+        const { name } = metadata;
+
+        this.addImage(metadata);
+
+        const geojson = this.pointsMap.get(name);
+        return geojson;
+    }
+
+    saveAllPoints = async () => {
+        const title = document.getElementById('title').value;
+        const points = Array.from(this.pointsMap.values());
+        const images = points.reduce((arr, point) => {
+            const card = point.data.card;
+            arr.push(card.image);
+            return arr;
+        }, []);
+
+        await SaveFeatures.toFile(points, images, title);
     }
 
     #error = message => {
