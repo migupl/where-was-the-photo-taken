@@ -36,7 +36,7 @@ class GeoJSONFeatures {
             }
         };
 
-        this.pointsMap.set(image.name, geojson);
+        this.pointsMap.set(name, geojson);
 
         return geojson;
     }
