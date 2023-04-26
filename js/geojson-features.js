@@ -10,6 +10,8 @@ class GeoJSONFeatures {
         this.#read(geojsonFile);
     }
 
+    isGeojson = file => 'application/geo+json' === file.type;
+
     getGeoJSONPoint = metadata => {
         const { name } = metadata;
 

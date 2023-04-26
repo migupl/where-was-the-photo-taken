@@ -23,10 +23,8 @@ document.addEventListener('drop-photo-for-exif:data', (event) => {
 document.addEventListener('drop-photo-for-exif:file', (event) => {
     event.preventDefault();
 
-    const isGeojson = file => 'application/geo+json' === file.type;
-
     const file = event.detail;
-    if (isGeojson(file)) GeoJSONFeatures.add(file)
+    if (GeoJSONFeatures.isGeojson(file)) GeoJSONFeatures.add(file)
 });
 
 const save = document.getElementById('save-all');
