@@ -3,8 +3,8 @@ import { SaveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
 
-    pointsMap = new Map();
-    geojson;
+    #pointsMap = new Map();
+    #geojson;
     #title;
 
     add = geojsonFile => {
@@ -38,13 +38,13 @@ class GeoJSONFeatures {
             }
         };
 
-        this.pointsMap.set(name, geojson);
+        this.#pointsMap.set(name, geojson);
     }
 
     isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
-        const points = this.pointsMap.values();
+        const points = this.#pointsMap.values();
         return points ? Array.from(points) : []
     }
 
@@ -54,7 +54,7 @@ class GeoJSONFeatures {
 
     saveAllPoints = async () => {
         const title = document.getElementById('title').value;
-        const points = Array.from(this.pointsMap.values());
+        const points = Array.from(this.#pointsMap.values());
         const images = points.reduce((arr, point) => {
             const card = point.data.card;
             arr.push(card.image);
@@ -88,11 +88,11 @@ class GeoJSONFeatures {
         const reader = new FileReader();
         reader.addEventListener('loadend', () => {
             try {
-                if (this.geojson) this.#error('Only a GeoJSON file is allowed');
+                if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
 
                 const json = JSON.parse(reader.result);
                 this.#simpleCheck(json);
-                this.geojson = json;
+                this.#geojson = json;
 
             } catch (err) {
                 alert(err);
