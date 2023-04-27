@@ -42,5 +42,6 @@ document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
 const save = document.getElementById('save-all');
 save.addEventListener('click', (event) => {
     event.stopPropagation();
-    GeoJSONFeatures.saveAllPoints();
+    const title = document.getElementById('title').value
+    GeoJSONFeatures.saveAllPoints(title);
 });
