@@ -5,13 +5,14 @@ class DropPhotoForExifFiles {
     process = (items
         , afterImageReady = (image, exif) => console.log('Do something after image is ready')
         , afterFileReady = file => console.log('Do something after file is ready')
-        , onComplete = () => console.log('Do something on complete')) => {
-        this._afterImageReady = afterImageReady;
-        this._afterFileReady = afterFileReady;
-        this._onComplete = onComplete;
+        , onCompletion = () => console.log('Do something on complete')) => {
 
+        this.#setAfterActions(afterImageReady, afterFileReady, onCompletion);
         this.#filesToProcess(items.length);
+        this.#process(items);
+    }
 
+    #process = items => {
         for (let item of items) {
             if (!(this.#supportsFileSystemAccessAPI || this.#supportsWebkitGetAsEntry)) {
                 this.#processFile(item.getAsFile());
@@ -39,8 +40,8 @@ class DropPhotoForExifFiles {
                 this.#filesToProcess(files.length - 1);
 
                 files.forEach(entryFile =>
-                        entryFile.file(this.#processFile)
-                    )
+                    entryFile.file(this.#processFile)
+                )
             });
     }
 
@@ -55,7 +56,7 @@ class DropPhotoForExifFiles {
 
     #onCompletion = () => {
         --this._remainToCompleteBatch;
-        if (!this._remainToCompleteBatch) this._onComplete();
+        if (!this._remainToCompleteBatch) this._onCompletion();
     }
 
     #processFile = file => {
@@ -67,8 +68,20 @@ class DropPhotoForExifFiles {
         else {
             this._afterFileReady(fileWithType);
         }
+    }
 
-        this.#onCompletion();
+    #setAfterActions = (afterImageReady, afterFileReady, onCompletion) => {
+        this._afterImageReady = (image, exif) => {
+            afterImageReady(image, exif);
+            this.#onCompletion();
+        };
+
+        this._afterFileReady = file => {
+            afterFileReady(file);
+            this.#onCompletion();
+        };
+
+        this._onCompletion = onCompletion;
     }
 
     #supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
