@@ -5,8 +5,10 @@ class GeoJSONFeatures {
 
     pointsMap = new Map();
     geojson;
+    #title;
 
     add = geojsonFile => {
+        this.#setTitle(geojsonFile.name);
         this.#read(geojsonFile);
     }
 
@@ -44,6 +46,10 @@ class GeoJSONFeatures {
     getGeoJSONPoints = () => {
         const points = this.pointsMap.values();
         return points ? Array.from(points) : []
+    }
+
+    getTitle = () => {
+        return this.#title;
     }
 
     saveAllPoints = async () => {
@@ -94,6 +100,18 @@ class GeoJSONFeatures {
         });
 
         reader.readAsText(geojsonFile);
+    }
+
+    #setTitle = filename => {
+        const separator = '.';
+        if (filename.includes(separator)) {
+            const texts = filename.split(separator);
+            texts.pop();
+            this.#title = texts.join(separator);
+        }
+        else {
+            this.#title = filename;
+        }
     }
 
     #simpleCheck = geojsonFile => {
