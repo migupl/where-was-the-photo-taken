@@ -12,8 +12,7 @@ document.addEventListener('drop-photo-for-exif:data', (event) => {
 
     const data = event.detail;
     if (data.location) {
-        const point = GeoJSONFeatures.getGeoJSONPoint(data);
-        addPointToMap(point);
+        GeoJSONFeatures.addPhoto(data);
     }
     else {
         alert(`The added photo '${data.name}' has no geolocation data`);
@@ -25,6 +24,13 @@ document.addEventListener('drop-photo-for-exif:file', (event) => {
 
     const file = event.detail;
     if (GeoJSONFeatures.isGeojson(file)) GeoJSONFeatures.add(file)
+});
+
+document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
+    event.preventDefault();
+
+    const points = GeoJSONFeatures.getGeoJSONPoints();
+    points.forEach(addPointToMap)
 });
 
 const save = document.getElementById('save-all');

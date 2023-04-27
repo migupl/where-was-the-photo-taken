@@ -41,13 +41,9 @@ class GeoJSONFeatures {
 
     isGeojson = file => 'application/geo+json' === file.type;
 
-    getGeoJSONPoint = metadata => {
-        const { name } = metadata;
-
-        this.addPhoto(metadata);
-
-        const geojson = this.pointsMap.get(name);
-        return geojson;
+    getGeoJSONPoints = () => {
+        const points = this.pointsMap.values();
+        return points ? Array.from(points) : []
     }
 
     saveAllPoints = async () => {
