@@ -45,3 +45,8 @@ save.addEventListener('click', (event) => {
     const title = document.getElementById('title').value
     GeoJSONFeatures.saveAllPoints(title);
 });
+
+window.onload = () => {
+    const eTitle = document.getElementById('title');
+    eTitle.value = eTitle.defaultValue;
+}
