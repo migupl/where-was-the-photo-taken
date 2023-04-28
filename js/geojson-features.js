@@ -8,7 +8,6 @@ class GeoJSONFeatures {
     #title;
 
     add = geojsonFile => {
-        this.#title = this.#composeTitle(geojsonFile.name);
         this.#read(geojsonFile);
     }
 
@@ -108,6 +107,7 @@ class GeoJSONFeatures {
                 this.#checkIsValid(json);
 
                 this.#geojson = json;
+                this.#title = this.#composeTitle(geojsonFile.name);
 
             } catch (err) {
                 alert(err);
