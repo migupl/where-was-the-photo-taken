@@ -8,7 +8,7 @@ class GeoJSONFeatures {
     #title;
 
     add = geojsonFile => {
-        this.#setTitle(geojsonFile.name);
+        this.#title = this.#composeTitle(geojsonFile.name);
         this.#read(geojsonFile);
     }
 
@@ -67,6 +67,17 @@ class GeoJSONFeatures {
         if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
     }
 
+    #composeTitle = filename => {
+        const separator = '.';
+        if (filename.includes(separator)) {
+            const texts = filename.split(separator);
+            texts.pop();
+            return texts.join(separator);
+        }
+
+        return filename;
+    }
+
     #error = message => {
         throw {
             toString() {
@@ -104,18 +115,6 @@ class GeoJSONFeatures {
         });
 
         reader.readAsText(geojsonFile);
-    }
-
-    #setTitle = filename => {
-        const separator = '.';
-        if (filename.includes(separator)) {
-            const texts = filename.split(separator);
-            texts.pop();
-            this.#title = texts.join(separator);
-        }
-        else {
-            this.#title = filename;
-        }
     }
 }
 
