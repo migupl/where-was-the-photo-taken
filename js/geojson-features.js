@@ -63,6 +63,10 @@ class GeoJSONFeatures {
         await SaveFeatures.toFile(points, images, title);
     }
 
+    #checkIsValid = json => {
+        if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
+    }
+
     #error = message => {
         throw {
             toString() {
@@ -90,7 +94,8 @@ class GeoJSONFeatures {
                 if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
 
                 const json = JSON.parse(reader.result);
-                this.#simpleCheck(json);
+                this.#checkIsValid(json);
+
                 this.#geojson = json;
 
             } catch (err) {
@@ -111,10 +116,6 @@ class GeoJSONFeatures {
         else {
             this.#title = filename;
         }
-    }
-
-    #simpleCheck = geojsonFile => {
-        if (!geojsonFile.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
     }
 }
 
