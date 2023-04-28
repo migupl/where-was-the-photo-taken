@@ -43,8 +43,18 @@ class GeoJSONFeatures {
     isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
-        const points = this.#pointsMap.values();
-        return points ? Array.from(points) : []
+        const points = this.#pointsMap.values() || [];
+        if (points) {
+            return Array.from(points).map(point => {
+                const { filename } = point.data.card;
+                return {
+                    name: filename,
+                    geojson: point
+                }
+            });
+        }
+
+        return [];
     }
 
     getTitle = () => {

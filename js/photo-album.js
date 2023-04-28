@@ -1,10 +1,15 @@
 import { GeoJSONFeatures } from './geojson-features.js';
 
+const existingPoints = [];
 const addPointToMap = point => {
-    const map = document.querySelector('leaflet-map');
-    const eventBus = map.eventBus;
+    const { name, geojson } = point;
+    if (!existingPoints.includes(name)) {
+        const map = document.querySelector('leaflet-map');
+        const eventBus = map.eventBus;
 
-    eventBus.dispatch('x-leaflet-map-geojson-add', { leafletMap: map, geojson: point })
+        eventBus.dispatch('x-leaflet-map-geojson-add', { leafletMap: map, geojson: geojson });
+        existingPoints.push(name);
+    }
 }
 
 document.addEventListener('drop-photo-for-exif:data', (event) => {
