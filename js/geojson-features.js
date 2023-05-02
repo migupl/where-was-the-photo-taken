@@ -29,7 +29,7 @@ class GeoJSONFeatures {
                 coordinates: lnglatalt
             },
             properties: {
-                popupContent: card.el
+                popupContent: card.element()
             },
             data: {
                 exif: exif,

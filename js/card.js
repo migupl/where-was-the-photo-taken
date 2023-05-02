@@ -1,5 +1,6 @@
 class Card {
 
+    #element;
     #properties;
 
     constructor(image) {
@@ -28,8 +29,8 @@ class Card {
         const description = card.querySelector('p');
         this.#properties.description = description.textContent;
 
-        this.el = document.createElement('div');
-        this.el.appendChild(card);
+        this.#element = document.createElement('div');
+        this.#element.appendChild(card);
 
         title.addEventListener('input', event => {
             event.stopPropagation();
@@ -43,6 +44,7 @@ class Card {
         });
     }
 
+    element = () => this.#element
     properties = () => this.#properties
 
     #template = `
