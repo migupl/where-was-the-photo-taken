@@ -33,7 +33,7 @@ class GeoJSONFeatures {
             },
             data: {
                 exif: exif,
-                card: card.properties
+                card: card.properties()
             }
         };
 

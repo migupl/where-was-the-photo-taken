@@ -1,7 +1,9 @@
 class Card {
 
+    #properties;
+
     constructor(image) {
-        this.properties = {
+        this.#properties = {
             image: image,
             filename: image.name,
             title: image.name,
@@ -14,17 +16,17 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const name = this.properties.filename;
+        const name = this.#properties.filename;
 
         const img = card.querySelector('img');
-        img.src = URL.createObjectURL(this.properties.image);
+        img.src = URL.createObjectURL(this.#properties.image);
         img.alt = name;
 
         const title = card.querySelector('h4');
         title.innerHTML = name;
 
         const description = card.querySelector('p');
-        this.properties.description = description.textContent;
+        this.#properties.description = description.textContent;
 
         this.el = document.createElement('div');
         this.el.appendChild(card);
@@ -32,14 +34,16 @@ class Card {
         title.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.properties.title = el.textContent;
+            this.#properties.title = el.textContent;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.properties.description = el.textContent;
+            this.#properties.description = el.textContent;
         });
     }
+
+    properties = () => this.#properties
 
     #template = `
 <div>
