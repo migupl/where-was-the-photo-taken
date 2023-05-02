@@ -8,7 +8,7 @@ class Card {
             image: image,
             filename: image.name,
             title: image.name,
-            description: null
+            description: 'A description about the image'
         };
     }
 
@@ -27,7 +27,7 @@ class Card {
         title.innerHTML = name;
 
         const description = card.querySelector('p');
-        this.#properties.description = description.textContent;
+        description.textContent = this.#properties.description;
 
         this.#element = document.createElement('div');
         this.#element.appendChild(card);
@@ -52,7 +52,7 @@ class Card {
 <img src="" alt="" style="width: 100%;">
     <div>
         <h4 contenteditable="true" style="caret-color: red;"></h4>
-        <p contenteditable="true" style="caret-color: red;">A description about the image</p>
+        <p contenteditable="true" style="caret-color: red;"></p>
     </div>
 </div>
 `;
