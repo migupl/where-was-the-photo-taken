@@ -20,7 +20,7 @@ class GeoJSONFeatures {
             .filter((value) => !isNaN(value));
 
         const card = new Card(image);
-        card.add();
+        const popup = card.getPopup();
 
         const geojson = {
             type: "Feature",
@@ -29,7 +29,7 @@ class GeoJSONFeatures {
                 coordinates: lnglatalt
             },
             properties: {
-                popupContent: card.element()
+                popupContent: popup
             },
             data: {
                 exif: exif,

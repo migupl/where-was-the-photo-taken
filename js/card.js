@@ -1,6 +1,5 @@
 class Card {
 
-    #element;
     #properties;
 
     constructor(image) {
@@ -12,7 +11,7 @@ class Card {
         };
     }
 
-    add = () => {
+    getPopup = () => {
         const card = document
             .createRange()
             .createContextualFragment(this.#template);
@@ -29,8 +28,8 @@ class Card {
         const description = card.querySelector('p');
         description.textContent = this.#properties.description;
 
-        this.#element = document.createElement('div');
-        this.#element.appendChild(card);
+        const popup = document.createElement('div');
+        popup.appendChild(card);
 
         title.addEventListener('input', event => {
             event.stopPropagation();
@@ -42,9 +41,10 @@ class Card {
             const el = event.target;
             this.#properties.description = el.textContent;
         });
+
+        return popup;
     }
 
-    element = () => this.#element
     properties = () => this.#properties
 
     #template = `
