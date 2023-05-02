@@ -10,8 +10,9 @@ class Card {
     }
 
     add = () => {
-        const template = document.getElementById('card-template');
-        const card = template.content.cloneNode(true);
+        const card = document
+            .createRange()
+            .createContextualFragment(this.#template);
 
         const name = this.properties.filename;
 
@@ -39,6 +40,16 @@ class Card {
             this.properties.description = el.textContent;
         });
     }
+
+    #template = `
+<div>
+<img src="" alt="" style="width: 100%;">
+    <div>
+        <h4 contenteditable="true" style="caret-color: red;"></h4>
+        <p contenteditable="true" style="caret-color: red;">A description about the image</p>
+    </div>
+</div>
+`;
 }
 
 export { Card }
