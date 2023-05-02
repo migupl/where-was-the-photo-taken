@@ -43,18 +43,18 @@ class GeoJSONFeatures {
     isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
-        const points = this.#pointsMap.values() || [];
-        if (points) {
-            return Array.from(points).map(point => {
-                const { filename } = point.data.card;
-                return {
-                    name: filename,
-                    geojson: point
-                }
-            });
-        }
+        const points = this.#pointsMap.values();
+        const pointsArr = points ? Array.from(points) : [];
 
-        return [];
+        this.#updateUsingGeojson(pointsArr);
+
+        return pointsArr.map(point => {
+            const { card } = point.data;
+            return {
+                name: card.filename,
+                geojson: point
+            }
+        });
     }
 
     getTitle = () => {
@@ -71,6 +71,8 @@ class GeoJSONFeatures {
 
         await SaveFeatures.toFile(points, images, title);
     }
+
+    #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
 
     #checkIsValid = json => {
         if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
@@ -125,6 +127,30 @@ class GeoJSONFeatures {
         });
 
         reader.readAsText(geojsonFile);
+    }
+
+    #updatePoint(data, point) {
+        if (data) {
+            const newerGeojson = data[0];
+            if (!this.#areGeojsonEqual(newerGeojson, point)) {
+                let { card } = point.data;
+                const { card: newerCard } = newerGeojson.data;
+                card = newerCard;
+
+                Card.updatePopup(point.properties, newerCard);
+            }
+        }
+    }
+
+    #updateUsingGeojson = points => {
+        if (this.#geojson) {
+            points.forEach(point => {
+                const { filename } = point.data.card;
+                const data = this.#geojson.features
+                    .filter(feature => filename === feature.data.card.filename);
+                this.#updatePoint(data, point);
+            })
+        }
     }
 }
 

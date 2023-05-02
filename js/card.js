@@ -47,6 +47,14 @@ class Card {
 
     properties = () => this.#properties
 
+    static updatePopup = ({popupContent}, {title, description}) => {
+        const elTitle = popupContent.querySelector('h4');
+        elTitle.textContent = title;
+
+        const elDescription = popupContent.querySelector('p');
+        elDescription.textContent = description;
+    }
+
     #template = `
 <div>
 <img src="" alt="" style="width: 100%;">
