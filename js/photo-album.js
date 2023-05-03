@@ -28,17 +28,16 @@ document.addEventListener('drop-photo-for-exif:file', (event) => {
     event.preventDefault();
 
     const file = event.detail;
-    if (GeoJSONFeatures.isGeojson(file)) GeoJSONFeatures.add(file)
+    const refreshTitle = title => {
+        const eTitle = document.getElementById('title');
+        eTitle.value = title;
+    }
+
+    if (GeoJSONFeatures.isGeojson(file)) GeoJSONFeatures.add(file, refreshTitle);
 });
 
 document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
     event.preventDefault();
-
-    const title = GeoJSONFeatures.getTitle();
-    if (title) {
-        const eTitle = document.getElementById('title');
-        eTitle.value = title;
-    }
 
     const points = GeoJSONFeatures.getGeoJSONPoints();
     points.forEach(addPointToMap)

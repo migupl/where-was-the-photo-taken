@@ -5,10 +5,9 @@ class GeoJSONFeatures {
 
     #pointsMap = new Map();
     #geojson;
-    #title;
 
-    add = geojsonFile => {
-        this.#read(geojsonFile);
+    add = (geojsonFile, doAfter = (title) => console.log(`Do something with title: '${title}'`)) => {
+        this.#read(geojsonFile, doAfter);
     }
 
     addPhoto = metadata => {
@@ -61,10 +60,6 @@ class GeoJSONFeatures {
         });
     }
 
-    getTitle = () => {
-        return this.#title;
-    }
-
     saveAllPoints = async (title) => {
         const points = Array.from(this.#pointsMap.values())
             .map(point => point.feature);
@@ -115,7 +110,7 @@ class GeoJSONFeatures {
         return [lat, lng];
     }
 
-    #read = geojsonFile => {
+    #read = (geojsonFile, doAfter) => {
         const reader = new FileReader();
         reader.addEventListener('loadend', () => {
             try {
@@ -125,7 +120,8 @@ class GeoJSONFeatures {
                 this.#checkIsValid(json);
 
                 this.#geojson = json;
-                this.#title = this.#composeTitle(geojsonFile.name);
+                const title = this.#composeTitle(geojsonFile.name);
+                doAfter(title);
 
             } catch (err) {
                 alert(err);
@@ -150,7 +146,6 @@ class GeoJSONFeatures {
 
     #updateUsingGeojson = points => {
         if (this.#geojson) {
-            console.log('updateUsingGeojson', points)
             points
                 .filter(point => !point.card.wasUpdated())
                 .forEach(point => {
