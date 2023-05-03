@@ -1,6 +1,6 @@
 class Card {
 
-    #properties;
+    #popup; #properties;
 
     constructor(image) {
         this.#properties = {
@@ -12,6 +12,21 @@ class Card {
     }
 
     getPopup = () => {
+        if (!this.#popup) this.#setPopup();
+        return this.#popup;
+    }
+
+    properties = () => this.#properties
+
+    static updatePopup = ({ popupContent }, { title, description }) => {
+        const elTitle = popupContent.querySelector('h4');
+        elTitle.textContent = title;
+
+        const elDescription = popupContent.querySelector('p');
+        elDescription.textContent = description;
+    }
+
+    #setPopup() {
         const card = document
             .createRange()
             .createContextualFragment(this.#template);
@@ -28,8 +43,8 @@ class Card {
         const description = card.querySelector('p');
         description.textContent = this.#properties.description;
 
-        const popup = document.createElement('div');
-        popup.appendChild(card);
+        this.#popup = document.createElement('div');
+        this.#popup.appendChild(card);
 
         title.addEventListener('input', event => {
             event.stopPropagation();
@@ -41,18 +56,6 @@ class Card {
             const el = event.target;
             this.#properties.description = el.textContent;
         });
-
-        return popup;
-    }
-
-    properties = () => this.#properties
-
-    static updatePopup = ({ popupContent }, { title, description }) => {
-        const elTitle = popupContent.querySelector('h4');
-        elTitle.textContent = title;
-
-        const elDescription = popupContent.querySelector('p');
-        elDescription.textContent = description;
     }
 
     #template = `
