@@ -11,35 +11,42 @@ class GeoJSONFeatures {
     }
 
     addPhoto = metadata => {
-        const { image, name, location, exif } = metadata;
-        const { latitude, longitude, altitude } = location;
-        const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
+        try {
+            const { image, name, location, exif } = metadata;
+            this.#checkExisting(name);
 
-        const lnglatalt = [lng, lat, altitude]
-            .filter((value) => !isNaN(value));
+            const { latitude, longitude, altitude } = location;
+            const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
 
-        const card = new Card(image);
-        const popup = card.getPopup();
+            const lnglatalt = [lng, lat, altitude]
+                .filter((value) => !isNaN(value));
 
-        const point = {
-            feature: {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: lnglatalt
+            const card = new Card(image);
+            const popup = card.getPopup();
+
+            const point = {
+                feature: {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: lnglatalt
+                    },
+                    properties: {
+                        popupContent: popup
+                    },
+                    data: {
+                        exif: exif,
+                        card: card.properties()
+                    }
                 },
-                properties: {
-                    popupContent: popup
-                },
-                data: {
-                    exif: exif,
-                    card: card.properties()
-                }
-            },
-            card: card
-        };
+                card: card
+            };
 
-        this.#pointsMap.set(name, point);
+            this.#pointsMap.set(name, point);
+
+        } catch (err) {
+            alert(err)
+        }
     }
 
     isGeojson = file => 'application/geo+json' === file.type;
@@ -72,6 +79,10 @@ class GeoJSONFeatures {
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
+
+    #checkExisting = filename => {
+        if (this.#pointsMap.get(filename)) this.#error(`The image '${filename}' already exists`)
+    }
 
     #checkIsValid = json => {
         if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
