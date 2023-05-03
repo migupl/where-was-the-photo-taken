@@ -37,7 +37,7 @@ class GeoJSONFeatures {
                     card: card.properties()
                 }
             },
-            updated: false
+            card: card
         };
 
         this.#pointsMap.set(name, point);
@@ -150,15 +150,15 @@ class GeoJSONFeatures {
 
     #updateUsingGeojson = points => {
         if (this.#geojson) {
+            console.log('updateUsingGeojson', points)
             points
-                .filter(point => !point.updated)
+                .filter(point => !point.card.wasUpdated())
                 .forEach(point => {
                     const { feature } = point;
                     const { filename } = feature.data.card;
                     const data = this.#geojson.features
                         .filter(feature => filename === feature.data.card.filename);
                     this.#updatePoint(data, feature);
-                    point.updated = true;
                 })
         }
     }

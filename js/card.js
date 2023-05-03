@@ -1,6 +1,7 @@
 class Card {
 
     #popup; #properties;
+    #updated = false;
 
     constructor(image) {
         this.#properties = {
@@ -26,6 +27,8 @@ class Card {
         elDescription.textContent = description;
     }
 
+    wasUpdated = () => this.#updated
+
     #setPopup() {
         const card = document
             .createRange()
@@ -50,11 +53,13 @@ class Card {
             event.stopPropagation();
             const el = event.target;
             this.#properties.title = el.textContent;
+            this.#updated = true;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
             this.#properties.description = el.textContent;
+            this.#updated = true;
         });
     }
 
