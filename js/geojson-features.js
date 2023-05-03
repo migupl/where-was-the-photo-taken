@@ -22,22 +22,25 @@ class GeoJSONFeatures {
         const card = new Card(image);
         const popup = card.getPopup();
 
-        const geojson = {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: lnglatalt
+        const point = {
+            feature: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: lnglatalt
+                },
+                properties: {
+                    popupContent: popup
+                },
+                data: {
+                    exif: exif,
+                    card: card.properties()
+                }
             },
-            properties: {
-                popupContent: popup
-            },
-            data: {
-                exif: exif,
-                card: card.properties()
-            }
+            updated: false
         };
 
-        this.#pointsMap.set(name, geojson);
+        this.#pointsMap.set(name, point);
     }
 
     isGeojson = file => 'application/geo+json' === file.type;
@@ -49,10 +52,11 @@ class GeoJSONFeatures {
         this.#updateUsingGeojson(pointsArr);
 
         return pointsArr.map(point => {
-            const { card } = point.data;
+            const { feature } = point;
+            const { card } = feature.data;
             return {
                 name: card.filename,
-                geojson: point
+                geojson: feature
             }
         });
     }
@@ -62,7 +66,9 @@ class GeoJSONFeatures {
     }
 
     saveAllPoints = async (title) => {
-        const points = Array.from(this.#pointsMap.values());
+        const points = Array.from(this.#pointsMap.values())
+            .map(point => point.feature);
+
         const images = points.reduce((arr, point) => {
             const card = point.data.card;
             arr.push(card.image);
@@ -144,12 +150,16 @@ class GeoJSONFeatures {
 
     #updateUsingGeojson = points => {
         if (this.#geojson) {
-            points.forEach(point => {
-                const { filename } = point.data.card;
-                const data = this.#geojson.features
-                    .filter(feature => filename === feature.data.card.filename);
-                this.#updatePoint(data, point);
-            })
+            points
+                .filter(point => !point.updated)
+                .forEach(point => {
+                    const { feature } = point;
+                    const { filename } = feature.data.card;
+                    const data = this.#geojson.features
+                        .filter(feature => filename === feature.data.card.filename);
+                    this.#updatePoint(data, feature);
+                    point.updated = true;
+                })
         }
     }
 }
