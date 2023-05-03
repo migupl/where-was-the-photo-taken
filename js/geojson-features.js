@@ -45,9 +45,7 @@ class GeoJSONFeatures {
     isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
-        const points = this.#pointsMap.values();
-        const pointsArr = points ? Array.from(points) : [];
-
+        const pointsArr = this.#pointsArray();
         this.#updateUsingGeojson(pointsArr);
 
         return pointsArr.map(point => {
@@ -110,6 +108,11 @@ class GeoJSONFeatures {
         return [lat, lng];
     }
 
+    #pointsArray() {
+        const points = this.#pointsMap.values();
+        return points ? Array.from(points) : [];
+    }
+
     #read = (geojsonFile, doAfter) => {
         const reader = new FileReader();
         reader.addEventListener('loadend', () => {
@@ -121,7 +124,9 @@ class GeoJSONFeatures {
 
                 this.#geojson = json;
                 const title = this.#composeTitle(geojsonFile.name);
+
                 doAfter(title);
+                this.#updateUsingGeojson();
 
             } catch (err) {
                 alert(err);
@@ -144,7 +149,7 @@ class GeoJSONFeatures {
         }
     }
 
-    #updateUsingGeojson = points => {
+    #updateUsingGeojson = (points = this.#pointsArray()) => {
         if (this.#geojson) {
             points
                 .filter(point => !point.card.wasUpdated())
