@@ -70,7 +70,7 @@ class GeoJSONFeatures {
             .map(point => point.feature);
 
         const images = points.reduce((arr, point) => {
-            const card = point.data.card;
+            const { card } = point.data;
             arr.push(card.image);
             return arr;
         }, []);

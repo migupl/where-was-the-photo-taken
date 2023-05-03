@@ -16,14 +16,14 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const name = this.#properties.filename;
+        const { filename } = this.#properties;
 
         const img = card.querySelector('img');
         img.src = URL.createObjectURL(this.#properties.image);
-        img.alt = name;
+        img.alt = filename;
 
         const title = card.querySelector('h4');
-        title.innerHTML = name;
+        title.innerHTML = filename;
 
         const description = card.querySelector('p');
         description.textContent = this.#properties.description;
@@ -47,7 +47,7 @@ class Card {
 
     properties = () => this.#properties
 
-    static updatePopup = ({popupContent}, {title, description}) => {
+    static updatePopup = ({ popupContent }, { title, description }) => {
         const elTitle = popupContent.querySelector('h4');
         elTitle.textContent = title;
 
