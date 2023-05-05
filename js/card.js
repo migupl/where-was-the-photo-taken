@@ -67,8 +67,8 @@ class Card {
 <div>
 <img src="" alt="" style="width: 100%;">
     <div>
-        <h4 contenteditable="true" style="caret-color: red;"></h4>
-        <p contenteditable="true" style="caret-color: red;"></p>
+        <h4 contenteditable="true"></h4>
+        <p contenteditable="true"></p>
     </div>
 </div>
 `;
