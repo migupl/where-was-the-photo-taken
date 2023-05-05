@@ -153,7 +153,9 @@ class GeoJSONFeatures {
             if (!this.#areGeojsonEqual(newerGeojson, point)) {
                 let { card } = point.data;
                 const { card: newerCard } = newerGeojson.data;
-                card = newerCard;
+
+                card.title = newerCard.title;
+                card.description = newerCard.description;
 
                 Card.updatePopup(point.properties, newerCard);
             }
