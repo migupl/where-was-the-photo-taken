@@ -6,3 +6,11 @@
 .custom-leaflet-popup .leaflet-popup-tip {
     background: #2c3e50;
 }
+
+.custom-leaflet-popup h4[contenteditable="true"],
+.custom-leaflet-popup p[contenteditable="true"] {
+    background-image: url('assets/edit-3-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    padding-left: 16px;
+    display: block;
+}
