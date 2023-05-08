@@ -20,6 +20,7 @@ class Card {
     }
 
     id = () => this.#id
+    isThis = properties => this.#id === properties.id
 
     properties = () => this.#properties
 

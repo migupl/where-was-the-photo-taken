@@ -163,9 +163,8 @@ class GeoJSONFeatures {
                 .filter(point => !point.card.wasUpdated())
                 .forEach(point => {
                     const { card, feature } = point;
-                    const { filename } = feature.data.card;
                     const data = this.#geojson.features
-                        .filter(feature => filename === feature.data.card.filename);
+                        .filter(feature => card.isThis(feature.data.card));
                     this.#updatePoint(data, feature, card);
                 })
         }
