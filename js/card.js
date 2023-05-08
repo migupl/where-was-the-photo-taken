@@ -41,7 +41,7 @@ class Card {
         img.alt = filename;
 
         const title = card.querySelector('h4');
-        title.innerHTML = filename;
+        title.textContent = filename;
 
         const description = card.querySelector('p');
         description.textContent = this.#properties.description;
