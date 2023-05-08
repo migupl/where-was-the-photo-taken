@@ -8,7 +8,7 @@ class Card {
         this.#id = image.name;
         this.#properties = {
             image: image,
-            filename: this.#id,
+            id: this.#id,
             title: this.#id,
             description: 'A description about the image'
         };
@@ -18,6 +18,8 @@ class Card {
         if (!this.#popup) this.#setPopup();
         return this.#popup;
     }
+
+    id = () => this.#id
 
     properties = () => this.#properties
 

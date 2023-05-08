@@ -2,13 +2,13 @@ import { GeoJSONFeatures } from './geojson-features.js';
 
 const existingPoints = [];
 const addPointToMap = point => {
-    const { name, geojson } = point;
-    if (!existingPoints.includes(name)) {
+    const { id, geojson } = point;
+    if (!existingPoints.includes(id)) {
         const map = document.querySelector('leaflet-map');
         const eventBus = map.eventBus;
 
         eventBus.dispatch('x-leaflet-map-geojson-add', { leafletMap: map, geojson: geojson });
-        existingPoints.push(name);
+        existingPoints.push(id);
     }
 }
 

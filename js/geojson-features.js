@@ -56,10 +56,9 @@ class GeoJSONFeatures {
         this.#updateUsingGeojson(pointsArr);
 
         return pointsArr.map(point => {
-            const { feature } = point;
-            const { card } = feature.data;
+            const { card, feature } = point;
             return {
-                name: card.filename,
+                id: card.id(),
                 geojson: feature
             }
         });
