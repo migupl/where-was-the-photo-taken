@@ -22,14 +22,12 @@ class Card {
     updatePopup = ({ title, description }) => {
         this.#properties.title = title;
         this.#properties.description = description;
-    }
 
-    static updatePopup = ({ popupContent }, { title, description }) => {
-        const elTitle = popupContent.querySelector('h4');
-        elTitle.textContent = title;
+        const titleEl = this.#popup.querySelector('h4');
+        titleEl.textContent = title;
 
-        const elDescription = popupContent.querySelector('p');
-        elDescription.textContent = description;
+        const descriptionEl = this.#popup.querySelector('p');
+        descriptionEl.textContent = description;
     }
 
     wasUpdated = () => this.#updated

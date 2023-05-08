@@ -154,8 +154,6 @@ class GeoJSONFeatures {
                 const { card: newerCard } = newerGeojson.data;
 
                 _card.updatePopup(newerCard);
-
-                Card.updatePopup(point.properties, newerCard);
             }
         }
     }
