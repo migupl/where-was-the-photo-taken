@@ -1,13 +1,15 @@
 class Card {
 
+    #id;
     #popup; #properties;
     #updated = false;
 
     constructor(image) {
+        this.#id = image.name;
         this.#properties = {
             image: image,
-            filename: image.name,
-            title: image.name,
+            filename: this.#id,
+            title: this.#id,
             description: 'A description about the image'
         };
     }
@@ -37,14 +39,12 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const { filename } = this.#properties;
-
         const img = card.querySelector('img');
         img.src = URL.createObjectURL(this.#properties.image);
-        img.alt = filename;
+        img.alt = this.#id;
 
         const title = card.querySelector('h4');
-        title.textContent = filename;
+        title.textContent = this.#id;
 
         const description = card.querySelector('p');
         description.textContent = this.#properties.description;
