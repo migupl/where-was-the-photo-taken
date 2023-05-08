@@ -147,15 +147,13 @@ class GeoJSONFeatures {
         reader.readAsText(geojsonFile);
     }
 
-    #updatePoint(data, point) {
+    #updatePoint(data, point, _card) {
         if (data) {
             const newerGeojson = data[0];
             if (!this.#areGeojsonEqual(newerGeojson, point)) {
-                let { card } = point.data;
                 const { card: newerCard } = newerGeojson.data;
 
-                card.title = newerCard.title;
-                card.description = newerCard.description;
+                _card.updatePopup(newerCard);
 
                 Card.updatePopup(point.properties, newerCard);
             }
@@ -167,11 +165,11 @@ class GeoJSONFeatures {
             points
                 .filter(point => !point.card.wasUpdated())
                 .forEach(point => {
-                    const { feature } = point;
+                    const { card, feature } = point;
                     const { filename } = feature.data.card;
                     const data = this.#geojson.features
                         .filter(feature => filename === feature.data.card.filename);
-                    this.#updatePoint(data, feature);
+                    this.#updatePoint(data, feature, card);
                 })
         }
     }

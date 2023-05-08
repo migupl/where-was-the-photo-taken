@@ -19,6 +19,11 @@ class Card {
 
     properties = () => this.#properties
 
+    updatePopup = ({ title, description }) => {
+        this.#properties.title = title;
+        this.#properties.description = description;
+    }
+
     static updatePopup = ({ popupContent }, { title, description }) => {
         const elTitle = popupContent.querySelector('h4');
         elTitle.textContent = title;
