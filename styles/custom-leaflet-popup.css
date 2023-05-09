@@ -23,6 +23,7 @@
     outline: none;
     color: #fff;
     width: 87%;
+    font-size: 0.9em;
 }
 
 .custom-leaflet-popup input[type="text"] {
