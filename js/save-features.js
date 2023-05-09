@@ -1,7 +1,9 @@
 class SaveFeatures {
 
+    #supportsApi;
+
     constructor() {
-        this._supportsApi = this.#allowsFileSystemAccess();
+        this.#supportsApi = this.#allowsFileSystemAccess();
     }
 
     toFile = (features, images, filename) => {
@@ -34,7 +36,7 @@ class SaveFeatures {
     }
 
     #saveFile = (blob, filename) => {
-        if (this._supportsApi) {
+        if (this.#supportsApi) {
             this.#saveFileUsingFSAApi(blob, filename);
         }
         else {
