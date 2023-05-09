@@ -9,19 +9,20 @@
 }
 
 .custom-leaflet-popup .leaflet-popup-content-wrapper img {
+    padding-bottom: 8px;
     width: 100%;
 }
 
 .custom-leaflet-popup input,
 .custom-leaflet-popup textarea {
-    margin-bottom: 21px;
-    padding: 16px;
+    margin-bottom: 8px;
+    padding: 8px;
     background: #444444;
     border-radius: 4px;
     border: 2px solid transparent;
     outline: none;
     color: #fff;
-    width: 85%;
+    width: 87%;
 }
 
 .custom-leaflet-popup input[type="text"] {
