@@ -28,11 +28,11 @@ class Card {
         this.#properties.title = title;
         this.#properties.description = description;
 
-        const titleEl = this.#popup.querySelector('h4');
-        titleEl.textContent = title;
+        const _titleEl = this.#popup.querySelector('h4');
+        _titleEl.textContent = title;
 
-        const descriptionEl = this.#popup.querySelector('p');
-        descriptionEl.textContent = description;
+        const _descriptionEl = this.#popup.querySelector('p');
+        _descriptionEl.textContent = description;
     }
 
     wasUpdated = () => this.#updated
@@ -46,22 +46,22 @@ class Card {
         img.src = URL.createObjectURL(this.#properties.image);
         img.alt = this.#id;
 
-        const title = card.querySelector('h4');
-        title.textContent = this.#id;
+        const _title = card.querySelector('h4');
+        _title.textContent = this.#id;
 
-        const description = card.querySelector('p');
-        description.textContent = this.#properties.description;
+        const _description = card.querySelector('p');
+        _description.textContent = this.#properties.description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
 
-        title.addEventListener('input', event => {
+        _title.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
             this.#properties.title = el.textContent;
             this.#updated = true;
         });
-        description.addEventListener('input', event => {
+        _description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
             this.#properties.description = el.textContent;
