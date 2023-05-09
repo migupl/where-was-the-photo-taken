@@ -7,6 +7,10 @@
     background: #333333;
 }
 
+.custom-leaflet-popup .leaflet-popup-content-wrapper img {
+    width: 100%;
+}
+
 .custom-leaflet-popup input,
 .custom-leaflet-popup textarea {
     margin-bottom: 21px;
