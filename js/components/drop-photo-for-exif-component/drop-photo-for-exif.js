@@ -46,7 +46,7 @@ class DropPhotoForExif extends HTMLElement {
     })
 
     #fireImageEvent = (image, exif) => {
-        const evt = new CustomEvent('drop-photo-for-exif:data', {
+        const evt = new CustomEvent('drop-photo-for-exif:image', {
             bubbles: true,
             composed: true,
             detail: {

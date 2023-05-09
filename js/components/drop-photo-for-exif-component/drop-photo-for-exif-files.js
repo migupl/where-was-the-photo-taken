@@ -2,6 +2,8 @@ import { exifData } from "./drop-photo-for-exif-data.js";
 
 class DropPhotoForExifFiles {
 
+    #afterFileReady; #afterImageReady; #doOnCompletion;
+
     process = (items
         , afterImageReady = (image, exif) => console.log('Do something after image is ready')
         , afterFileReady = file => console.log('Do something after file is ready')
@@ -14,14 +16,11 @@ class DropPhotoForExifFiles {
 
     #process = items => {
         for (let item of items) {
-            if (!(this.#supportsFileSystemAccessAPI || this.#supportsWebkitGetAsEntry)) {
+            if (!this.#supportsWebkitGetAsEntry) {
                 this.#processFile(item.getAsFile());
             }
 
-            const entry = this.#supportsFileSystemAccessAPI
-                ? item.getAsFileSystemHandle()
-                : item.webkitGetAsEntry();
-
+            const entry = item.webkitGetAsEntry();
             if (entry.isFile) {
                 this.#processFile(item.getAsFile());
             }
@@ -56,35 +55,34 @@ class DropPhotoForExifFiles {
 
     #onCompletion = () => {
         --this._remainToCompleteBatch;
-        if (!this._remainToCompleteBatch) this._onCompletion();
+        if (!this._remainToCompleteBatch) this.#doOnCompletion();
     }
 
     #processFile = file => {
         const fileWithType = file.type ? file : new File([file], file.name, { type: this.#mimetype(file.name) })
         if (this.#isAnImage(fileWithType)) {
             exifData.extractExif(fileWithType)
-                .then((exif) => this._afterImageReady(fileWithType, exif));
+                .then((exif) => this.#afterImageReady(fileWithType, exif));
         }
         else {
-            this._afterFileReady(fileWithType);
+            this.#afterFileReady(fileWithType);
         }
     }
 
     #setAfterActions = (afterImageReady, afterFileReady, onCompletion) => {
-        this._afterImageReady = (image, exif) => {
+        this.#afterImageReady = (image, exif) => {
             afterImageReady(image, exif);
             this.#onCompletion();
         };
 
-        this._afterFileReady = file => {
+        this.#afterFileReady = file => {
             afterFileReady(file);
             this.#onCompletion();
         };
 
-        this._onCompletion = onCompletion;
+        this.#doOnCompletion = onCompletion;
     }
 
-    #supportsFileSystemAccessAPI = 'getAsFileSystemHandle' in DataTransferItem.prototype;
     #supportsWebkitGetAsEntry = 'webkitGetAsEntry' in DataTransferItem.prototype;
 }
 
