@@ -1,6 +1,7 @@
 .custom-leaflet-popup .leaflet-popup-content-wrapper {
     background: #333333;
     color: #fff;
+    min-width: 250px;
 }
 
 .custom-leaflet-popup .leaflet-popup-tip {
