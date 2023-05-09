@@ -71,11 +71,9 @@ class Card {
 
     #template = `
 <div>
-<img src="" alt="">
-    <div>
-        <input type="text" name="title" id="card-title" value="a title">
-        <textarea name="description" id="card-description"></textarea>
-    </div>
+    <img src="" alt="">
+    <input type="text" name="title" id="card-title" value="a title">
+    <textarea name="description" id="card-description"></textarea>
 </div>
 `;
 }
