@@ -75,6 +75,8 @@ class Card {
     <div>
         <h4 contenteditable="true"></h4>
         <p contenteditable="true"></p>
+        <input type="text" name="title" id="card-title" value="a title">
+        <textarea name="description" id="card-description"></textarea>
     </div>
 </div>
 `;
