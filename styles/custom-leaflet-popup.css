@@ -7,30 +7,6 @@
     background: #333333;
 }
 
-.custom-leaflet-popup h4[contenteditable="true"],
-.custom-leaflet-popup p[contenteditable="true"] {
-    background-image: url('assets/edit-3-svgrepo-com.svg');
-    background-repeat: no-repeat;
-    padding-left: 16px;
-    display: block;
-}
-
-.custom-leaflet-popup h4,
-.custom-leaflet-popup p {
-    margin-bottom: 21px;
-    padding: 16px;
-    background: #444444;
-    border-radius: 4px;
-    border: 2px solid transparent;
-    outline: none;
-}
-
-.custom-leaflet-popup h4:focus,
-.custom-leaflet-popup p:focus {
-    border-color: #009578;
-    background: #555555;
-}
-
 .custom-leaflet-popup input,
 .custom-leaflet-popup textarea {
     margin-bottom: 21px;

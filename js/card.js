@@ -31,14 +31,8 @@ class Card {
         const titleEl = this.#popup.querySelector('input');
         titleEl.value = title;
 
-        const _titleEl = this.#popup.querySelector('h4');
-        _titleEl.textContent = title;
-
         const descriptionEl = this.#popup.querySelector('textarea');
         descriptionEl.value = description;
-
-        const _descriptionEl = this.#popup.querySelector('p');
-        _descriptionEl.textContent = description;
     }
 
     wasUpdated = () => this.#updated
@@ -55,14 +49,8 @@ class Card {
         const title = card.querySelector('input');
         title.value = this.#id;
 
-        const _title = card.querySelector('h4');
-        _title.textContent = this.#id;
-
         const description = card.querySelector('textarea');
         description.value = this.#properties.description;
-
-        const _description = card.querySelector('p');
-        _description.textContent = this.#properties.description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
@@ -79,27 +67,12 @@ class Card {
             this.#properties.description = el.value;
             this.#updated = true;
         });
-
-        _title.addEventListener('input', event => {
-            event.stopPropagation();
-            const el = event.target;
-            this.#properties.title = el.textContent;
-            this.#updated = true;
-        });
-        _description.addEventListener('input', event => {
-            event.stopPropagation();
-            const el = event.target;
-            this.#properties.description = el.textContent;
-            this.#updated = true;
-        });
     }
 
     #template = `
 <div>
 <img src="" alt="" style="width: 100%;">
     <div>
-        <h4 contenteditable="true"></h4>
-        <p contenteditable="true"></p>
         <input type="text" name="title" id="card-title" value="a title">
         <textarea name="description" id="card-description"></textarea>
     </div>
