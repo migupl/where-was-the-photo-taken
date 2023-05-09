@@ -43,7 +43,17 @@
     width: 85%;
 }
 
+.custom-leaflet-popup input[type="text"] {
+    background-image: url('assets/edit-3-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    padding-left: 16px;
+    display: block;
+}
+
 .custom-leaflet-popup textarea {
+    background-image: url('assets/edit-3-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    padding-left: 16px;
     height: 100px;
     resize: none;
 }
