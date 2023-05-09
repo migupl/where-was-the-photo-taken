@@ -28,8 +28,14 @@ class Card {
         this.#properties.title = title;
         this.#properties.description = description;
 
+        const titleEl = this.#popup.querySelector('input');
+        titleEl.value = title;
+
         const _titleEl = this.#popup.querySelector('h4');
         _titleEl.textContent = title;
+
+        const descriptionEl = this.#popup.querySelector('textarea');
+        descriptionEl.value = description;
 
         const _descriptionEl = this.#popup.querySelector('p');
         _descriptionEl.textContent = description;
@@ -46,14 +52,33 @@ class Card {
         img.src = URL.createObjectURL(this.#properties.image);
         img.alt = this.#id;
 
+        const title = card.querySelector('input');
+        title.value = this.#id;
+
         const _title = card.querySelector('h4');
         _title.textContent = this.#id;
+
+        const description = card.querySelector('textarea');
+        description.value = this.#properties.description;
 
         const _description = card.querySelector('p');
         _description.textContent = this.#properties.description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
+
+        title.addEventListener('input', event => {
+            event.stopPropagation();
+            const el = event.target;
+            this.#properties.title = el.value;
+            this.#updated = true;
+        });
+        description.addEventListener('input', event => {
+            event.stopPropagation();
+            const el = event.target;
+            this.#properties.description = el.value;
+            this.#updated = true;
+        });
 
         _title.addEventListener('input', event => {
             event.stopPropagation();
