@@ -37,8 +37,9 @@ class SaveFeatures {
         if (this._supportsApi) {
             this.#saveFileUsingFSAApi(blob, filename);
         }
-
-        this.#saveFileWithoutFSAApi(blob, filename);
+        else {
+            this.#saveFileWithoutFSAApi(blob, filename);
+        }
     }
 
     #saveFileWithoutFSAApi = (blob, filename) => {
