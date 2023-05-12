@@ -11,20 +11,63 @@ class LeafletMapFeatures {
         shadowSize: [41, 41]
     };
 
-    addTo = (geojson, leafletMap, mapId) => {
+    addTo = (geojson, mapId, theMap) => {
+        if (!theMap.markers) {
+            const { onMarkerRemoved } = theMap;
+            theMap.markers = this.#getClusterAndOnDblclickDo(onMarkerRemoved);
+        }
+
         const features = this.#getFeaturesArray(geojson);
         const { points, polygons } = this.#groupPointsAndPolygons(features);
 
-        this.#addPoints(points, mapId, leafletMap);
-        this.#addPolygons(polygons, mapId, leafletMap);
+        this.#addPoints(points, mapId, theMap);
+        this.#addPolygons(polygons, mapId, theMap);
     }
 
-    #addPoints = (points, mapId, leafletMap) => points && this.#pointToLayer(points, mapId).addTo(leafletMap)
-    #addPolygons = (polygons, mapId, leafletMap) => polygons && this.#polygonToLayer(polygons, mapId).addTo(leafletMap)
+    #addPoints = (points, mapId, theMap) => {
+        const { map, markers } = theMap;
+        points &&
+            markers
+                .addLayer(this.#pointToLayer(points, mapId))
+                .addTo(map)
+    }
+
+    #addPolygons = (polygons, mapId, theMap) => {
+        const { map, markers } = theMap;
+        polygons &&
+            markers
+                .addLayer(this.#polygonToLayer(polygons, mapId))
+                .addTo(map)
+    }
 
     #coordsToLatLng = mapId => new LeafletMapFeature(mapId).coordsToLatLng
 
+    #deleteMarker = (markers, layer, onMarkerRemoved) => {
+        const initialPopupContent = layer.getPopup()._content;
+
+        let btn = document.createElement('button');
+        btn.style = 'background-color: red; border: none; border-radius: 8px; color: white; padding: 10px;'
+        btn.innerText = 'Delete Marker';
+        btn.onclick = () => onMarkerRemoved(layer, markers)
+
+        this.#bindPopup(layer, btn).openPopup();
+        layer.getPopup().on('remove', () => {
+            this.#bindPopup(layer, initialPopupContent);
+            layer.getPopup().off('remove');
+        });
+    }
+
     #getFeaturesArray = geojson => 'FeatureCollection' === geojson.type ? geojson.features : [geojson]
+
+    #getClusterAndOnDblclickDo = onMarkerRemoved => {
+        const markers = L.markerClusterGroup();
+        markers.on('dblclick', ev => {
+            const { layer } = ev;
+            this.#deleteMarker(markers, layer, onMarkerRemoved);
+        });
+
+        return markers;
+    }
 
     #groupPointsAndPolygons = features => features.reduce((r, feature) => {
         const group = feature.geometry.type == 'Point' ? 'points' : 'polygons';
@@ -35,7 +78,7 @@ class LeafletMapFeatures {
 
     #onEachFeature = (feature, layer) => {
         if (feature?.properties?.popupContent) {
-            layer.bindPopup(feature.properties.popupContent);
+            this.#bindPopup(layer, feature.properties.popupContent);
         }
     }
 
@@ -84,6 +127,10 @@ class LeafletMapFeatures {
             },
         });
     }
+
+    #bindPopup = (layer, content) => layer.bindPopup(content, {
+        closeButton: false
+    })
 }
 
 const features = new LeafletMapFeatures();

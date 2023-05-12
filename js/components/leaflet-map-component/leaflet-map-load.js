@@ -2,6 +2,8 @@ import { css, html } from "./leaflet-map-dom.js"
 
 class LeafletMapLoad {
 
+    #markerClusterVersion = '1.5.3';
+
     getStyleElement = () => {
         const el = document.createElement('style');
         el.innerText = css;
@@ -13,7 +15,7 @@ class LeafletMapLoad {
 
         if (styleFile) {
             this.#fetchCss(styleFile)
-            .then(css => el.innerText = css);
+                .then(css => el.innerText = css);
         }
 
         return el;
@@ -52,6 +54,22 @@ class LeafletMapLoad {
         return js;
     }
 
+    getMarkerClusterScript = () => {
+        let js = document.createElement('script');
+        js.src = `https://unpkg.com/leaflet.markercluster@${this.#markerClusterVersion}/dist/leaflet.markercluster.js`;
+
+        js.crossOrigin = '';
+        js.async = 'false';
+        return js;
+    }
+
+    getMarkerClusterStyles = () => {
+        return [
+            this.#getMarkerClusterStyle('MarkerCluster.Default.css'),
+            this.#getMarkerClusterStyle('MarkerCluster.css')
+        ];
+    }
+
     #fetchCss = async (url) => {
         const response = await fetch(url);
         if (!response.ok) {
@@ -70,6 +88,15 @@ class LeafletMapLoad {
         };
 
         return this.#fetchCss(leafletCss.url);
+    }
+
+    #getMarkerClusterStyle = cssFile => {
+        const el = document.createElement('style');
+        const url = `https://unpkg.com/leaflet.markercluster@${this.#markerClusterVersion}/dist/${cssFile}`;
+        this.#fetchCss(url)
+            .then(css => el.innerText = css);
+
+        return el;
     }
 }
 

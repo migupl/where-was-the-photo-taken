@@ -26,6 +26,9 @@ class LeafletMap extends HTMLElement {
         const customLeafletStyle = LoadMap.getCustomStyle(customStyleFile);
         this.#appendChild(customLeafletStyle);
 
+        const markerClusterStyles = LoadMap.getMarkerClusterStyles();
+        markerClusterStyles.forEach(style => this.#appendChild(style))
+
         const leafletCss = LoadMap.getLeafletCss();
         this.#appendChild(leafletCss);
 
@@ -43,6 +46,17 @@ class LeafletMap extends HTMLElement {
 
     #appendChild = element => this.shadowRoot.appendChild(element)
 
+    #fireMarkerRemoved = feature => {
+        const evt = new CustomEvent('x-leaflet-map:marker-removed', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                feature: feature
+            }
+        });
+        this.shadowRoot.dispatchEvent(evt);
+    }
+
     #getCustomStyle = () => (this.getAttribute('customStyle') || '').split(':')
 
     #initializeMap = mapElement => {
@@ -51,6 +65,9 @@ class LeafletMap extends HTMLElement {
 
         LeafletMap.maps.set(this, {
             map: map,
+            tile: opts.layers,
+            markers: null,
+            onMarkerRemoved: this.#remove,
             latLngPoints: []
         });
     }
@@ -90,9 +107,9 @@ class LeafletMap extends HTMLElement {
             const { leafletMap } = event.detail;
 
             if (this.#isThisMap(leafletMap.id)) {
-                const { map } = LeafletMap.maps.get(leafletMap);
+                const { map, tile } = LeafletMap.maps.get(leafletMap);
                 map.eachLayer(function (layer) {
-                    map.removeLayer(layer);
+                    if (layer !== tile) layer.removeFrom(map);
                 });
             }
         });
@@ -103,8 +120,8 @@ class LeafletMap extends HTMLElement {
             const { leafletMap, geojson } = event.detail;
 
             if (this.#isThisMap(leafletMap.id)) {
-                const { map, latLngPoints } = LeafletMap.maps.get(leafletMap);
-                Features.addTo(geojson, map, leafletMap.id);
+                const thisMap = LeafletMap.maps.get(leafletMap);
+                Features.addTo(geojson, leafletMap.id, thisMap);
             }
         });
 
@@ -112,7 +129,7 @@ class LeafletMap extends HTMLElement {
             event.stopPropagation();
 
             const { map, latLngPoints } = LeafletMap.maps.get(this);
-            const { lng, lat, alt, mapId } = event.detail;
+            const { lng, lat, mapId } = event.detail;
 
             if (this.#isThisMap(mapId)) {
                 const latLng = L.latLng(lat, lng);
@@ -125,12 +142,22 @@ class LeafletMap extends HTMLElement {
             }
         });
     }
+
+    #remove = (layer, markers) => {
+        if (layer.feature) {
+            markers.removeLayer(layer);
+            this.#fireMarkerRemoved(layer.feature);
+        }
+    }
 }
 
 let leafletjs = LoadMap.getLeafletScript();
 leafletjs.onload = (ev) => {
     customElements.define('leaflet-map', LeafletMap);
     leaflet = null;
+
+    const markerClusterScript = LoadMap.getMarkerClusterScript();
+    document.head.appendChild(markerClusterScript);
 }
 
 document.head.append(leafletjs);
