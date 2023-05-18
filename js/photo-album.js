@@ -43,6 +43,15 @@ document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
     points.forEach(addPointToMap)
 });
 
+document.addEventListener('x-leaflet-map:marker-removed', (event) => {
+    event.preventDefault();
+
+    const { feature } = event.detail;
+    const { card } = feature.data;
+
+    GeoJSONFeatures.remove(card);
+})
+
 const save = document.getElementById('save-all');
 save.addEventListener('click', (event) => {
     event.stopPropagation();

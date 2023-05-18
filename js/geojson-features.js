@@ -6,7 +6,7 @@ class GeoJSONFeatures {
     #pointsMap = new Map();
     #geojson;
 
-    add = (geojsonFile, doAfter = (title) => console.log(`Do something with title: '${title}'`)) => {
+    add = (geojsonFile, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
         this.#read(geojsonFile, doAfter);
     }
 
@@ -42,10 +42,10 @@ class GeoJSONFeatures {
                 card: card
             };
 
-            this.#pointsMap.set(name, point);
+            this.#pointsMap.set(card.id(), point);
 
         } catch (err) {
-            alert(err)
+            alert(err);
         }
     }
 
@@ -62,6 +62,10 @@ class GeoJSONFeatures {
                 geojson: feature
             }
         });
+    }
+
+    remove = card => {
+        if (!this.#pointsMap.delete(card.id)) this.#error(`Sorry, something went wrong deleting the photo '${card.id}'`)
     }
 
     saveAllPoints = async (title) => {
