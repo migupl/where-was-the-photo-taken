@@ -65,7 +65,7 @@ class GeoJSONFeatures {
     }
 
     saveAllPoints = async (title) => {
-        const points = Array.from(this.#pointsMap.values())
+        const points = this.#pointsArray()
             .map(point => point.feature);
 
         const images = points.reduce((arr, point) => {
