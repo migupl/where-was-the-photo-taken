@@ -62,7 +62,7 @@ class SaveFeatures {
     #saveFileUsingFSAApi = async (blob, filename) => {
         try {
             const handle = await showSaveFilePicker({
-                filename,
+                suggestedName: filename,
             });
             const writable = await handle.createWritable();
             await writable.write(blob);
