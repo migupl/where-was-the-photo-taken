@@ -72,13 +72,15 @@ class GeoJSONFeatures {
         const points = this.#pointsArray()
             .map(point => point.feature);
 
-        const images = points.reduce((arr, point) => {
-            const { card } = point.data;
-            arr.push(card.image);
-            return arr;
-        }, []);
+        if (points.length > 0) {
+            const images = points.reduce((arr, point) => {
+                const { card } = point.data;
+                arr.push(card.image);
+                return arr;
+            }, []);
 
-        await SaveFeatures.toFile(points, images, title);
+            await SaveFeatures.toFile(points, images, title);
+        }
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
