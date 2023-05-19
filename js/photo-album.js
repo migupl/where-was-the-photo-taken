@@ -40,7 +40,9 @@ document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
     event.preventDefault();
 
     const points = GeoJSONFeatures.getGeoJSONPoints();
-    points.forEach(addPointToMap)
+    points.forEach(addPointToMap);
+
+    toggleSaveButton();
 });
 
 document.addEventListener('x-leaflet-map:marker-removed', (event) => {
@@ -50,10 +52,16 @@ document.addEventListener('x-leaflet-map:marker-removed', (event) => {
     const { card } = feature.data;
 
     existingPoints.delete(card.id);
+    toggleSaveButton();
+
     GeoJSONFeatures.remove(card);
 })
 
+
 const save = document.getElementById('save-all');
+const toggleSaveButton = () => save.style.display = existingPoints.size > 0 ? 'block' : 'none';
+
+toggleSaveButton();
 save.addEventListener('click', (event) => {
     event.stopPropagation();
     const title = document.getElementById('title').value
