@@ -1,14 +1,14 @@
 import { GeoJSONFeatures } from './geojson-features.js';
 
-const existingPoints = [];
+const existingPoints = new Set();;
 const addPointToMap = point => {
     const { id, geojson } = point;
-    if (!existingPoints.includes(id)) {
+    if (!existingPoints.has(id)) {
         const map = document.querySelector('leaflet-map');
         const eventBus = map.eventBus;
 
         eventBus.dispatch('x-leaflet-map-geojson-add', { leafletMap: map, geojson: geojson });
-        existingPoints.push(id);
+        existingPoints.add(id);
     }
 }
 
@@ -49,6 +49,7 @@ document.addEventListener('x-leaflet-map:marker-removed', (event) => {
     const { feature } = event.detail;
     const { card } = feature.data;
 
+    existingPoints.delete(card.id);
     GeoJSONFeatures.remove(card);
 })
 
