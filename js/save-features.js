@@ -12,6 +12,8 @@ class SaveFeatures {
 
         const geojsonFile = this.#getGeojsonFile(features);
 
+        this.#saveZipFile(geojsonFile, images, filename);
+
         this.#saveGeoJsonFile(geojsonFile, name);
         this.#saveImages(images);
     }
@@ -88,6 +90,10 @@ class SaveFeatures {
         images.forEach(async (image) => {
             await this.#saveFileWithoutFSAApi(image, image.name);
         });
+    }
+
+    #saveZipFile = (geojsonFile, images, name) => {
+
     }
 }
 
