@@ -22,17 +22,22 @@ class SaveFeatures {
             })();
     }
 
-    #saveGeoJsonFile = (features, suggestedName = 'photos.geojson') => {
+    #getGeojsonFile(features) {
         const featureCollection = {
             type: "FeatureCollection",
             features: features
         };
 
         const text = JSON.stringify(featureCollection);
-
-        const filename = suggestedName.endsWith('.geojson') ? suggestedName : (suggestedName + '.geojson');
         const blob = new Blob([text], { type: 'text/plain' });
-        this.#saveFile(blob, filename);
+        return blob;
+    }
+
+    #saveGeoJsonFile = (features, suggestedName = 'photos.geojson') => {
+        const filename = suggestedName.endsWith('.geojson') ? suggestedName : (suggestedName + '.geojson');
+        const file = this.#getGeojsonFile(features);
+
+        this.#saveFile(file, filename);
     }
 
     #saveFile = (blob, filename) => {
