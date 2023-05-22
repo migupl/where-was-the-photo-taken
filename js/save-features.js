@@ -12,11 +12,11 @@ class SaveFeatures {
         const filename = suggestedName.endsWith('.zip') ? suggestedName : (suggestedName + '.zip');
         const name = filename.split('.').slice(0, -1).join('.');
 
-        const geojsonFile = this.#getGeojsonFile(features);
+        const geojsonFile = this.#getGeojsonFile(features, name);
 
         this.#saveZipFile(geojsonFile, images, filename);
 
-        this.#saveGeoJsonFile(geojsonFile, name);
+        this.#saveGeoJsonFile(geojsonFile);
         this.#saveImages(images);
     }
 
@@ -31,7 +31,7 @@ class SaveFeatures {
             })();
     }
 
-    #getGeojsonFile(features) {
+    #getGeojsonFile(features, name) {
         const featureCollection = {
             type: "FeatureCollection",
             features: features
@@ -39,12 +39,16 @@ class SaveFeatures {
 
         const text = JSON.stringify(featureCollection);
         const blob = new Blob([text], { type: 'text/plain' });
-        return blob;
+
+        const filename = name + '.geojson';
+        const file = new File([blob], filename, {
+            type: blob.type,
+        });
+        return file;
     }
 
-    #saveGeoJsonFile = (file, name) => {
-        const filename = name + '.geojson';
-        this.#saveFile(file, filename);
+    #saveGeoJsonFile = (file) => {
+        this.#saveFile(file, file.name);
     }
 
     #saveFile = (blob, filename) => {
