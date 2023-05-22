@@ -6,7 +6,7 @@ class SaveFeatures {
         this.#supportsApi = this.#allowsFileSystemAccess();
     }
 
-    toFile = (features, images, filename) => {
+    toZipFile = (features, images, suggestedName = 'photos.zip') => {
         this.#saveGeoJsonFile(features, filename);
         this.#saveImages(images);
     }

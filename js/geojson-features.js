@@ -79,7 +79,7 @@ class GeoJSONFeatures {
                 return arr;
             }, []);
 
-            await SaveFeatures.toFile(points, images, title);
+            await SaveFeatures.toZipFile(points, images, title);
         }
     }
 
