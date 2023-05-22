@@ -98,8 +98,35 @@ class SaveFeatures {
         });
     }
 
-    #saveZipFile = (geojsonFile, images, name) => {
+    #saveZipFile = (geojsonFile, images, filename) => {
+        const readableZipStream = new ZIP({
+            start(ctrl) {
+                ctrl.enqueue(geojsonFile);
+                images.forEach(ctrl.enqueue);
+                ctrl.close()
+            }
+        })
 
+        const streamSaver = window.streamSaver;
+        const fileStream = streamSaver.createWriteStream(filename);
+
+        const allowFastWay = window.WritableStream && readableZipStream.pipeTo;
+        if (allowFastWay) {
+            readableZipStream.
+                pipeTo(fileStream).
+                then(() => console.log('done writing'))
+        }
+        else {
+            const writer = fileStream.getWriter()
+            const reader = readableZipStream.getReader()
+            const pump = () => reader.read()
+                .then(res => res.done ?
+                    writer.close() :
+                    writer.write(res.value).then(pump)
+                )
+
+            pump();
+        }
     }
 }
 
