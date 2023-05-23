@@ -1,14 +1,29 @@
-import { ZIP } from './deps/zip-streams.js'
-
 class SaveFeatures {
 
-    toZipFile = (features, images, suggestedName = 'photos.zip') => {
+    #supportsApi;
+
+    constructor() {
+        this.#supportsApi = this.#allowsFileSystemAccess();
+    }
+
+    toFile = (features, suggestedName = 'photos.zip') => {
         const filename = suggestedName.endsWith('.zip') ? suggestedName : (suggestedName + '.zip');
         const name = filename.split('.').slice(0, -1).join('.');
 
         const geojsonFile = this.#getGeojsonFile(features, name);
 
-        this.#saveZipFile(geojsonFile, images, filename);
+        this.#saveGeoJsonFile(geojsonFile, name);
+    }
+
+    #allowsFileSystemAccess = () => {
+        return 'showSaveFilePicker' in window &&
+            (() => {
+                try {
+                    return window.self === window.top;
+                } catch {
+                    return false;
+                }
+            })();
     }
 
     #getGeojsonFile(features, name) {
@@ -27,34 +42,49 @@ class SaveFeatures {
         return file;
     }
 
-    #saveZipFile = (geojsonFile, images, filename) => {
-        const readableZipStream = new ZIP({
-            start(ctrl) {
-                ctrl.enqueue(geojsonFile);
-                images.forEach(ctrl.enqueue);
-                ctrl.close()
-            }
-        })
+    #saveGeoJsonFile = (file, name) => {
+        const filename = name + '.geojson';
+        this.#saveFile(file, filename);
+    }
 
-        const streamSaver = window.streamSaver;
-        const fileStream = streamSaver.createWriteStream(filename);
-
-        const allowFastWay = window.WritableStream && readableZipStream.pipeTo;
-        if (allowFastWay) {
-            readableZipStream.
-                pipeTo(fileStream).
-                then(() => console.log('done writing'))
+    #saveFile = (blob, filename) => {
+        if (this.#supportsApi) {
+            this.#saveFileUsingFSAApi(blob, filename);
         }
         else {
-            const writer = fileStream.getWriter()
-            const reader = readableZipStream.getReader()
-            const pump = () => reader.read()
-                .then(res => res.done ?
-                    writer.close() :
-                    writer.write(res.value).then(pump)
-                )
+            this.#saveFileWithoutFSAApi(blob, filename);
+        }
+    }
 
-            pump();
+    #saveFileWithoutFSAApi = (blob, filename) => {
+        const blobURL = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobURL;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.append(a);
+        a.click();
+
+        setTimeout(() => {
+            URL.revokeObjectURL(blobURL);
+            a.remove();
+        }, 1000);
+    }
+
+    #saveFileUsingFSAApi = async (blob, filename) => {
+        try {
+            const handle = await showSaveFilePicker({
+                suggestedName: filename,
+            });
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            return;
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error(err.name, err.message);
+                return;
+            }
         }
     }
 }

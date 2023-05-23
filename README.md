@@ -9,5 +9,3 @@ For this we will combine the following Web Components:
 ## Helpers
 
 A [container is used for hot reloading](https://github.com/migupl/hot-reloading-container) during development.
-
-[StreamSaver.js](https://github.com/jimmywarting/StreamSaver.js) for [saving a zip archive](https://github.com/jimmywarting/StreamSaver.js/blob/master/examples/saving-multiple-files.html) containing all images and geojson files.

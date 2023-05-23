@@ -73,13 +73,7 @@ class GeoJSONFeatures {
             .map(point => point.feature);
 
         if (points.length > 0) {
-            const images = points.reduce((arr, point) => {
-                const { card } = point.data;
-                arr.push(card.image);
-                return arr;
-            }, []);
-
-            await SaveFeatures.toZipFile(points, images, title);
+            await SaveFeatures.toFile(points, title);
         }
     }
 
