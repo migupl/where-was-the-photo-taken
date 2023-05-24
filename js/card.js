@@ -47,10 +47,10 @@ class Card {
         img.alt = this.#id;
 
         const title = card.querySelector('input');
-        title.value = this.#id;
+        title.placeholder = this.#id;
 
         const description = card.querySelector('textarea');
-        description.value = this.#properties.description;
+        description.placeholder = this.#properties.description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
@@ -72,7 +72,7 @@ class Card {
     #template = `
 <div>
     <img src="" alt="">
-    <input type="text" name="title" id="card-title" value="a title">
+    <input type="text" name="title" id="card-title" placeholder="a title">
     <textarea name="description" id="card-description"></textarea>
 </div>
 `;
