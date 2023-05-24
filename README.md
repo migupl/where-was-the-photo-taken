@@ -22,6 +22,11 @@ The name for the saved file will be the text of the main input field. *Madrid tr
 
 If the browser supports the showSaveFilePicker() method of the Window interface, such as Chrome, you could choose the folder where the GeoJSON will be saved.
 
+Then, by adding this GeoJSON file and the photos we can continue adding information to them as we can see below
+
+![Continue with the photos](./docs/lets_continue.webp)
+
+We can always add new photos, but only one GeoJSON file.
 
 ## Helpers
 
