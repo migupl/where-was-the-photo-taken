@@ -64,7 +64,7 @@ const toggleSaveButton = () => save.style.display = existingPoints.size > 0 ? 'b
 toggleSaveButton();
 save.addEventListener('click', (event) => {
     event.stopPropagation();
-    const title = document.getElementById('title').value
+    const title = document.getElementById('title').value || document.getElementById('title').placeholder
     GeoJSONFeatures.saveAllPoints(title);
 });
 
