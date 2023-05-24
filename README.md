@@ -1,6 +1,6 @@
-# A photo location solution
+# Another way to view photos on a map
 
-Behind this solution is the location of the photo on a map based on its GPS metadata and adding information about it.
+Behind this solution is the location of the photo on a map based on its GPS metadata and the ability to add information about it afterwards.
 
 For this we will combine the following Web Components:
 - [Dropping a photo and getting EXIF data](https://github.com/migupl/drop-photo-get-exif-data)
