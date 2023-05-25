@@ -25,21 +25,23 @@ class GeoJSONFeatures {
             const popup = card.getPopup();
 
             const point = {
-                feature: {
-                    type: "Feature",
-                    geometry: {
-                        type: "Point",
-                        coordinates: lnglatalt
+                point: {
+                    feature: {
+                        type: "Feature",
+                        geometry: {
+                            type: "Point",
+                            coordinates: lnglatalt
+                        },
+                        properties: {
+                            popupContent: popup
+                        },
+                        data: {
+                            exif: exif,
+                            card: card.properties()
+                        }
                     },
-                    properties: {
-                        popupContent: popup
-                    },
-                    data: {
-                        exif: exif,
-                        card: card.properties()
-                    }
-                },
-                card: card
+                    card: card
+                }
             };
 
             this.#pointsMap.set(card.id(), point);
@@ -122,7 +124,7 @@ class GeoJSONFeatures {
 
     #pointsArray() {
         const points = this.#pointsMap.values();
-        return points ? Array.from(points) : [];
+        return points ? Array.from(points).map(value => value.point) : [];
     }
 
     #read = (geojsonFile, doAfter) => {
