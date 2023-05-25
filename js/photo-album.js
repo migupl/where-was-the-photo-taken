@@ -13,7 +13,7 @@ const addPointToMap = point => {
 }
 
 document.addEventListener('drop-photo-for-exif:image', (event) => {
-    event.preventDefault();
+    event.stopPropagation();
 
     const data = event.detail;
     if (data.location) {
@@ -25,7 +25,7 @@ document.addEventListener('drop-photo-for-exif:image', (event) => {
 });
 
 document.addEventListener('drop-photo-for-exif:file', (event) => {
-    event.preventDefault();
+    event.stopPropagation();
 
     const file = event.detail;
     const refreshTitle = title => {
@@ -37,7 +37,7 @@ document.addEventListener('drop-photo-for-exif:file', (event) => {
 });
 
 document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
-    event.preventDefault();
+    event.stopPropagation();
 
     const points = GeoJSONFeatures.getGeoJSONPoints();
     points.forEach(addPointToMap);
@@ -46,7 +46,7 @@ document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
 });
 
 document.addEventListener('x-leaflet-map:marker-removed', (event) => {
-    event.preventDefault();
+    event.stopPropagation();
 
     const { feature } = event.detail;
     const { card } = feature.data;
