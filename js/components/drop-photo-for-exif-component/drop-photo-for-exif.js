@@ -8,8 +8,8 @@ class DropPhotoForExif extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
 
+        this.#stopDefaultsForDragAndDropEvents();
         this.#extractExifDataOnDrop();
-        this.#stopBehaviorOnDragOver();
     }
 
     connectedCallback() {
@@ -39,8 +39,6 @@ class DropPhotoForExif extends HTMLElement {
     }
 
     #extractExifDataOnDrop = () => this.addEventListener('drop', (event) => {
-        event.preventDefault();
-
         const { items } = event.dataTransfer;
         dropFiles.process(items, this.#fireImageEvent, this.#fireFileEvent, this.#fireOnCompleted);
     })
@@ -87,9 +85,16 @@ class DropPhotoForExif extends HTMLElement {
         return './components/drop-photo-for-exif-component/';
     }
 
-    #stopBehaviorOnDragOver = () => this.addEventListener('dragover', (event) => {
-        event.preventDefault()
-    });
+    #preventDefaults = e => {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    #stopDefaultsForDragAndDropEvents = () => {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            this.addEventListener(eventName, this.#preventDefaults);
+        });
+    }
 }
 
 let exifReaderjs = getExifReaderScript();
