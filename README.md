@@ -6,6 +6,8 @@ For this we will combine the following Web Components:
 - [Dropping a photo and getting EXIF data](https://github.com/migupl/drop-photo-get-exif-data)
 - [Locate the photo on a Leaflet map](https://github.com/migupl/vanilla-js-web-component-leaflet-geojson)
 
+Any of the markers added to the map can be deleted by double clicking on it and confirming the deletion.
+
 ## A use case
 
 Let's suppose we have some photos of a trip
