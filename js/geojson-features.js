@@ -108,6 +108,8 @@ class GeoJSONFeatures {
 
     #extractNumeric = text => text.match(/[0-9.]/g).join('')
 
+    #hasElements = array => array && array.length > 0;
+
     #DMS2Decimal = (latitude, longitude) => {
         let lat = this.#extractNumeric(latitude);
         let lng = this.#extractNumeric(longitude);
@@ -147,7 +149,7 @@ class GeoJSONFeatures {
     }
 
     #updatePoint(data, point) {
-        if (data) {
+        if (this.#hasElements(data)) {
             const newerGeojson = data[0];
             const { card, feature } = point;
             if (!this.#areGeojsonEqual(newerGeojson, feature)) {
