@@ -1,7 +1,7 @@
 class Card {
 
     #point;
-    #popup; #properties;
+    #popup;
     #updated = false;
 
     constructor(image, geojson) {
@@ -22,8 +22,6 @@ class Card {
             description: 'A description about the image'
         };
 
-        this.#properties = data.card;
-
         feature.properties = {
             popupContent: this.getPopup()
         };
@@ -39,7 +37,7 @@ class Card {
     id = () => this.#point.feature.id
     isThis = properties => this.id() === properties.id
 
-    properties = () => this.#properties
+    properties = () => this.#point.feature.data.card
 
     updatePopup = ({ title, description }) => {
         this.#setProperties(title, description);
@@ -59,14 +57,14 @@ class Card {
             .createContextualFragment(this.#template);
 
         const img = card.querySelector('img');
-        img.src = URL.createObjectURL(this.#properties.image);
+        img.src = URL.createObjectURL(this.properties().image);
         img.alt = this.id();
 
         const title = card.querySelector('input');
         title.placeholder = this.id();
 
         const description = card.querySelector('textarea');
-        description.placeholder = this.#properties.description;
+        description.placeholder = this.properties().description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
@@ -74,20 +72,20 @@ class Card {
         title.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.#properties.title = el.value;
+            this.properties().title = el.value;
             this.#updated = true;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.#properties.description = el.value;
+            this.properties().description = el.value;
             this.#updated = true;
         });
     }
 
     #setProperties(title, description) {
-        this.#properties.title = title;
-        this.#properties.description = description;
+        this.properties().title = title;
+        this.properties().description = description;
     }
 
     #template = `
