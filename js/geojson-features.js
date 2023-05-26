@@ -55,8 +55,8 @@ class GeoJSONFeatures {
         });
     }
 
-    remove = card => {
-        if (!this.#cardsMap.delete(card.id())) this.#error(`Sorry, something went wrong deleting the photo '${card.id()}'`)
+    remove = id => {
+        if (!this.#cardsMap.delete(id)) this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
     }
 
     saveAllPoints = async (title) => {

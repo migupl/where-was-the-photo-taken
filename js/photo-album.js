@@ -49,13 +49,10 @@ window.onload = () => {
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
         event.stopPropagation();
 
-        const { feature } = event.detail;
-        const { card } = feature.data;
-
-        existingPoints.delete(card.id);
+        existingPoints.delete(id);
         toggleSaveButton();
 
-        GeoJSONFeatures.remove(card);
+        GeoJSONFeatures.remove(id);
     })
 
 
