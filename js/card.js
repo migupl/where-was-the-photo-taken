@@ -23,7 +23,9 @@ class Card {
         };
 
         feature.properties = {
-            popupContent: this.#getPopup()
+            popupContent: this.#getPopup(),
+            name: id,
+            description: 'A description about the image'
         };
     }
 
