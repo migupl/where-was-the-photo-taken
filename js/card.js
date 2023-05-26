@@ -1,13 +1,14 @@
 class Card {
 
-    #id; #point;
+    #point;
     #popup; #properties;
     #updated = false;
 
     constructor(image, geojson) {
-        this.#id = image.name;
+        const id = image.name;
 
         const feature = JSON.parse(JSON.stringify(geojson));
+        feature.id = id;
         this.#point = {
             feature: feature,
             card: this
@@ -16,8 +17,8 @@ class Card {
         const { data } = feature;
         data.card = {
             image: image,
-            id: this.#id,
-            title: this.#id,
+            id: id,
+            title: id,
             description: 'A description about the image'
         };
 
@@ -35,8 +36,8 @@ class Card {
         return this.#popup;
     }
 
-    id = () => this.#id
-    isThis = properties => this.#id === properties.id
+    id = () => this.#point.feature.id
+    isThis = properties => this.id() === properties.id
 
     properties = () => this.#properties
 
@@ -60,10 +61,10 @@ class Card {
 
         const img = card.querySelector('img');
         img.src = URL.createObjectURL(this.#properties.image);
-        img.alt = this.#id;
+        img.alt = this.id();
 
         const title = card.querySelector('input');
-        title.placeholder = this.#id;
+        title.placeholder = this.id();
 
         const description = card.querySelector('textarea');
         description.placeholder = this.#properties.description;
