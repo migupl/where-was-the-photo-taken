@@ -23,16 +23,11 @@ class Card {
         };
 
         feature.properties = {
-            popupContent: this.getPopup()
+            popupContent: this.#getPopup()
         };
     }
 
     getPoint = () => this.#point;
-
-    getPopup = () => {
-        if (!this.#popup) this.#setPopup();
-        return this.#popup;
-    }
 
     id = () => this.#point.feature.id
     isThis = properties => this.id() === properties.id
@@ -50,6 +45,11 @@ class Card {
     }
 
     wasUpdated = () => this.#updated
+
+    #getPopup = () => {
+        if (!this.#popup) this.#setPopup();
+        return this.#popup;
+    }
 
     #setPopup() {
         const card = document
