@@ -34,7 +34,8 @@ class Card {
 
     updatePopup = feature => {
         const { name, description } = feature.properties;
-        this.#setProperties(name, description);
+        this.#setTitle(name);
+        this.#setDescription(description);
 
         const titleEl = this.#popup.querySelector('input');
         titleEl.value = name;
@@ -88,12 +89,6 @@ class Card {
             this.#setDescription(el.value);
             this.#updated = true;
         });
-    }
-
-    #setProperties(title, description) {
-        this.#setTitle(title);
-
-        this.#setDescription(description);
     }
 
     #setTitle = title => {
