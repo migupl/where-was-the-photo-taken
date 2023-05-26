@@ -50,6 +50,12 @@ class Card {
         return this.#popup;
     }
 
+    #setDescription = description => {
+        if (description) {
+            this.getPoint().feature.properties.description = description;
+        }
+    }
+
     #setPopup() {
         const card = document
             .createRange()
@@ -73,24 +79,26 @@ class Card {
         title.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.#setProperties(el.value);
+            this.#setTitle(el.value);
             this.#updated = true;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.#setProperties(null, el.value);
+            this.#setDescription(el.value);
             this.#updated = true;
         });
     }
 
     #setProperties(title, description) {
+        this.#setTitle(title);
+
+        this.#setDescription(description);
+    }
+
+    #setTitle = title => {
         if (title) {
             this.getPoint().feature.properties.name = title;
-        }
-
-        if (description) {
-            this.getPoint().feature.properties.description = description;
         }
     }
 
