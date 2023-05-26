@@ -66,10 +66,6 @@ class Card {
 
         const title = card.querySelector('input');
         title.placeholder = this.id();
-
-        const description = card.querySelector('textarea');
-        description.placeholder = properties.description;
-
         title.addEventListener('input', event => {
             event.stopPropagation();
 
@@ -77,6 +73,9 @@ class Card {
             this.#setTitle(name);
             this.#updated = true;
         });
+
+        const description = card.querySelector('textarea');
+        description.placeholder = properties.description;
         description.addEventListener('input', event => {
             event.stopPropagation();
 
