@@ -49,7 +49,8 @@ class GeoJSONFeatures {
                         data: {
                             exif: exif,
                             card: card.properties()
-                        }
+                        },
+                        id: image.name
                     },
                     card: card
                 },
@@ -79,7 +80,7 @@ class GeoJSONFeatures {
     }
 
     remove = card => {
-        if (!this.#pointsMap.delete(card.id)) this.#error(`Sorry, something went wrong deleting the photo '${card.id}'`)
+        if (!this.#pointsMap.delete(card.id())) this.#error(`Sorry, something went wrong deleting the photo '${card.id()}'`)
     }
 
     saveAllPoints = async (title) => {
@@ -180,7 +181,7 @@ class GeoJSONFeatures {
                 .forEach(point => {
                     const { card } = point;
                     const data = this.#geojson.features
-                        .filter(feature => card.isThis(feature.data.card));
+                        .filter(feature => card.isThis(feature));
                     this.#updatePoint(data, point);
                 })
         }
