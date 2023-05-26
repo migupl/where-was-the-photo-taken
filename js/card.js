@@ -29,8 +29,6 @@ class Card {
 
     getPoint = () => this.#point;
 
-    id = () => this.#point.feature.id
-
     updatePopup = feature => {
         const { name, description } = feature.properties;
 
@@ -61,10 +59,10 @@ class Card {
 
         const img = card.querySelector('img');
         img.src = URL.createObjectURL(data.image);
-        img.alt = this.id();
+        img.alt = this.#point.id();
 
         const title = card.querySelector('input');
-        title.placeholder = this.id();
+        title.placeholder = this.#point.id();
         title.addEventListener('input', event => {
             event.stopPropagation();
 

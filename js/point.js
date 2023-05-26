@@ -1,7 +1,9 @@
 class Point {
     feature; card;
 
-    has = feature => this.card.id() === feature.id
+    id = () => this.feature.id
+
+    has = feature => this.id() === feature.id
     wasUpdated = () => this.card.wasUpdated()
 }
 

@@ -3,7 +3,7 @@ import { SaveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
 
-    #cardsMap = new Map();
+    #pointsMap = new Map();
     #geojson;
 
     add = (geojsonFile, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
@@ -33,7 +33,8 @@ class GeoJSONFeatures {
             };
 
             const card = new Card(image, feature);
-            this.#cardsMap.set(card.id(), card);
+            const point = card.getPoint();
+            this.#pointsMap.set(point.id(), point);
 
         } catch (err) {
             alert(err);
@@ -47,16 +48,16 @@ class GeoJSONFeatures {
         this.#updateUsingGeojson(pointsArr);
 
         return pointsArr.map(point => {
-            const { card, feature } = point;
+            const { feature } = point;
             return {
-                id: card.id(),
+                id: point.id(),
                 geojson: feature
             }
         });
     }
 
     remove = id => {
-        if (!this.#cardsMap.delete(id)) this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
+        if (!this.#pointsMap.delete(id)) this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
     }
 
     saveAllPoints = async (title) => {
@@ -71,7 +72,7 @@ class GeoJSONFeatures {
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
 
     #checkExisting = filename => {
-        if (this.#cardsMap.get(filename)) this.#error(`The image '${filename}' already exists`)
+        if (this.#pointsMap.get(filename)) this.#error(`The image '${filename}' already exists`)
     }
 
     #checkIsValid = json => {
@@ -112,8 +113,8 @@ class GeoJSONFeatures {
     }
 
     #pointsArray() {
-        const cards = this.#cardsMap.values();
-        return cards ? Array.from(cards).map(card => card.getPoint()) : [];
+        const points = this.#pointsMap.values();
+        return points ? Array.from(points) : [];
     }
 
     #read = (geojsonFile, doAfter) => {
