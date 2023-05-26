@@ -17,16 +17,14 @@ class Card {
         const { data } = feature;
         data.card = {
             image: image,
-            id: id,
-            title: id,
-            description: 'A description about the image'
         };
 
         feature.properties = {
-            popupContent: this.#getPopup(),
             name: id,
             description: 'A description about the image'
         };
+
+        feature.properties.popupContent = this.#getPopup();
     }
 
     getPoint = () => this.#point;
@@ -34,14 +32,12 @@ class Card {
     id = () => this.#point.feature.id
     isThis = properties => this.id() === properties.id
 
-    properties = () => this.#point.feature.data.card
-
     updatePopup = feature => {
-        const { title, description } = feature.data.card;
-        this.#setProperties(title, description);
+        const { name, description } = feature.properties;
+        this.#setProperties(name, description);
 
         const titleEl = this.#popup.querySelector('input');
-        titleEl.value = title;
+        titleEl.value = name;
 
         const descriptionEl = this.#popup.querySelector('textarea');
         descriptionEl.value = description;
@@ -59,15 +55,17 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
+        const { properties, data } = this.getPoint().feature;
+
         const img = card.querySelector('img');
-        img.src = URL.createObjectURL(this.properties().image);
+        img.src = URL.createObjectURL(data.card.image);
         img.alt = this.id();
 
         const title = card.querySelector('input');
         title.placeholder = this.id();
 
         const description = card.querySelector('textarea');
-        description.placeholder = this.properties().description;
+        description.placeholder = properties.description;
 
         this.#popup = document.createElement('div');
         this.#popup.appendChild(card);
@@ -75,20 +73,25 @@ class Card {
         title.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.properties().title = el.value;
+            this.#setProperties(el.value);
             this.#updated = true;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
             const el = event.target;
-            this.properties().description = el.value;
+            this.#setProperties(null, el.value);
             this.#updated = true;
         });
     }
 
     #setProperties(title, description) {
-        this.properties().title = title;
-        this.properties().description = description;
+        if (title) {
+            this.getPoint().feature.properties.name = title;
+        }
+
+        if (description) {
+            this.getPoint().feature.properties.description = description;
+        }
     }
 
     #template = `
