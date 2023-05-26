@@ -33,11 +33,7 @@ class GeoJSONFeatures {
             };
 
             const card = new Card(image, feature);
-            const point = {
-                cardPoint: card.getPoint()
-            };
-
-            this.#pointsMap.set(card.id(), point);
+            this.#pointsMap.set(card.id(), card.getPoint());
 
         } catch (err) {
             alert(err);
@@ -117,7 +113,7 @@ class GeoJSONFeatures {
 
     #pointsArray() {
         const points = this.#pointsMap.values();
-        return points ? Array.from(points).map(value => value.cardPoint) : [];
+        return points ? Array.from(points) : [];
     }
 
     #read = (geojsonFile, doAfter) => {
