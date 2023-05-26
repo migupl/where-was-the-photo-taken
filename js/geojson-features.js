@@ -152,11 +152,10 @@ class GeoJSONFeatures {
     #updateUsingGeojson = (points = this.#pointsArray()) => {
         if (this.#geojson) {
             points
-                .filter(point => !point.card.wasUpdated())
+                .filter(point => !point.wasUpdated())
                 .forEach(point => {
-                    const { card } = point;
                     const data = this.#geojson.features
-                        .filter(feature => card.isThis(feature));
+                        .filter(feature => point.has(feature));
                     this.#updatePoint(data, point);
                 })
         }

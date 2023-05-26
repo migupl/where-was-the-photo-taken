@@ -1,3 +1,5 @@
+import { Point } from './point.js'
+
 class Card {
 
     #point;
@@ -9,10 +11,10 @@ class Card {
 
         const feature = JSON.parse(JSON.stringify(geojson));
         feature.id = id;
-        this.#point = {
-            feature: feature,
-            card: this
-        }
+
+        this.#point = new Point();
+        this.#point.feature = feature;
+        this.#point.card = this;
 
         const { data } = feature;
         data.image = image;
@@ -28,7 +30,6 @@ class Card {
     getPoint = () => this.#point;
 
     id = () => this.#point.feature.id
-    isThis = properties => this.id() === properties.id
 
     updatePopup = feature => {
         const { name, description } = feature.properties;
