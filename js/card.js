@@ -42,8 +42,7 @@ class Card {
     properties = () => this.#properties
 
     updatePopup = ({ title, description }) => {
-        this.#properties.title = title;
-        this.#properties.description = description;
+        this.#setProperties(title, description);
 
         const titleEl = this.#popup.querySelector('input');
         titleEl.value = title;
@@ -84,6 +83,11 @@ class Card {
             this.#properties.description = el.value;
             this.#updated = true;
         });
+    }
+
+    #setProperties(title, description) {
+        this.#properties.title = title;
+        this.#properties.description = description;
     }
 
     #template = `
