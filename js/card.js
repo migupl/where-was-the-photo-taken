@@ -15,9 +15,7 @@ class Card {
         }
 
         const { data } = feature;
-        data.card = {
-            image: image,
-        };
+        data.image = image;
 
         feature.properties = {
             name: id,
@@ -61,7 +59,7 @@ class Card {
         const { properties, data } = this.getPoint().feature;
 
         const img = card.querySelector('img');
-        img.src = URL.createObjectURL(data.card.image);
+        img.src = URL.createObjectURL(data.image);
         img.alt = this.id();
 
         const title = card.querySelector('input');
