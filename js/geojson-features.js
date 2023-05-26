@@ -21,7 +21,18 @@ class GeoJSONFeatures {
             const lnglatalt = [lng, lat, altitude]
                 .filter((value) => !isNaN(value));
 
-            const card = new Card(image);
+            const feature = {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: lnglatalt
+                },
+                data: {
+                    exif: exif
+                }
+            };
+
+            const card = new Card(image, feature);
             const popup = card.getPopup();
 
             const point = {
@@ -41,7 +52,8 @@ class GeoJSONFeatures {
                         }
                     },
                     card: card
-                }
+                },
+                cardPoint: card.getPoint()
             };
 
             this.#pointsMap.set(card.id(), point);

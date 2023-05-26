@@ -1,18 +1,34 @@
 class Card {
 
-    #id;
+    #id; #point;
     #popup; #properties;
     #updated = false;
 
-    constructor(image) {
+    constructor(image, geojson) {
         this.#id = image.name;
-        this.#properties = {
+
+        const feature = JSON.parse(JSON.stringify(geojson));
+        this.#point = {
+            feature: feature,
+            card: this
+        }
+
+        const { data } = feature;
+        data.card = {
             image: image,
             id: this.#id,
             title: this.#id,
             description: 'A description about the image'
         };
+
+        this.#properties = data.card;
+
+        feature.properties = {
+            popupContent: this.getPopup()
+        };
     }
+
+    getPoint = () => this.#point;
 
     getPopup = () => {
         if (!this.#popup) this.#setPopup();
