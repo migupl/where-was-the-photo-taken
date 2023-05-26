@@ -77,14 +77,16 @@ class Card {
 
         title.addEventListener('input', event => {
             event.stopPropagation();
-            const el = event.target;
-            this.#setTitle(el.value);
+
+            const { value: name } = event.target;
+            this.#setTitle(name);
             this.#updated = true;
         });
         description.addEventListener('input', event => {
             event.stopPropagation();
-            const el = event.target;
-            this.#setDescription(el.value);
+
+            const { value: description } = event.target;
+            this.#setDescription(description);
             this.#updated = true;
         });
     }
