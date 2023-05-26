@@ -70,11 +70,6 @@ class Card {
         const description = card.querySelector('textarea');
         description.placeholder = properties.description;
 
-        this.#popupEl = document.createElement('div');
-        this.#popupEl.appendChild(card);
-
-        properties.popupContent = this.#popupEl;
-
         title.addEventListener('input', event => {
             event.stopPropagation();
 
@@ -89,6 +84,16 @@ class Card {
             this.#setDescription(description);
             this.#updated = true;
         });
+
+        this.#setPopupContent(card);
+    }
+
+    #setPopupContent = card => {
+        this.#popupEl = document.createElement('div');
+        this.#popupEl.appendChild(card);
+
+        const { properties, data } = this.getPoint().feature;
+        properties.popupContent = this.#popupEl;
     }
 
     #setTitle = title => {
