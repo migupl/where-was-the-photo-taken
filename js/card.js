@@ -1,7 +1,7 @@
 class Card {
 
     #point;
-    #popup;
+    #popupEl;
     #updated = false;
 
     constructor(image, geojson) {
@@ -24,7 +24,7 @@ class Card {
             description: 'A description about the image'
         };
 
-        feature.properties.popupContent = this.#getPopup();
+        this.#setPopup();
     }
 
     getPoint = () => this.#point;
@@ -34,22 +34,18 @@ class Card {
 
     updatePopup = feature => {
         const { name, description } = feature.properties;
+
         this.#setTitle(name);
         this.#setDescription(description);
 
-        const titleEl = this.#popup.querySelector('input');
+        const titleEl = this.#popupEl.querySelector('input');
         titleEl.value = name;
 
-        const descriptionEl = this.#popup.querySelector('textarea');
+        const descriptionEl = this.#popupEl.querySelector('textarea');
         descriptionEl.value = description;
     }
 
     wasUpdated = () => this.#updated
-
-    #getPopup = () => {
-        if (!this.#popup) this.#setPopup();
-        return this.#popup;
-    }
 
     #setDescription = description => {
         if (description) {
@@ -57,7 +53,7 @@ class Card {
         }
     }
 
-    #setPopup() {
+    #setPopup = () => {
         const card = document
             .createRange()
             .createContextualFragment(this.#template);
@@ -74,8 +70,10 @@ class Card {
         const description = card.querySelector('textarea');
         description.placeholder = properties.description;
 
-        this.#popup = document.createElement('div');
-        this.#popup.appendChild(card);
+        this.#popupEl = document.createElement('div');
+        this.#popupEl.appendChild(card);
+
+        properties.popupContent = this.#popupEl;
 
         title.addEventListener('input', event => {
             event.stopPropagation();
