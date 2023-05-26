@@ -1,4 +1,4 @@
-import { Card } from "./card.js";
+import { Point } from './point.js'
 import { SaveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
@@ -32,8 +32,7 @@ class GeoJSONFeatures {
                 }
             };
 
-            const card = new Card(image, feature);
-            const point = card.getPoint();
+            const point = new Point(image, feature);
             this.#pointsMap.set(point.id(), point);
 
         } catch (err) {
