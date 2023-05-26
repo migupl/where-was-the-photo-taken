@@ -144,8 +144,7 @@ class GeoJSONFeatures {
             const newerGeojson = data[0];
             const { card, feature } = point;
             if (!this.#areGeojsonEqual(newerGeojson, feature)) {
-                const { card: newerCard } = newerGeojson.data;
-                card.updatePopup(newerCard);
+                card.updatePopup(newerGeojson);
             }
         }
     }

@@ -36,7 +36,8 @@ class Card {
 
     properties = () => this.#point.feature.data.card
 
-    updatePopup = ({ title, description }) => {
+    updatePopup = feature => {
+        const { title, description } = feature.data.card;
         this.#setProperties(title, description);
 
         const titleEl = this.#popup.querySelector('input');
