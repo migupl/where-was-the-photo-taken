@@ -89,7 +89,7 @@ class Card {
         this.#popupEl = document.createElement('div');
         this.#popupEl.appendChild(card);
 
-        const { properties, data } = this.getPoint().feature;
+        const { properties } = this.getPoint().feature;
         properties.popupContent = this.#popupEl;
     }
 
