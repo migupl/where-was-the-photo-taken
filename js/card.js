@@ -31,17 +31,17 @@ class Card {
     }
 
     #setPopup = () => {
-        const card = document
+        const cardEl = document
             .createRange()
             .createContextualFragment(this.#template);
 
         const { id, properties, data } = this.#feature;
 
-        const img = card.querySelector('img');
+        const img = cardEl.querySelector('img');
         img.src = URL.createObjectURL(data.image);
         img.alt = id;
 
-        const title = card.querySelector('input');
+        const title = cardEl.querySelector('input');
         title.placeholder = id;
         title.addEventListener('input', event => {
             event.stopPropagation();
@@ -51,7 +51,7 @@ class Card {
             this.#updated = true;
         });
 
-        const description = card.querySelector('textarea');
+        const description = cardEl.querySelector('textarea');
         description.placeholder = properties.description;
         description.addEventListener('input', event => {
             event.stopPropagation();
@@ -61,12 +61,12 @@ class Card {
             this.#updated = true;
         });
 
-        this.#setPopupContent(card);
+        this.#setPopupContent(cardEl);
     }
 
-    #setPopupContent = card => {
+    #setPopupContent = cardEl => {
         this.#popupEl = document.createElement('div');
-        this.#popupEl.appendChild(card);
+        this.#popupEl.appendChild(cardEl);
 
         const { properties } = this.#feature;
         properties.popupContent = this.#popupEl;
