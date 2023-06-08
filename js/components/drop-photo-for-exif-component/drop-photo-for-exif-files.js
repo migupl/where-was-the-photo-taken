@@ -16,16 +16,20 @@ class DropPhotoForExifFiles {
 
     #process = items => {
         for (let item of items) {
-            if (!this.#supportsWebkitGetAsEntry) {
+            if (typeof item.name === 'string') {
+                this.#processFile(item);
+            }
+            else if (!this.#supportsWebkitGetAsEntry) {
                 this.#processFile(item.getAsFile());
             }
-
-            const entry = item.webkitGetAsEntry();
-            if (entry.isFile) {
-                this.#processFile(item.getAsFile());
-            }
-            else if (entry.isDirectory) {
-                this.#exploreDirectoryContent(entry)
+            else {
+                const entry = item.webkitGetAsEntry();
+                if (entry.isFile) {
+                    this.#processFile(item.getAsFile());
+                }
+                else if (entry.isDirectory) {
+                    this.#exploreDirectoryContent(entry);
+                }
             }
         }
     }
