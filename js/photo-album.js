@@ -1,7 +1,7 @@
 import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
-    const existingPoints = new Set();;
+    const existingPoints = new Set();
     const addPointToMap = point => {
         const { id, geojson } = point;
         if (!existingPoints.has(id)) {
@@ -43,23 +43,24 @@ window.onload = () => {
         const points = GeoJSONFeatures.getGeoJSONPoints();
         points.forEach(addPointToMap);
 
-        toggleSaveButton();
+        toggleSavingArea();
     });
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
         event.stopPropagation();
 
         existingPoints.delete(id);
-        toggleSaveButton();
+        toggleSavingArea();
 
         GeoJSONFeatures.remove(id);
     })
 
 
-    const save = document.getElementById('save-all');
-    const toggleSaveButton = () => save.style.display = existingPoints.size > 0 ? 'block' : 'none';
+    const saving = document.getElementById('saving-area');
+    const toggleSavingArea = () => saving.style.display = existingPoints.size > 0 ? 'flex' : 'none';
+    toggleSavingArea();
 
-    toggleSaveButton();
+    const save = document.getElementById('save-all');
     save.addEventListener('click', (event) => {
         event.stopPropagation();
         const title = document.getElementById('title').value || document.getElementById('title').placeholder
