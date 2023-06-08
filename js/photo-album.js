@@ -13,9 +13,14 @@ window.onload = () => {
         }
     }
 
-    document.addEventListener('drop-photo-for-exif:image', (event) => {
-        event.stopPropagation();
+    [
+        'drop-photo-for-exif:image',
+        'drop-photo-for-exif:file',
+        'drop-photo-for-exif:completed-batch',
+        'x-leaflet-map:marker-removed'
+    ].forEach(eventName => document.addEventListener(eventName, e => e.stopPropagation()))
 
+    document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
             GeoJSONFeatures.addPhoto(data);
@@ -26,8 +31,6 @@ window.onload = () => {
     });
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
-        event.stopPropagation();
-
         const file = event.detail;
         const refreshTitle = title => {
             const eTitle = document.getElementById('title');
@@ -38,8 +41,6 @@ window.onload = () => {
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
-        event.stopPropagation();
-
         const points = GeoJSONFeatures.getGeoJSONPoints();
         points.forEach(addPointToMap);
 
@@ -47,8 +48,6 @@ window.onload = () => {
     });
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
-        event.stopPropagation();
-
         existingPoints.delete(id);
         toggleSavingArea();
 
