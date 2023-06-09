@@ -6,9 +6,12 @@ window.onload = () => {
         const { id, geojson } = point;
         if (!existingPoints.has(id)) {
             const map = document.querySelector('leaflet-map');
-            const eventBus = map.eventBus;
+            map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+                detail: {
+                    geojson: geojson
+                }
+            }));
 
-            eventBus.dispatch('x-leaflet-map-geojson-add', { leafletMap: map, geojson: geojson });
             existingPoints.add(id);
         }
     }
