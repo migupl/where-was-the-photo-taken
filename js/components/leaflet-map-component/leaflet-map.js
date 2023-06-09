@@ -44,17 +44,53 @@ class LeafletMap extends HTMLElement {
         }
     }
 
+    #addNewMarkerTo = map => {
+        const isAddingAllowed = this.hasAttribute('allowAddMarker');
+        if (!isAddingAllowed) return;
+
+        const getAddingButton = latlng => {
+            const { lat, lng } = latlng;
+
+            let btn = document.createElement('button');
+            btn.style = 'background-color: blue; border: none; border-radius: 8px; color: white; padding: 10px;';
+            btn.innerText = `Click to adding a point at lat: ${lat}, lng: ${lng}`;
+            btn.onclick = _ => {
+                this.#fireMarkerAdded(latlng);
+                map.closePopup();
+            };
+
+            return btn;
+        }
+
+        map.addEventListener('contextmenu', e => {
+            const { latlng } = e;
+            const btn = getAddingButton(latlng);
+            map.openPopup(btn, latlng, { closeButton: false })
+        });
+
+    }
+
     #appendChild = element => this.shadowRoot.appendChild(element)
 
-    #fireMarkerRemoved = feature => {
-        const evt = new CustomEvent('x-leaflet-map:marker-removed', {
+    #fireEvent = (eventName, detail) => {
+        const evt = new CustomEvent(eventName, {
             bubbles: true,
             composed: true,
-            detail: {
-                feature: feature
-            }
+            detail: detail
         });
         this.shadowRoot.dispatchEvent(evt);
+    }
+
+    #fireMarkerAdded = latlng => {
+        this.#fireEvent('x-leaflet-map:marker-added', {
+            latlng: latlng
+        });
+    }
+
+    #fireMarkerRemoved = feature => {
+        this.#fireEvent('x-leaflet-map:marker-removed', {
+                feature: feature
+        });
     }
 
     #getCustomStyle = () => (this.getAttribute('customStyle') || '').split(':')
@@ -62,6 +98,8 @@ class LeafletMap extends HTMLElement {
     #initializeMap = mapElement => {
         const opts = this.#mapOptions();
         const map = L.map(mapElement, opts);
+
+        this.#addNewMarkerTo(map);
 
         LeafletMap.maps.set(this, {
             map: map,
