@@ -1,14 +1,9 @@
-import { EventBus } from "./event-bus.js";
 import { LoadMap } from "./leaflet-map-load.js";
 import { Features } from "./leaflet-map-features.js";
 
 class LeafletMap extends HTMLElement {
 
     static maps = new WeakMap();
-
-    get eventBus() {
-        return EventBus;
-    }
 
     constructor() {
         super();
@@ -44,17 +39,53 @@ class LeafletMap extends HTMLElement {
         }
     }
 
+    #addNewMarkerTo = map => {
+        const isAddingAllowed = this.hasAttribute('allowAddMarker');
+        if (!isAddingAllowed) return;
+
+        const getAddingButton = latlng => {
+            const { lat, lng } = latlng;
+
+            let btn = document.createElement('button');
+            btn.style = 'background-color: blue; border: none; border-radius: 8px; color: white; padding: 10px;';
+            btn.innerText = `Click to adding a point at lat: ${lat}, lng: ${lng}`;
+            btn.onclick = _ => {
+                this.#fireMarkerAdded(latlng);
+                map.closePopup();
+            };
+
+            return btn;
+        }
+
+        map.addEventListener('contextmenu', e => {
+            const { latlng } = e;
+            const btn = getAddingButton(latlng);
+            map.openPopup(btn, latlng, { closeButton: false })
+        });
+
+    }
+
     #appendChild = element => this.shadowRoot.appendChild(element)
 
-    #fireMarkerRemoved = feature => {
-        const evt = new CustomEvent('x-leaflet-map:marker-removed', {
+    #fireEvent = (eventName, detail) => {
+        const evt = new CustomEvent(eventName, {
             bubbles: true,
             composed: true,
-            detail: {
-                feature: feature
-            }
+            detail: detail
         });
         this.shadowRoot.dispatchEvent(evt);
+    }
+
+    #fireMarkerAdded = latlng => {
+        this.#fireEvent('x-leaflet-map:marker-pointed-out', {
+            latlng: latlng
+        });
+    }
+
+    #fireMarkerRemoved = feature => {
+        this.#fireEvent('x-leaflet-map:marker-removed', {
+            feature: feature
+        });
     }
 
     #getCustomStyle = () => (this.getAttribute('customStyle') || '').split(':')
@@ -62,6 +93,8 @@ class LeafletMap extends HTMLElement {
     #initializeMap = mapElement => {
         const opts = this.#mapOptions();
         const map = L.map(mapElement, opts);
+
+        this.#addNewMarkerTo(map);
 
         LeafletMap.maps.set(this, {
             map: map,
@@ -101,37 +134,43 @@ class LeafletMap extends HTMLElement {
     }
 
     #registerEvents = () => {
-        EventBus.register('x-leaflet-map-clear', (event) => {
-            event.stopPropagation();
+        [
+            'x-leaflet-map-clear',
+            'x-leaflet-map-geojson-add',
+            'x-leaflet-map-geojson:include-latlng-to-fly',
+        ].forEach(eventName => this.addEventListener(eventName, ev =>
+            ev.stopPropagation()
+        ))
 
-            const { leafletMap } = event.detail;
+        this.addEventListener('x-leaflet-map-clear', (event) => {
+            const targetMap = event.target;
 
-            if (this.#isThisMap(leafletMap.id)) {
-                const { map, tile } = LeafletMap.maps.get(leafletMap);
+            if (this.#isThisMap(targetMap.id)) {
+                const { map, tile } = LeafletMap.maps.get(targetMap);
                 map.eachLayer(function (layer) {
                     if (layer !== tile) layer.removeFrom(map);
                 });
             }
         });
 
-        EventBus.register('x-leaflet-map-geojson-add', (event) => {
-            event.stopPropagation();
+        this.addEventListener('x-leaflet-map-geojson-add', (event) => {
+            const targetMap = event.target;
 
-            const { leafletMap, geojson } = event.detail;
+            if (this.#isThisMap(targetMap.id)) {
+                const map = LeafletMap.maps.get(targetMap);
+                const { geojson } = event.detail;
 
-            if (this.#isThisMap(leafletMap.id)) {
-                const thisMap = LeafletMap.maps.get(leafletMap);
-                Features.addTo(geojson, leafletMap.id, thisMap);
+                Features.addTo(geojson, targetMap, map);
             }
         });
 
-        EventBus.register('x-leaflet-map-geojson:add-latlng', (event) => {
-            event.stopPropagation();
+        this.addEventListener('x-leaflet-map-geojson:include-latlng-to-fly', (event) => {
+            const targetMap = event.target;
 
-            const { map, latLngPoints } = LeafletMap.maps.get(this);
-            const { lng, lat, mapId } = event.detail;
+            if (this.#isThisMap(targetMap.id)) {
+                const { map, latLngPoints } = LeafletMap.maps.get(targetMap);
 
-            if (this.#isThisMap(mapId)) {
+                const { latlng: { lng, lat } } = event.detail;
                 const latLng = L.latLng(lat, lng);
 
                 const latLngBounds = L.latLngBounds([latLng]);

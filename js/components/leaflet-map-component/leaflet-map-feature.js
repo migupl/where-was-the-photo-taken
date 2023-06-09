@@ -1,15 +1,20 @@
-import { EventBus } from "./event-bus.js";
-
 class LeafletMapFeature {
 
-    constructor(mapId) {
-        this._mapId = mapId;
+    #map;
+
+    constructor(map) {
+        this.#map = map;
     }
 
     coordsToLatLng = coordinates => {
         const latlng = L.GeoJSON.coordsToLatLng(coordinates);
-        latlng.mapId = this._mapId;
-        EventBus.dispatch('x-leaflet-map-geojson:add-latlng', latlng);
+        this.#map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson:include-latlng-to-fly', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                latlng: latlng,
+            }
+        }));
 
         return latlng;
     }
