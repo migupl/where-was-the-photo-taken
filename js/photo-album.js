@@ -4,12 +4,12 @@ window.onload = () => {
 
     const geojsonFeatures = new GeoJSONFeatures();
 
-    const existingPoints = new Set();
+    const album = new Set();
     const addPoints = () => {
         const map = document.querySelector('leaflet-map');
 
         geojsonFeatures.getGeoJSONPoints()
-            .filter(point => !existingPoints.has(point.id))
+            .filter(point => !album.has(point.id))
             .forEach(point => {
                 const { id, geojson } = point;
                 map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
@@ -18,7 +18,7 @@ window.onload = () => {
                     }
                 }));
 
-                existingPoints.add(id);
+                album.add(id);
             })
 
         toggleSavingArea();
@@ -49,6 +49,7 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
         geojsonFeatures.add(file, refreshTitle);
+        addPoints();
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
@@ -56,7 +57,7 @@ window.onload = () => {
     });
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
-        existingPoints.delete(id);
+        album.delete(id);
         toggleSavingArea();
 
         geojsonFeatures.remove(id);
@@ -69,7 +70,7 @@ window.onload = () => {
     })
 
     const saving = document.getElementById('saving-area');
-    const toggleSavingArea = () => saving.style.display = existingPoints.size > 0 ? 'flex' : 'none';
+    const toggleSavingArea = () => saving.style.display = album.size > 0 ? 'flex' : 'none';
     toggleSavingArea();
 
     const save = document.getElementById('save-all');
