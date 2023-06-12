@@ -37,9 +37,11 @@ class Card {
 
         const { id, properties, data } = this.#feature;
 
-        const img = cardEl.querySelector('img');
-        img.src = URL.createObjectURL(data.image);
-        img.alt = id;
+        if (data.image) {
+            const img = cardEl.querySelector('img');
+            img.src = URL.createObjectURL(data.image);
+            img.alt = id;
+        }
 
         const title = cardEl.querySelector('input');
         title.placeholder = id;
