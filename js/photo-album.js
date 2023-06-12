@@ -46,9 +46,7 @@ window.onload = () => {
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-        if (GeoJSONFeatures.isGeojson(file)) {
-            GeoJSONFeatures.add(file, refreshTitle);
-        }
+        GeoJSONFeatures.add(file, refreshTitle);
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {

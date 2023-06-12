@@ -6,8 +6,10 @@ class GeoJSONFeatures {
     #pointsMap = new Map();
     #geojson;
 
-    add = (geojsonFile, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
-        this.#read(geojsonFile, doAfter);
+    add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
+        if (this.#isGeojson(file)) {
+            this.#read(file, doAfter);
+        }
     }
 
     addPoint = latlng => {
@@ -53,8 +55,6 @@ class GeoJSONFeatures {
             alert(err);
         }
     }
-
-    isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
         this.#updateUsingGeojson();
@@ -125,6 +125,8 @@ class GeoJSONFeatures {
     #extractNumeric = text => text.match(/[0-9.]/g).join('')
 
     #hasElements = array => array && array.length > 0;
+
+    #isGeojson = file => 'application/geo+json' === file.type;
 
     #DMS2Decimal = (latitude, longitude) => {
         let lat = this.#extractNumeric(latitude);
