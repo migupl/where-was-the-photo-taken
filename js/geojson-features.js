@@ -63,16 +63,16 @@ class GeoJSONFeatures {
     isGeojson = file => 'application/geo+json' === file.type;
 
     getGeoJSONPoints = () => {
-        const pointsArr = this.#pointsArray();
-        this.#updateUsingGeojson(pointsArr);
+        this.#updateUsingGeojson();
 
-        return pointsArr.map(point => {
-            const { feature } = point;
-            return {
-                id: point.id(),
-                geojson: feature
-            }
-        });
+        return this.#pointsArray()
+            .map(point => {
+                const { feature } = point;
+                return {
+                    id: point.id(),
+                    geojson: feature
+                }
+            });
     }
 
     remove = id => {
@@ -171,12 +171,12 @@ class GeoJSONFeatures {
 
     #updateUsingGeojson = (points = this.#pointsArray()) => {
         if (this.#geojson) {
-            points
-                .filter(point => !point.wasUpdated())
-                .forEach(point => {
-                    const data = this.#geojson.features
-                        .filter(feature => point.has(feature));
-                    this.#updatePoint(data, point);
+            this.#geojson.features
+                .forEach(feature => {
+                    const point = this.#pointsMap.get(feature.id);
+                    if (point && !point.wasUpdated()) {
+                        this.#updatePoint([feature], point);
+                    }
                 })
         }
     }
