@@ -46,7 +46,6 @@ window.onload = () => {
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-
         if (GeoJSONFeatures.isGeojson(file)) {
             GeoJSONFeatures.add(file, refreshTitle);
         }
@@ -66,9 +65,8 @@ window.onload = () => {
     document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
         const { detail: { latlng } } = event;
         GeoJSONFeatures.addPoint(latlng);
-
         addPoints();
-      })
+    })
 
     const saving = document.getElementById('saving-area');
     const toggleSavingArea = () => saving.style.display = existingPoints.size > 0 ? 'flex' : 'none';
@@ -77,6 +75,7 @@ window.onload = () => {
     const save = document.getElementById('save-all');
     save.addEventListener('click', (event) => {
         event.stopPropagation();
+
         const title = document.getElementById('title').value || document.getElementById('title').placeholder
         GeoJSONFeatures.saveAllPoints(title);
     });

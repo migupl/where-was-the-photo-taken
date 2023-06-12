@@ -92,11 +92,15 @@ class GeoJSONFeatures {
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
 
     #checkExisting = filename => {
-        if (this.#pointsMap.get(filename)) this.#error(`The image '${filename}' already exists`)
+        if (this.#pointsMap.get(filename)) {
+            this.#error(`The image '${filename}' already exists`);
+        }
     }
 
     #checkIsValid = json => {
-        if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
+        if (!json.hasOwnProperty('type')) {
+            this.#error('Invalid GeoJSON format')
+        }
     }
 
     #composeTitle = filename => {
