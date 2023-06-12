@@ -26,8 +26,7 @@ class GeoJSONFeatures {
             }
         };
 
-        const point = new Point({ label: label, geojson: feature });
-        this.#pointsMap.set(point.id(), point);
+        this.#add({ label: label, geojson: feature });
     }
 
     addPhoto = metadata => {
@@ -52,8 +51,7 @@ class GeoJSONFeatures {
                 }
             };
 
-            const point = new Point({ image: image, geojson: feature });
-            this.#pointsMap.set(point.id(), point);
+            this.#add({ image: image, geojson: feature });
 
         } catch (err) {
             alert(err);
@@ -86,6 +84,11 @@ class GeoJSONFeatures {
         if (points.length > 0) {
             await SaveFeatures.toFile(points, title);
         }
+    }
+
+    #add = o => {
+        const point = new Point(o);
+        this.#pointsMap.set(point.id(), point);
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
