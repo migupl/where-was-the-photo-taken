@@ -61,10 +61,9 @@ class GeoJSONFeatures {
 
         return this.#pointsArray()
             .map(point => {
-                const { feature } = point;
                 return {
                     id: point.id(),
-                    geojson: feature
+                    geojson: point.feature()
                 }
             });
     }
@@ -75,7 +74,7 @@ class GeoJSONFeatures {
 
     saveAllPoints = async (title) => {
         const points = this.#pointsArray()
-            .map(point => point.feature);
+            .map(point => point.feature());
 
         if (points.length > 0) {
             await SaveFeatures.toFile(points, title);
@@ -169,9 +168,8 @@ class GeoJSONFeatures {
     #updatePoint(data, point) {
         if (this.#hasElements(data)) {
             const newerGeojson = data[0];
-            const { card, feature } = point;
-            if (!this.#areGeojsonEqual(newerGeojson, feature)) {
-                card.updatePopup(newerGeojson);
+            if (!this.#areGeojsonEqual(newerGeojson, point.feature())) {
+                point.updatePopupWith(newerGeojson);
             }
         }
     }
