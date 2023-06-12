@@ -1,19 +1,25 @@
 import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
-    const existingPoints = new Set();
-    const addPointToMap = point => {
-        const { id, geojson } = point;
-        if (!existingPoints.has(id)) {
-            const map = document.querySelector('leaflet-map');
-            map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
-                detail: {
-                    geojson: geojson
-                }
-            }));
 
-            existingPoints.add(id);
-        }
+    const existingPoints = new Set();
+    const addPoints = () => {
+        const map = document.querySelector('leaflet-map');
+
+        GeoJSONFeatures.getGeoJSONPoints()
+            .filter(point => !existingPoints.has(point.id))
+            .forEach(point => {
+                const { id, geojson } = point;
+                map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+                    detail: {
+                        geojson: geojson
+                    }
+                }));
+
+                existingPoints.add(id);
+            })
+
+        toggleSavingArea();
     }
 
     [
@@ -44,10 +50,7 @@ window.onload = () => {
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
-        const points = GeoJSONFeatures.getGeoJSONPoints();
-        points.forEach(addPointToMap);
-
-        toggleSavingArea();
+        addPoints();
     });
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
