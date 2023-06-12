@@ -39,14 +39,17 @@ window.onload = () => {
         }
     });
 
+    const refreshTitle = title => {
+        const eTitle = document.getElementById('title');
+        eTitle.value = title;
+    }
+
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-        const refreshTitle = title => {
-            const eTitle = document.getElementById('title');
-            eTitle.value = title;
-        }
 
-        if (GeoJSONFeatures.isGeojson(file)) GeoJSONFeatures.add(file, refreshTitle);
+        if (GeoJSONFeatures.isGeojson(file)) {
+            GeoJSONFeatures.add(file, refreshTitle);
+        }
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
