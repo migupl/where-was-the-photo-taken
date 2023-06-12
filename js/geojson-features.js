@@ -189,5 +189,4 @@ class GeoJSONFeatures {
     }
 }
 
-const geojsonFeatures = new GeoJSONFeatures();
-export { geojsonFeatures as GeoJSONFeatures }
+export { GeoJSONFeatures }

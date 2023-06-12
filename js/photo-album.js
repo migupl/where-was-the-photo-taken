@@ -2,11 +2,13 @@ import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
 
+    const geojsonFeatures = new GeoJSONFeatures();
+
     const existingPoints = new Set();
     const addPoints = () => {
         const map = document.querySelector('leaflet-map');
 
-        GeoJSONFeatures.getGeoJSONPoints()
+        geojsonFeatures.getGeoJSONPoints()
             .filter(point => !existingPoints.has(point.id))
             .forEach(point => {
                 const { id, geojson } = point;
@@ -32,7 +34,7 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
-            GeoJSONFeatures.addPhoto(data);
+            geojsonFeatures.addPhoto(data);
         }
         else {
             alert(`The added photo '${data.name}' has no geolocation data`);
@@ -46,7 +48,7 @@ window.onload = () => {
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-        GeoJSONFeatures.add(file, refreshTitle);
+        geojsonFeatures.add(file, refreshTitle);
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
@@ -57,12 +59,12 @@ window.onload = () => {
         existingPoints.delete(id);
         toggleSavingArea();
 
-        GeoJSONFeatures.remove(id);
+        geojsonFeatures.remove(id);
     })
 
     document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
         const { detail: { latlng } } = event;
-        GeoJSONFeatures.addPoint(latlng);
+        geojsonFeatures.addPoint(latlng);
         addPoints();
     })
 
@@ -75,7 +77,7 @@ window.onload = () => {
         event.stopPropagation();
 
         const title = document.getElementById('title').value || document.getElementById('title').placeholder
-        GeoJSONFeatures.saveAllPoints(title);
+        geojsonFeatures.saveAllPoints(title);
     });
 
     const eTitle = document.getElementById('title');
