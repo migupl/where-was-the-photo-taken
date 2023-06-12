@@ -10,6 +10,26 @@ class GeoJSONFeatures {
         this.#read(geojsonFile, doAfter);
     }
 
+    addPoint = ({ lat, lng }) => {
+        const label = `lat: ${lat}, lng: ${lng}`;
+        this.#checkExisting(label);
+
+        const lnglat = [lng, lat]
+
+        const feature = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: lnglat
+            },
+            data: {
+            }
+        };
+
+        const point = new Point({ label: label, geojson: feature });
+        this.#pointsMap.set(point.id(), point);
+    }
+
     addPhoto = metadata => {
         try {
             const { name } = metadata;

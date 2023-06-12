@@ -60,6 +60,12 @@ window.onload = () => {
         GeoJSONFeatures.remove(id);
     })
 
+    document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
+        const { detail: { latlng } } = event;
+        GeoJSONFeatures.addPoint(latlng);
+
+        addPoints();
+      })
 
     const saving = document.getElementById('saving-area');
     const toggleSavingArea = () => saving.style.display = existingPoints.size > 0 ? 'flex' : 'none';
