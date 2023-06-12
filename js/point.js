@@ -3,8 +3,8 @@ import { Card } from "./card.js";
 class Point {
     feature; card;
 
-    constructor({ image, label, geojson }) {
-        const id = image ? image.name : label;
+    constructor({ image, latlng, geojson }) {
+        const id = image ? image.name : this.#label(latlng);
 
         this.feature = JSON.parse(JSON.stringify(geojson));
         this.feature.id = id;
@@ -15,7 +15,7 @@ class Point {
         }
 
         this.feature.properties = {
-            name: id,
+            name: image ? id : 'A point',
             description: `A description about the ${image ? 'image' : 'point'}`
         };
 
@@ -26,6 +26,8 @@ class Point {
 
     has = feature => this.id() === feature.id
     wasUpdated = () => this.card.wasUpdated()
+
+    #label = latlng => `lat: ${latlng.lat}, lng: ${latlng.lng}`
 }
 
 export { Point }

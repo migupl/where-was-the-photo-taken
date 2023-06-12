@@ -10,29 +10,25 @@ class GeoJSONFeatures {
         this.#read(geojsonFile, doAfter);
     }
 
-    addPoint = ({ lat, lng }) => {
-        const label = `lat: ${lat}, lng: ${lng}`;
-        this.#checkExisting(label);
-
-        const lnglat = [lng, lat]
+    addPoint = latlng => {
+        const { lat, lng } = latlng;
 
         const feature = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: lnglat
+                coordinates: [lng, lat]
             },
             data: {
             }
         };
 
-        this.#add({ label: label, geojson: feature });
+        this.#add({ latlng: latlng, geojson: feature });
     }
 
     addPhoto = metadata => {
         try {
             const { name } = metadata;
-            this.#checkExisting(name);
 
             const { image, location: { latitude, longitude, altitude }, exif } = metadata;
             const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
@@ -88,6 +84,8 @@ class GeoJSONFeatures {
 
     #add = o => {
         const point = new Point(o);
+        this.#checkExisting(point.id());
+
         this.#pointsMap.set(point.id(), point);
     }
 
@@ -172,7 +170,7 @@ class GeoJSONFeatures {
         }
     }
 
-    #updateUsingGeojson = (points = this.#pointsArray()) => {
+    #updateUsingGeojson = () => {
         if (this.#geojson) {
             this.#geojson.features
                 .forEach(feature => {
