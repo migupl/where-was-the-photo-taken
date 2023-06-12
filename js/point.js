@@ -3,7 +3,7 @@ import { Card } from "./card.js";
 class Point {
     feature; card;
 
-    constructor (image, geojson) {
+    constructor({ image, geojson }) {
         const id = image.name;
 
         this.feature = JSON.parse(JSON.stringify(geojson));
@@ -17,7 +17,7 @@ class Point {
             description: 'A description about the image'
         };
 
-        this.card = new Card (this.feature);
+        this.card = new Card(this.feature);
     }
 
     id = () => this.feature.id

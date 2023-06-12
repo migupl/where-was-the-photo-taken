@@ -32,7 +32,7 @@ class GeoJSONFeatures {
                 }
             };
 
-            const point = new Point(image, feature);
+            const point = new Point({ image: image, geojson: feature });
             this.#pointsMap.set(point.id(), point);
 
         } catch (err) {
