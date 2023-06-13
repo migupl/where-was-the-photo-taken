@@ -8,7 +8,7 @@ class GeoJSONFeatures {
 
     add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
         if (this.#isGeojson(file)) {
-            this.#read(file, doAfter);
+            this.#readGeojsonFile(file, doAfter);
         }
     }
 
@@ -142,7 +142,7 @@ class GeoJSONFeatures {
         return points ? Array.from(points) : [];
     }
 
-    #read = (geojsonFile, doAfter) => {
+    #readGeojsonFile = (file, doAfter) => {
         const reader = new FileReader();
         reader.addEventListener('loadend', () => {
             try {
@@ -152,7 +152,7 @@ class GeoJSONFeatures {
                 this.#checkIsValid(json);
 
                 this.#geojson = json;
-                const title = this.#composeTitle(geojsonFile.name);
+                const title = this.#composeTitle(file.name);
 
                 doAfter(title);
                 this.#updateUsingGeojson();
@@ -162,7 +162,7 @@ class GeoJSONFeatures {
             }
         });
 
-        reader.readAsText(geojsonFile);
+        reader.readAsText(file);
     }
 
     #updatePoint(data, point) {
