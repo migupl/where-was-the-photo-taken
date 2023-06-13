@@ -40,10 +40,8 @@ window.onload = () => {
         }
     });
 
-    const refreshTitle = title => {
-        const eTitle = document.getElementById('title');
-        eTitle.value = title;
-    }
+    const titleEl = document.getElementById('title');
+    const refreshTitle = title => titleEl.value = title;
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
@@ -72,7 +70,7 @@ window.onload = () => {
     save.addEventListener('click', (event) => {
         event.stopPropagation();
 
-        const title = document.getElementById('title').value || document.getElementById('title').placeholder
+        const title = titleEl.value || titleEl.placeholder
         geojsonFeatures.saveAllPoints(title);
     });
 }
