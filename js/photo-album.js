@@ -19,6 +19,7 @@ window.onload = () => {
             points--;
             if (!points) {
                 hideSavingArea();
+                titleEl.value = '';
             }
         }
     );
