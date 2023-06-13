@@ -131,12 +131,6 @@ class GeoJSONFeatures {
         }
     }
 
-    #extractNumeric = text => text.match(/[0-9.]/g).join('')
-
-    #hasElements = array => array && array.length > 0;
-
-    #isGeojson = file => 'application/geo+json' === file.type;
-
     #DMS2Decimal = (latitude, longitude) => {
         let lat = this.#extractNumeric(latitude);
         let lng = this.#extractNumeric(longitude);
@@ -146,6 +140,12 @@ class GeoJSONFeatures {
 
         return [lat, lng];
     }
+
+    #extractNumeric = text => text.match(/[0-9.]/g).join('')
+
+    #hasElements = array => array && array.length > 0;
+
+    #isGeojson = file => 'application/geo+json' === file.type;
 
     #pointsArray() {
         const points = this.#pointsMap.values();

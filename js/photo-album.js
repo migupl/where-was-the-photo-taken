@@ -40,9 +40,6 @@ window.onload = () => {
         }
     });
 
-    const titleEl = document.getElementById('title');
-    const refreshTitle = title => titleEl.value = title;
-
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
         geojsonFeatures.add(file, refreshTitle);
@@ -61,6 +58,11 @@ window.onload = () => {
         const { detail: { latlng } } = event;
         geojsonFeatures.addPoint(latlng);
     })
+
+    const titleEl = document.getElementById('title');
+    const refreshTitle = title => titleEl.value = title;
+
+    titleEl.value = '';
 
     const saving = document.getElementById('saving-area');
     const showSavingArea = () => saving.style.display = 'flex'
