@@ -147,6 +147,8 @@ class GeoJSONFeatures {
 
     #isGeojson = file => 'application/geo+json' === file.type;
 
+    #isAPointWithoutPhoto = feature => !feature.data.image
+
     #pointsArray() {
         const points = this.#pointsMap.values();
         return points ? Array.from(points) : [];
@@ -184,8 +186,12 @@ class GeoJSONFeatures {
             this.#geojson.features
                 .forEach(feature => {
                     const point = this.#pointsMap.get(feature.id);
-                    if (point && !point.wasUpdated()) {
-                        this.#updatePoint([feature], point);
+                    if (point) {
+                        !point.wasUpdated() && this.#updatePoint([feature], point);
+                    }
+                    else if (this.#isAPointWithoutPhoto(feature)) {
+                        const [lng, lat] = feature.geometry.coordinates;
+                        this.#addPoint({ latlng: { lat: lat, lng: lng }, geojson: feature })
                     }
                 })
         }
