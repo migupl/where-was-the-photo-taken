@@ -8,7 +8,12 @@ class GeoJSONFeatures {
 
     add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
         if (this.#isGeojson(file)) {
-            this.#readGeojsonFile(file, doAfter);
+            try {
+                this.#readGeojsonFile(file, doAfter);
+
+            } catch (err) {
+                alert(err);
+            }
         }
     }
 
@@ -136,11 +141,10 @@ class GeoJSONFeatures {
     }
 
     #readGeojsonFile = (file, doAfter) => {
-        const reader = new FileReader();
-        reader.addEventListener('loadend', () => {
-            try {
-                if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
+            if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
 
+            const reader = new FileReader();
+            reader.addEventListener('loadend', () => {
                 const json = JSON.parse(reader.result);
                 this.#checkIsValid(json);
 
@@ -149,13 +153,9 @@ class GeoJSONFeatures {
 
                 doAfter(title);
                 this.#updateUsingGeojson();
+            });
 
-            } catch (err) {
-                alert(err);
-            }
-        });
-
-        reader.readAsText(file);
+            reader.readAsText(file);
     }
 
     #updatePoint(data, point) {
