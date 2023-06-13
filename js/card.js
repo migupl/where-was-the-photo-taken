@@ -35,16 +35,19 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const { id, properties, data } = this.#feature;
+        const { id, properties, data: { image } } = this.#feature;
 
-        if (data.image) {
+        if (image) {
             const img = cardEl.querySelector('img');
-            img.src = URL.createObjectURL(data.image);
+            img.src = URL.createObjectURL(image);
             img.alt = id;
         }
 
         const title = cardEl.querySelector('input');
         title.placeholder = id;
+        if (properties.name) {
+            title.value = properties.name;
+        }
         title.addEventListener('input', event => {
             event.stopPropagation();
 
@@ -54,7 +57,10 @@ class Card {
         });
 
         const description = cardEl.querySelector('textarea');
-        description.placeholder = properties.description;
+        description.placeholder = 'A description about...';
+        if (properties.description) {
+            description.value = properties.description;
+        }
         description.addEventListener('input', event => {
             event.stopPropagation();
 

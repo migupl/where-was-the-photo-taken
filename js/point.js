@@ -15,10 +15,7 @@ class Point {
             data.image = image;
         }
 
-        this.#feature.properties = {
-            name: image ? id : 'A point',
-            description: `A description about the ${image ? 'image' : 'point'}`
-        };
+        this.#feature.properties = this.#feature.properties || {};
 
         this.#card = new Card(this.#feature);
     }
