@@ -12,7 +12,7 @@ class GeoJSONFeatures {
         }
     }
 
-    addPoint = latlng => {
+    getMarkerFeature = latlng => {
         const { lat, lng } = latlng;
 
         const feature = {
@@ -25,10 +25,11 @@ class GeoJSONFeatures {
             }
         };
 
-        this.#add({ latlng: latlng, geojson: feature });
+        const point = this.#getPoint({ latlng: latlng, geojson: feature });
+        return point.feature();
     }
 
-    addPhoto = metadata => {
+    getPhotoFeature = metadata => {
         try {
             const { name } = metadata;
 
@@ -49,27 +50,18 @@ class GeoJSONFeatures {
                 }
             };
 
-            this.#add({ image: image, geojson: feature });
+            const point = this.#getPoint({ image: image, geojson: feature });
+            return point.feature();
 
         } catch (err) {
             alert(err);
         }
     }
 
-    getGeoJSONPoints = () => {
-        this.#updateUsingGeojson();
-
-        return this.#pointsArray()
-            .map(point => {
-                return {
-                    id: point.id(),
-                    geojson: point.feature()
-                }
-            });
-    }
-
-    remove = id => {
-        if (!this.#pointsMap.delete(id)) this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
+    remove = ({ id }) => {
+        if (!this.#pointsMap.delete(id)) {
+            this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
+        }
     }
 
     saveAllPoints = async (title) => {
@@ -81,11 +73,12 @@ class GeoJSONFeatures {
         }
     }
 
-    #add = o => {
-        const point = new Point(o);
+    #getPoint = ({ image, latlng, geojson }) => {
+        const point = new Point({ image, latlng, geojson });
         this.#checkExisting(point.id());
 
         this.#pointsMap.set(point.id(), point);
+        return point;
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)

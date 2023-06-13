@@ -2,26 +2,27 @@ import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
 
-    const geojsonFeatures = new GeoJSONFeatures();
+    const map = document.querySelector('leaflet-map');
+    let points = 0;
+    const geojsonFeatures = new GeoJSONFeatures(map);
 
-    const album = new Set();
-    const addPoints = () => {
-        const map = document.querySelector('leaflet-map');
+    const addPoint = feature => {
+        map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+            detail: {
+                geojson: feature
+            }
+        }));
 
-        geojsonFeatures.getGeoJSONPoints()
-            .filter(point => !album.has(point.id))
-            .forEach(point => {
-                const { id, geojson } = point;
-                map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
-                    detail: {
-                        geojson: geojson
-                    }
-                }));
+        points++;
 
-                album.add(id);
-            })
+        showSavingArea()
+    }
 
-        toggleSavingArea();
+    const removePoint = () => {
+        points--;
+        if (!points) {
+            hideSavingArea();
+        }
     }
 
     [
@@ -34,7 +35,8 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
-            geojsonFeatures.addPhoto(data);
+            const feature = geojsonFeatures.getPhotoFeature(data);
+            addPoint(feature);
         }
         else {
             alert(`The added photo '${data.name}' has no geolocation data`);
@@ -49,29 +51,27 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
         geojsonFeatures.add(file, refreshTitle);
-        addPoints();
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
-        addPoints();
+        console.log(event)
     });
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
-        album.delete(id);
-        toggleSavingArea();
-
-        geojsonFeatures.remove(id);
+        const { feature } = event.detail;
+        geojsonFeatures.remove(feature);
+        removePoint()
     })
 
     document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
         const { detail: { latlng } } = event;
-        geojsonFeatures.addPoint(latlng);
-        addPoints();
+        const feature = geojsonFeatures.getMarkerFeature(latlng);
+        addPoint(feature);
     })
 
     const saving = document.getElementById('saving-area');
-    const toggleSavingArea = () => saving.style.display = album.size > 0 ? 'flex' : 'none';
-    toggleSavingArea();
+    const showSavingArea = () => saving.style.display = 'flex'
+    const hideSavingArea = () => saving.style.display = 'none'
 
     const save = document.getElementById('save-all');
     save.addEventListener('click', (event) => {
