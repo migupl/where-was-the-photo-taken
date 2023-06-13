@@ -80,7 +80,4 @@ window.onload = () => {
         const title = document.getElementById('title').value || document.getElementById('title').placeholder
         geojsonFeatures.saveAllPoints(title);
     });
-
-    const eTitle = document.getElementById('title');
-    eTitle.value = eTitle.defaultValue;
 }
