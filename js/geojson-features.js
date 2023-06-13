@@ -6,6 +6,16 @@ class GeoJSONFeatures {
     #pointsMap = new Map();
     #geojson;
 
+    #addToMap; #removeFromMap;
+
+    constructor(
+        addToMap = feature => console.log('Action for adding to map'),
+        removeFromMap = feature => console.log('Action for removing from map')
+    ) {
+        this.#addToMap = addToMap;
+        this.#removeFromMap = removeFromMap;
+    }
+
     add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
         if (this.#isGeojson(file)) {
             try {
@@ -17,7 +27,7 @@ class GeoJSONFeatures {
         }
     }
 
-    getMarkerFeature = latlng => {
+    addPoint = latlng => {
         const { lat, lng } = latlng;
 
         const feature = {
@@ -30,11 +40,10 @@ class GeoJSONFeatures {
             }
         };
 
-        const point = this.#getPoint({ latlng: latlng, geojson: feature });
-        return point.feature();
+        this.#addPoint({ latlng: latlng, geojson: feature });
     }
 
-    getPhotoFeature = metadata => {
+    addPhoto = metadata => {
         try {
             const { name } = metadata;
 
@@ -55,8 +64,7 @@ class GeoJSONFeatures {
                 }
             };
 
-            const point = this.#getPoint({ image: image, geojson: feature });
-            return point.feature();
+            this.#addPoint({ image: image, geojson: feature });
 
         } catch (err) {
             alert(err);
@@ -64,9 +72,12 @@ class GeoJSONFeatures {
     }
 
     remove = ({ id }) => {
+        const feature = this.#pointsMap.get(id).feature();
         if (!this.#pointsMap.delete(id)) {
             this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
         }
+
+        this.#removeFromMap(feature)
     }
 
     saveAllPoints = async (title) => {
@@ -78,12 +89,13 @@ class GeoJSONFeatures {
         }
     }
 
-    #getPoint = ({ image, latlng, geojson }) => {
+    #addPoint = ({ image, latlng, geojson }) => {
         const point = new Point({ image, latlng, geojson });
         this.#checkExisting(point.id());
 
         this.#pointsMap.set(point.id(), point);
-        return point;
+
+        this.#addToMap(point.feature());
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)

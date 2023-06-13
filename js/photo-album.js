@@ -2,28 +2,26 @@ import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
 
-    const map = document.querySelector('leaflet-map');
     let points = 0;
-    const geojsonFeatures = new GeoJSONFeatures(map);
+    const map = document.querySelector('leaflet-map');
+    const geojsonFeatures = new GeoJSONFeatures(
+        feature => {
+            map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+                detail: {
+                    geojson: feature
+                }
+            }));
 
-    const addPoint = feature => {
-        map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
-            detail: {
-                geojson: feature
+            points++;
+            showSavingArea();
+        },
+        () => {
+            points--;
+            if (!points) {
+                hideSavingArea();
             }
-        }));
-
-        points++;
-
-        showSavingArea()
-    }
-
-    const removePoint = () => {
-        points--;
-        if (!points) {
-            hideSavingArea();
         }
-    }
+    );
 
     [
         'drop-photo-for-exif:image',
@@ -35,8 +33,7 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
-            const feature = geojsonFeatures.getPhotoFeature(data);
-            addPoint(feature);
+            const feature = geojsonFeatures.addPhoto(data);
         }
         else {
             alert(`The added photo '${data.name}' has no geolocation data`);
@@ -60,13 +57,11 @@ window.onload = () => {
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
         const { feature } = event.detail;
         geojsonFeatures.remove(feature);
-        removePoint()
     })
 
     document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
         const { detail: { latlng } } = event;
-        const feature = geojsonFeatures.getMarkerFeature(latlng);
-        addPoint(feature);
+        geojsonFeatures.addPoint(latlng);
     })
 
     const saving = document.getElementById('saving-area');
