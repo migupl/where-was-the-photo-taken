@@ -96,6 +96,7 @@ class GeoJSONFeatures {
         this.#pointsMap.set(point.id(), point);
 
         this.#addToMap(point.feature());
+        this.#updateUsingGeojson(point);
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
@@ -181,19 +182,28 @@ class GeoJSONFeatures {
         }
     }
 
-    #updateUsingGeojson = () => {
+    #updateUsingGeojson = pointOnMap => {
         if (this.#geojson) {
             this.#geojson.features
                 .forEach(feature => {
-                    const point = this.#pointsMap.get(feature.id);
-                    if (point) {
-                        !point.wasUpdated() && this.#updatePoint([feature], point);
+                    if (pointOnMap) {
+                        pointOnMap.id() === feature.id && this.#updateWithGeojson(pointOnMap, feature)
                     }
-                    else if (this.#isAPointWithoutPhoto(feature)) {
-                        const [lng, lat] = feature.geometry.coordinates;
-                        this.#addPoint({ latlng: { lat: lat, lng: lng }, geojson: feature })
+                    else {
+                        const point = this.#pointsMap.get(feature.id);
+                        this.#updateWithGeojson(point, feature);
                     }
                 })
+        }
+    }
+
+    #updateWithGeojson(point, feature) {
+        if (point) {
+            !point.wasUpdated() && this.#updatePoint([feature], point);
+        }
+        else if (this.#isAPointWithoutPhoto(feature)) {
+            const [lng, lat] = feature.geometry.coordinates;
+            this.#addPoint({ latlng: { lat: lat, lng: lng }, geojson: feature });
         }
     }
 }
