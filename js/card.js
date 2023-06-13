@@ -24,37 +24,8 @@ class Card {
 
     wasUpdated = () => this.#updated
 
-    #setDescription = description => {
-        if (description) {
-            this.#feature.properties.description = description;
-        }
-    }
-
-    #setPopup = () => {
-        const cardEl = document
-            .createRange()
-            .createContextualFragment(this.#template);
-
-        const { id, properties, data: { image } } = this.#feature;
-
-        if (image) {
-            const img = cardEl.querySelector('img');
-            img.src = URL.createObjectURL(image);
-            img.alt = id;
-        }
-
-        const title = cardEl.querySelector('input');
-        title.placeholder = id;
-        if (properties.name) {
-            title.value = properties.name;
-        }
-        title.addEventListener('input', event => {
-            event.stopPropagation();
-
-            const { value: name } = event.target;
-            this.#setTitle(name);
-            this.#updated = true;
-        });
+    #addDescriptionTo = cardEl => {
+        const { properties } = this.#feature;
 
         const description = cardEl.querySelector('textarea');
         description.placeholder = 'A description about...';
@@ -68,7 +39,51 @@ class Card {
             this.#setDescription(description);
             this.#updated = true;
         });
+    }
 
+    #addImageTo = cardEl => {
+        const { id, data: { image } } = this.#feature;
+
+        if (image) {
+            const img = cardEl.querySelector('img');
+            img.src = URL.createObjectURL(image);
+            img.alt = id;
+        }
+    }
+
+    #addTitleTo = cardEl => {
+        const { id, properties } = this.#feature;
+
+        const title = cardEl.querySelector('input');
+        title.placeholder = id;
+        if (properties.name) {
+            title.value = properties.name;
+        }
+        title.addEventListener('input', event => {
+            event.stopPropagation();
+
+            const { value: name } = event.target;
+            this.#setTitle(name);
+            this.#updated = true;
+        });
+    }
+
+    #setDescription = description => {
+        if (description) {
+            this.#feature.properties.description = description;
+        }
+    }
+
+    #setPopup = () => {
+        const cardEl = document
+            .createRange()
+            .createContextualFragment(this.#template);
+
+        const { id, properties, data: { image } } = this.#feature;
+
+        this.#addImageTo(cardEl);
+        this.#addTitleTo(cardEl);
+        this.#addDescriptionTo(cardEl);
         this.#setPopupContent(cardEl);
     }
 
