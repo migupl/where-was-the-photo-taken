@@ -65,32 +65,6 @@ class LeafletMap extends HTMLElement {
 
     }
 
-    #addNewMarkerTo = map => {
-        const isAddingAllowed = this.hasAttribute('allowAddMarker');
-        if (!isAddingAllowed) return;
-
-        const getAddingButton = latlng => {
-            const { lat, lng } = latlng;
-
-            let btn = document.createElement('button');
-            btn.style = 'background-color: blue; border: none; border-radius: 8px; color: white; padding: 10px;';
-            btn.innerText = `Click to adding a point at lat: ${lat}, lng: ${lng}`;
-            btn.onclick = _ => {
-                this.#fireMarkerAdded(latlng);
-                map.closePopup();
-            };
-
-            return btn;
-        }
-
-        map.addEventListener('contextmenu', e => {
-            const { latlng } = e;
-            const btn = getAddingButton(latlng);
-            map.openPopup(btn, latlng, { closeButton: false })
-        });
-
-    }
-
     #appendChild = element => this.shadowRoot.appendChild(element)
 
     #fireEvent = (eventName, detail) => {
@@ -103,14 +77,14 @@ class LeafletMap extends HTMLElement {
     }
 
     #fireMarkerAdded = latlng => {
-        this.#fireEvent('x-leaflet-map:marker-added', {
+        this.#fireEvent('x-leaflet-map:marker-pointed-out', {
             latlng: latlng
         });
     }
 
     #fireMarkerRemoved = feature => {
         this.#fireEvent('x-leaflet-map:marker-removed', {
-                feature: feature
+            feature: feature
         });
     }
 
@@ -199,20 +173,35 @@ class LeafletMap extends HTMLElement {
                 const { latlng: { lng, lat } } = event.detail;
                 const latLng = L.latLng(lat, lng);
 
-                const latLngBounds = L.latLngBounds([latLng]);
-                latLngPoints.push(latLngBounds);
+                latLngPoints.push(latLng);
 
-                if (this.hasAttribute('fitToBounds')) map.fitBounds(latLngPoints)
-                else if (this.hasAttribute('flyToBounds')) map.flyToBounds(latLngPoints);
+                this.#setViewToBounds(map, latLngPoints);
             }
         });
     }
 
-    #remove = (layer, markers) => {
-        if (layer.feature) {
+    #remove = ({ layer, markers, removingLatLng, theMap }) => {
+        const { feature } = layer;
+        if (feature) {
+            let { map, latLngPoints } = theMap;
+            const removingPoint = L.latLng(removingLatLng);
+            const remainingPoints = latLngPoints.filter(point => !point.equals(removingPoint, 0));
+
             markers.removeLayer(layer);
-            this.#fireMarkerRemoved(layer.feature);
+            this.#fireMarkerRemoved(feature);
+
+            theMap.latLngPoints = remainingPoints;
+
+            if (remainingPoints.length)
+                this.#setViewToBounds(map, remainingPoints);
         }
+    }
+
+    #setViewToBounds(map, latLngPoints) {
+        if (this.hasAttribute('fitToBounds'))
+            map.fitBounds(latLngPoints);
+        else if (this.hasAttribute('flyToBounds'))
+            map.flyToBounds(latLngPoints);
     }
 }
 
