@@ -24,6 +24,50 @@ class Card {
 
     wasUpdated = () => this.#updated
 
+    #addDescriptionTo = cardEl => {
+        const { properties } = this.#feature;
+
+        const description = cardEl.querySelector('textarea');
+        description.placeholder = 'A description about...';
+        if (properties.description) {
+            description.value = properties.description;
+        }
+        description.addEventListener('input', event => {
+            event.stopPropagation();
+
+            const { value: description } = event.target;
+            this.#setDescription(description);
+            this.#updated = true;
+        });
+    }
+
+    #addImageTo = cardEl => {
+        const { id, data: { image } } = this.#feature;
+
+        if (image) {
+            const img = cardEl.querySelector('img');
+            img.src = URL.createObjectURL(image);
+            img.alt = id;
+        }
+    }
+
+    #addTitleTo = cardEl => {
+        const { id, properties } = this.#feature;
+
+        const title = cardEl.querySelector('input');
+        title.placeholder = id;
+        if (properties.name) {
+            title.value = properties.name;
+        }
+        title.addEventListener('input', event => {
+            event.stopPropagation();
+
+            const { value: name } = event.target;
+            this.#setTitle(name);
+            this.#updated = true;
+        });
+    }
+
     #setDescription = description => {
         if (description) {
             this.#feature.properties.description = description;
@@ -35,32 +79,11 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const { id, properties, data } = this.#feature;
+        const { id, properties, data: { image } } = this.#feature;
 
-        const img = cardEl.querySelector('img');
-        img.src = URL.createObjectURL(data.image);
-        img.alt = id;
-
-        const title = cardEl.querySelector('input');
-        title.placeholder = id;
-        title.addEventListener('input', event => {
-            event.stopPropagation();
-
-            const { value: name } = event.target;
-            this.#setTitle(name);
-            this.#updated = true;
-        });
-
-        const description = cardEl.querySelector('textarea');
-        description.placeholder = properties.description;
-        description.addEventListener('input', event => {
-            event.stopPropagation();
-
-            const { value: description } = event.target;
-            this.#setDescription(description);
-            this.#updated = true;
-        });
-
+        this.#addImageTo(cardEl);
+        this.#addTitleTo(cardEl);
+        this.#addDescriptionTo(cardEl);
         this.#setPopupContent(cardEl);
     }
 

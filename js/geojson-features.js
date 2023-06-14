@@ -6,14 +6,46 @@ class GeoJSONFeatures {
     #pointsMap = new Map();
     #geojson;
 
-    add = (geojsonFile, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
-        this.#read(geojsonFile, doAfter);
+    #addToMap; #removeFromMap;
+
+    constructor(
+        addToMap = feature => console.log('Action for adding to map'),
+        removeFromMap = feature => console.log('Action for removing from map')
+    ) {
+        this.#addToMap = addToMap;
+        this.#removeFromMap = removeFromMap;
+    }
+
+    add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
+        if (this.#isGeojson(file)) {
+            try {
+                this.#readGeojsonFile(file, doAfter);
+
+            } catch (err) {
+                alert(err);
+            }
+        }
+    }
+
+    addPoint = latlng => {
+        const { lat, lng } = latlng;
+
+        const feature = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+            },
+            data: {
+            }
+        };
+
+        this.#addPoint({ latlng: latlng, geojson: feature });
     }
 
     addPhoto = metadata => {
         try {
             const { name } = metadata;
-            this.#checkExisting(name);
 
             const { image, location: { latitude, longitude, altitude }, exif } = metadata;
             const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
@@ -32,50 +64,53 @@ class GeoJSONFeatures {
                 }
             };
 
-            const point = new Point(image, feature);
-            this.#pointsMap.set(point.id(), point);
+            this.#addPoint({ image: image, geojson: feature });
 
         } catch (err) {
             alert(err);
         }
     }
 
-    isGeojson = file => 'application/geo+json' === file.type;
+    remove = ({ id }) => {
+        const feature = this.#pointsMap.get(id).feature();
+        if (!this.#pointsMap.delete(id)) {
+            this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
+        }
 
-    getGeoJSONPoints = () => {
-        const pointsArr = this.#pointsArray();
-        this.#updateUsingGeojson(pointsArr);
-
-        return pointsArr.map(point => {
-            const { feature } = point;
-            return {
-                id: point.id(),
-                geojson: feature
-            }
-        });
-    }
-
-    remove = id => {
-        if (!this.#pointsMap.delete(id)) this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
+        this.#removeFromMap(feature)
     }
 
     saveAllPoints = async (title) => {
         const points = this.#pointsArray()
-            .map(point => point.feature);
+            .map(point => point.feature());
 
         if (points.length > 0) {
             await SaveFeatures.toFile(points, title);
         }
     }
 
+    #addPoint = ({ image, latlng, geojson }) => {
+        const point = new Point({ image, latlng, geojson });
+        this.#checkExisting(point.id());
+
+        this.#pointsMap.set(point.id(), point);
+
+        this.#addToMap(point.feature());
+        this.#updateUsingGeojson(point);
+    }
+
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
 
     #checkExisting = filename => {
-        if (this.#pointsMap.get(filename)) this.#error(`The image '${filename}' already exists`)
+        if (this.#pointsMap.get(filename)) {
+            this.#error(`The image '${filename}' already exists`);
+        }
     }
 
     #checkIsValid = json => {
-        if (!json.hasOwnProperty('type')) this.#error('Invalid GeoJSON format')
+        if (!json.hasOwnProperty('type')) {
+            this.#error('Invalid GeoJSON format')
+        }
     }
 
     #composeTitle = filename => {
@@ -97,10 +132,6 @@ class GeoJSONFeatures {
         }
     }
 
-    #extractNumeric = text => text.match(/[0-9.]/g).join('')
-
-    #hasElements = array => array && array.length > 0;
-
     #DMS2Decimal = (latitude, longitude) => {
         let lat = this.#extractNumeric(latitude);
         let lng = this.#extractNumeric(longitude);
@@ -111,56 +142,70 @@ class GeoJSONFeatures {
         return [lat, lng];
     }
 
+    #extractNumeric = text => text.match(/[0-9.]/g).join('')
+
+    #hasElements = array => array && array.length > 0;
+
+    #isGeojson = file => 'application/geo+json' === file.type;
+
+    #isAPointWithoutPhoto = feature => !feature.data.image
+
     #pointsArray() {
         const points = this.#pointsMap.values();
         return points ? Array.from(points) : [];
     }
 
-    #read = (geojsonFile, doAfter) => {
-        const reader = new FileReader();
-        reader.addEventListener('loadend', () => {
-            try {
-                if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
+    #readGeojsonFile = (file, doAfter) => {
+            if (this.#geojson) this.#error('Only a GeoJSON file is allowed');
 
+            const reader = new FileReader();
+            reader.addEventListener('loadend', () => {
                 const json = JSON.parse(reader.result);
                 this.#checkIsValid(json);
 
                 this.#geojson = json;
-                const title = this.#composeTitle(geojsonFile.name);
+                const title = this.#composeTitle(file.name);
 
                 doAfter(title);
                 this.#updateUsingGeojson();
+            });
 
-            } catch (err) {
-                alert(err);
-            }
-        });
-
-        reader.readAsText(geojsonFile);
+            reader.readAsText(file);
     }
 
     #updatePoint(data, point) {
         if (this.#hasElements(data)) {
             const newerGeojson = data[0];
-            const { card, feature } = point;
-            if (!this.#areGeojsonEqual(newerGeojson, feature)) {
-                card.updatePopup(newerGeojson);
+            if (!this.#areGeojsonEqual(newerGeojson, point.feature())) {
+                point.updatePopupWith(newerGeojson);
             }
         }
     }
 
-    #updateUsingGeojson = (points = this.#pointsArray()) => {
+    #updateUsingGeojson = pointOnMap => {
         if (this.#geojson) {
-            points
-                .filter(point => !point.wasUpdated())
-                .forEach(point => {
-                    const data = this.#geojson.features
-                        .filter(feature => point.has(feature));
-                    this.#updatePoint(data, point);
+            this.#geojson.features
+                .forEach(feature => {
+                    if (pointOnMap) {
+                        pointOnMap.id() === feature.id && this.#updateWithGeojson(pointOnMap, feature)
+                    }
+                    else {
+                        const point = this.#pointsMap.get(feature.id);
+                        this.#updateWithGeojson(point, feature);
+                    }
                 })
+        }
+    }
+
+    #updateWithGeojson(point, feature) {
+        if (point) {
+            !point.wasUpdated() && this.#updatePoint([feature], point);
+        }
+        else if (this.#isAPointWithoutPhoto(feature)) {
+            const [lng, lat] = feature.geometry.coordinates;
+            this.#addPoint({ latlng: { lat: lat, lng: lng }, geojson: feature });
         }
     }
 }
 
-const geojsonFeatures = new GeoJSONFeatures();
-export { geojsonFeatures as GeoJSONFeatures }
+export { GeoJSONFeatures }

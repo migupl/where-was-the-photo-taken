@@ -2,12 +2,6 @@
 
 Behind this solution is the location of the photo on a map based on its GPS metadata and the ability to add information about it afterwards.
 
-For this we will combine the following Web Components:
-- [Dropping a photo and getting EXIF data](https://github.com/migupl/drop-photo-get-exif-data)
-- [Locate the photo on a Leaflet map](https://github.com/migupl/vanilla-js-web-component-leaflet-geojson)
-
-Any of the markers added to the map can be deleted by double clicking on it and confirming the deletion.
-
 ## A use case
 
 Let's suppose we have some photos of a trip
@@ -30,6 +24,19 @@ https://github.com/migupl/where-was-the-photo-taken/assets/1670474/0e2ef318-7ee1
 
 We can always add new photos, but only one GeoJSON file.
 
+## Manually add a marker to the map
+
+Add a marker is done clicking with the right button in any point of the map. This action opens a popup with a button for confirmation.
+
+## Remove a marker from the map
+
+Any of the markers added to the map can be deleted by double clicking on it and confirming the deletion.
+
 ## Helpers
 
 A [container is used for hot reloading](https://github.com/migupl/hot-reloading-container) during development.
+
+Web Components behind this idea are:
+- [Dropping a photo and getting EXIF data](https://github.com/migupl/drop-photo-get-exif-data)
+- [Locate the photo on a Leaflet map](https://github.com/migupl/vanilla-js-web-component-leaflet-geojson)
+

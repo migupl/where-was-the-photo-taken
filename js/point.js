@@ -1,29 +1,33 @@
 import { Card } from "./card.js";
 
 class Point {
-    feature; card;
 
-    constructor (image, geojson) {
-        const id = image.name;
+    #feature; #card;
 
-        this.feature = JSON.parse(JSON.stringify(geojson));
-        this.feature.id = id;
+    constructor({ image, latlng, geojson }) {
+        const id = image ? image.name : this.#label(latlng);
 
-        const { data } = this.feature;
-        data.image = image;
+        this.#feature = JSON.parse(JSON.stringify(geojson));
+        this.#feature.id = id;
 
-        this.feature.properties = {
-            name: id,
-            description: 'A description about the image'
-        };
+        const { data } = this.#feature;
+        if (image) {
+            data.image = image;
+        }
 
-        this.card = new Card (this.feature);
+        this.#feature.properties = this.#feature.properties || {};
+
+        this.#card = new Card(this.#feature);
     }
 
-    id = () => this.feature.id
+    id = () => this.#feature.id
+    feature = () => this.#feature
 
     has = feature => this.id() === feature.id
-    wasUpdated = () => this.card.wasUpdated()
+    updatePopupWith = feature => this.#card.updatePopup(feature)
+    wasUpdated = () => this.#card.wasUpdated()
+
+    #label = latlng => `lat: ${latlng.lat}, lng: ${latlng.lng}`
 }
 
 export { Point }
