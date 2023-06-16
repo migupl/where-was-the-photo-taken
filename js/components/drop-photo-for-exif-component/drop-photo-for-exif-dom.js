@@ -1,11 +1,11 @@
 const svgCss = `
 :host {
-      display: block;
-    }
+  display: block;
+}
 
 div.svg-container {
-    position: relative;
-    min-height: 50px;
+  position: relative;
+  min-height: 50px;
 }
 
 .svg-object {
@@ -16,6 +16,7 @@ div.svg-container {
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  z-index: -1;
 }
 `
 export { svgCss }
