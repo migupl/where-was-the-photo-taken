@@ -39,4 +39,5 @@ A [container is used for hot reloading](https://github.com/migupl/hot-reloading-
 Web Components behind this idea are:
 - [Dropping a photo and getting EXIF data](https://github.com/migupl/drop-photo-get-exif-data)
 - [Locate the photo on a Leaflet map](https://github.com/migupl/vanilla-js-web-component-leaflet-geojson)
+- [Yet Another GitHub Corner](https://github.com/migupl/yagc)
 

@@ -13,7 +13,8 @@
 
     <meta property="og:title" content="Another way to view photos on a map">
     <meta property="og:type" content="website">
-    <meta property="og:description" content="Try the link in the about section to drop images, view them on a map and add some information about them.">
+    <meta property="og:description"
+        content="Try the link in the about section to drop images, view them on a map and add some information about them.">
     <meta property="og:url" content="https://github.com/migupl/where-was-the-photo-taken">
 
     <meta name="twitter:title" content="Another way to view photos on a map">
@@ -23,6 +24,8 @@
     <meta name="twitter:creator" content="@migupl">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <script type="module" src="./js/components/yagc/yagc.js"></script>
 
     <script type="module" src="./js/photo-album.js"></script>
     <script type="module" src="./js/components/drop-photo-for-exif-component/drop-photo-for-exif.js"></script>
@@ -127,7 +130,8 @@
         <drop-photo-for-exif></drop-photo-for-exif>
     </header>
     <section>
-        <leaflet-map allowAddMarker flyToBounds customStyle="custom-leaflet-popup:styles/custom-leaflet-popup.css"></leaflet-map>
+        <leaflet-map allowAddMarker flyToBounds
+            customStyle="custom-leaflet-popup:styles/custom-leaflet-popup.css"></leaflet-map>
         <div id="saving-area" class="container" style="display: none;">
             <div class="item">
                 <input type="text" id="title" name="title" placeholder="A title to group all photos">
@@ -137,6 +141,8 @@
             </div>
         </div>
     </section>
+
+    <ya-gc url="https://github.com/migupl/where-was-the-photo-taken"></ya-gc>
 </body>
 
 </html>

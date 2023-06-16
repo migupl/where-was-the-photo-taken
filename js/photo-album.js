@@ -46,10 +46,6 @@ window.onload = () => {
         geojsonFeatures.add(file, refreshTitle);
     });
 
-    document.addEventListener('drop-photo-for-exif:completed-batch', (event) => {
-        console.log(event)
-    });
-
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
         const { feature } = event.detail;
         geojsonFeatures.remove(feature);
