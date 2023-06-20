@@ -79,13 +79,21 @@ class LeafletMapFeatures {
         return r;
     }, Object.create(null));
 
+    #makeDraggable = marker => marker
+        .on('dragend', ev => {
+            const marker = ev.target;
+            const { lat, lng } = marker.getLatLng();
+            const position = new L.LatLng(lat, lng);
+            marker.setLatLng(position);
+        });
+
     #onEachFeature = (feature, layer) => {
         if (feature?.properties?.popupContent) {
             this.#bindPopup(layer, feature.properties.popupContent);
         }
     }
 
-    #pointToLayer = (feature, map) => {
+    #pointToLayer = (feature, map, makeDraggable = this.#makeDraggable) => {
         return L.geoJSON(feature, {
             coordsToLatLng: this.#coordsToLatLng(map),
             onEachFeature: this.#onEachFeature,
@@ -94,17 +102,22 @@ class LeafletMapFeatures {
                 const isCircle = feature?.properties?.radius;
 
                 if (isCircle) {
-                    const properties = {
+                    const options = {
                         ...feature.properties,
                     }
-                    delete properties.style;
-                    point = L.circle(latlng, properties);
+                    delete options.style;
+                    delete options.draggable;
+                    point = L.circle(latlng, options);
                 }
                 else {
-                    const icon = {
-                        icon: L.icon(feature?.properties?.icon || LeafletMapFeatures.DEFAULT_MARKER)
+                    const isDraggable = feature?.properties?.draggable || false;
+                    const options = {
+                        icon: L.icon(feature?.properties?.icon || LeafletMapFeatures.DEFAULT_MARKER),
+                        draggable: isDraggable
                     };
-                    point = L.marker(latlng, icon);
+
+                    point = L.marker(latlng, options);
+                    if (isDraggable) makeDraggable(point);
                 }
 
                 return point;
