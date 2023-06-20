@@ -121,6 +121,51 @@
             position: relative;
             min-height: 100%;
         }
+
+        dialog {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            width: 50%;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+
+            border: none;
+            border-radius: 1em;
+            background-color: lightgrey;
+            opacity: 0.75;
+            
+            z-index: 2147483647;
+        }
+
+        dialog button {
+            position: absolute;
+            background:darkgrey;
+            color: black;
+            border-style: groove;
+            border-color: white;
+            border-radius: 1em;
+            padding: 0.5em;
+            top: -1.25em;
+            left: 50%;
+            -ms-transform: translate(-50%);
+            transform: translate(-50%);
+        }
+
+        dialog p {
+            width: 100%;
+            text-align: left;
+        }
+
+        @media (max-width:500px) {
+            dialog {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 
@@ -140,6 +185,21 @@
             </div>
         </div>
     </section>
+
+    <dialog open>
+        <h2>Another way to view photos on a map</h2>
+        <p>Drop photos with location metadata and they will be automatically displayed on the map as a marker.</p>
+        <p>Each marker allows you to add a title and a short description by clicking on it.</p>
+        <p>All this <strong>information can be saved</strong> in a GeoJSON file for later use.
+            Give it a title in the field at the top of the map and click the save button.
+            Next time drop this file with the photos to continue working on them.</p>
+        <h3>Manually add a marker to the map</h3>
+        <p>Add a marker is done clicking with the right button in any point of the map. This action opens a popup with a button for
+        confirmation. <strong>This marker will be draggable</strong>.</p>
+        <h3>Remove a marker from the map</h3>
+        <p>Any of the markers on the map can be deleted by double clicking on it and confirming the deletion.</p>
+        <button>Close</button>
+    </dialog>
 
     <ya-gc url="https://github.com/migupl/where-was-the-photo-taken" openInNewWindow></ya-gc>
 </body>

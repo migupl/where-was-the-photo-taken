@@ -72,4 +72,22 @@ window.onload = () => {
         const title = titleEl.value || titleEl.placeholder
         geojsonFeatures.saveAllPoints(title);
     });
+
+    const getConfiguredHelperDialog = () => {
+        const dialog = document.getElementsByTagName('dialog')[0];
+        dialog.addEventListener('close', event => {
+            event.stopPropagation();
+            dialog.style = 'display: none;'
+        });
+
+        const closeDialog = dialog.getElementsByTagName('button')[0];
+        closeDialog.addEventListener('click', event => {
+            event.stopPropagation();
+            dialog.close()
+        });
+
+        return dialog;
+    }
+    const helperDialog = getConfiguredHelperDialog();
+    helperDialog.show();
 }
