@@ -1,16 +1,16 @@
 import { dropFiles } from "./drop-photo-for-exif-files.js";
-import { svgCss } from "./drop-photo-for-exif-dom.js";
+import { shadowCss } from "./drop-photo-for-exif-dom.js";
 import { getExifReaderScript } from "./drop-photo-for-exif-load.js";
 
 class DropPhotoForExif extends HTMLElement {
 
-    #isMobile;
+    #isMobile; #helperText;
 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
 
-        this.#isMobile = this.#isMobileBrowser(navigator.userAgent || window.opera);
+        this.#setProperties();
 
         this.#stopDefaultsForDragAndDropEvents();
         this.#extractExifData();
@@ -19,28 +19,38 @@ class DropPhotoForExif extends HTMLElement {
     connectedCallback() {
         this.#addCss();
         this.#addIcon();
+        this.#addHelperText();
     }
 
     #addCss = () => {
-        const css = document.createElement('style');
-        css.innerHTML = svgCss;
-        this.shadowRoot.appendChild(css);
+        const contentCss = document.createElement('style');
+        contentCss.textContent = shadowCss;
+        this.shadowRoot.appendChild(contentCss);
+    }
+
+    #addHelperText() {
+        const divEl = document.createElement('div');
+        divEl.className = 'item';
+        this.shadowRoot.appendChild(divEl);
+
+        const helpEl = document.createElement('span');
+        helpEl.textContent = this.#helperText;
+        divEl.appendChild(helpEl);
     }
 
     #addIcon = () => {
-        const div = document.createElement('div');
-        div.className = 'svg-container';
-        this.shadowRoot.appendChild(div);
+        const divEl = document.createElement('div');
+        divEl.className = 'item';
+        this.shadowRoot.appendChild(divEl);
 
-        const svg = document.createElement('object');
-        svg.setAttribute('class', 'svg-object');
-        svg.setAttribute('type', 'image/svg+xml');
+        const svgEl = document.createElement('object');
+        svgEl.setAttribute('type', 'image/svg+xml');
 
         const dirname = this.#getDirname();
         const svgFilename = this.#isMobile ? 'alt-plus-folder' : 'drop-photo'
-        svg.setAttribute('data', `${dirname}${svgFilename}.svg`);
+        svgEl.setAttribute('data', `${dirname}${svgFilename}.svg`);
 
-        div.appendChild(svg);
+        divEl.appendChild(svgEl);
     }
 
     #extractExifData = () => this.#isMobile ? this.#extractExifDataOnClick() : this.#extractExifDataOnDrop()
@@ -118,6 +128,12 @@ class DropPhotoForExif extends HTMLElement {
         fireOnFile = this.#fireFileEvent,
         fireOnCompletion = this.#fireOnCompleted
     ) => dropFiles.process(items, fireOnImage, fireOnFile, fireOnCompletion)
+
+    #setProperties() {
+        this.#isMobile = this.#isMobileBrowser(navigator.userAgent || window.opera);
+        this.#helperText = this.getAttribute('helperText') ||
+            (this.#isMobile ? 'Choose files' : 'Drop files here');
+    }
 
     #stopDefaultsForDragAndDropEvents = () => {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {

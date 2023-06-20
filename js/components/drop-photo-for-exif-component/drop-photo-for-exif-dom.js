@@ -1,22 +1,31 @@
-const svgCss = `
+const shadowCss = `
 :host {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 10px;
+  border-style: dashed;
+
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%);
+  transform: translate(-50%);
 }
 
-div.svg-container {
-  position: relative;
+.item {
+  margin: 10px;
+}
+
+div object {
   min-height: 50px;
 }
 
-.svg-object {
-  margin: 0;
-  position: absolute;
-  max-height: 90%;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+div > * {
+  position: relative;
   z-index: -1;
 }
 `
-export { svgCss }
+
+export { shadowCss }
