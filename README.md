@@ -28,6 +28,8 @@ We can always add new photos, but only one GeoJSON file.
 
 Add a marker is done clicking with the right button in any point of the map. This action opens a popup with a button for confirmation.
 
+This marker will be draggable.
+
 ## Remove a marker from the map
 
 Any of the markers added to the map can be deleted by double clicking on it and confirming the deletion.
