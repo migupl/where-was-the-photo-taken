@@ -37,6 +37,9 @@ class GeoJSONFeatures {
                 coordinates: [lng, lat]
             },
             data: {
+            },
+            properties: {
+                draggable: true
             }
         };
 
