@@ -24,16 +24,15 @@ window.onload = () => {
         }
     );
 
-    const stopEventPropagationOnDocument = () => {
+    const addActionsOnDocumentEvents = () => {
         [
             'drop-photo-for-exif:image',
             'drop-photo-for-exif:file',
             'drop-photo-for-exif:completed-batch',
-            'x-leaflet-map:marker-removed'
+            'x-leaflet-map:marker-removed',
+            'x-leaflet-map:marker-pointed-out'
         ].forEach(eventName => document.addEventListener(eventName, e => e.stopPropagation()))
-    }
 
-    const addActionsOnDocumentEvents = () => {
         let imagesWithouLocation = [];
         document.addEventListener('drop-photo-for-exif:image', (event) => {
             const data = event.detail;
@@ -116,7 +115,5 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     helperDialog.show();
 
     addActionOnSavePage();
-
-    stopEventPropagationOnDocument();
     addActionsOnDocumentEvents();
 }
