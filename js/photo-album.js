@@ -2,27 +2,33 @@ import { GeoJSONFeatures } from './geojson-features.js';
 
 window.onload = () => {
 
-    let points = 0;
-    const map = document.querySelector('leaflet-map');
-    const geojsonFeatures = new GeoJSONFeatures(
-        feature => {
-            map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
-                detail: {
-                    geojson: feature
-                }
-            }));
+    const getGeojsonFeatures = () => {
+        let points = 0;
+        const map = document.querySelector('leaflet-map');
+        const features = new GeoJSONFeatures(
+            feature => {
+                map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+                    detail: {
+                        geojson: feature
+                    }
+                }));
 
-            points++;
-            savingAreaShow();
-        },
-        () => {
-            points--;
-            if (!points) {
-                savingAreaHide();
-                pageTitleClear();
+                points++;
+                savingAreaShow();
+            },
+            () => {
+                points--;
+                if (!points) {
+                    savingAreaHide();
+                    pageTitleClear();
+                }
             }
-        }
-    );
+        );
+
+        return features;
+    }
+
+    const geojsonFeatures = getGeojsonFeatures();
 
     const addActionsOnDocumentEvents = () => {
         [
