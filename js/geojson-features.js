@@ -48,8 +48,6 @@ class GeoJSONFeatures {
 
     addPhoto = metadata => {
         try {
-            const { name } = metadata;
-
             const { image, location: { latitude, longitude, altitude }, exif } = metadata;
             const [lat, lng] = this.#DMS2Decimal(latitude, longitude);
 
