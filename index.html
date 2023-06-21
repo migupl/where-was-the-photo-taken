@@ -35,24 +35,27 @@
         html,
         body {
             height: 100%;
+            width: 100%;
             margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            width: 100%;
-            height: 9.5%;
-            min-height: 3.2em;
+            height: 81px;
         }
 
         main {
-            height: 90.5%;
-            width: 100%;
-            border-radius: 0.6em;
-            position: relative;
+            flex: auto;
         }
 
         drop-photo-for-exif {
             width: 100%;
+            margin: 1px;
         }
 
         .container {
