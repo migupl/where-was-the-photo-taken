@@ -13,13 +13,13 @@ window.onload = () => {
             }));
 
             points++;
-            showSavingArea();
+            savingAreaShow();
         },
         () => {
             points--;
             if (!points) {
-                hideSavingArea();
-                clearPageTitle();
+                savingAreaHide();
+                pageTitleClear();
             }
         }
     );
@@ -44,7 +44,7 @@ window.onload = () => {
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-        geojsonFeatures.add(file, refreshPageTitle);
+        geojsonFeatures.add(file, pageTitleSet);
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
@@ -68,27 +68,30 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         geojsonFeatures.addPoint(latlng);
     })
 
-    const clearPageTitle = () => getPageTitle().value = '';
-    const getPageTitle = () => document.getElementById('title');
-    const getPageTitleContent = () => {
-        const titleEl = getPageTitle();
+    const addActionOnSavePage = () => {
+        const save = document.getElementById('save-all');
+        save.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            const title = pageTitleContent();
+            geojsonFeatures.saveAllPoints(title);
+        });
+    }
+
+    const pageTitle = () => document.getElementById('title');
+    const pageTitleClear = () => pageTitle().value = '';
+    const pageTitleContent = () => {
+        const titleEl = pageTitle();
         return titleEl.value || titleEl.placeholder;
     }
-    const getSavingArea = () => document.getElementById('saving-area');
-    const refreshPageTitle = title => getPageTitle().value = title;
+    const pageTitleSet = title => pageTitle().value = title;
 
-    clearPageTitle();
+    const savingArea = () => document.getElementById('saving-area');
+    const savingAreaHide = () => savingArea().style.display = 'none'
+    const savingAreaShow = () => savingArea().style.display = 'flex'
 
-    const showSavingArea = () => getSavingArea().style.display = 'flex'
-    const hideSavingArea = () => getSavingArea().style.display = 'none'
-
-    const save = document.getElementById('save-all');
-    save.addEventListener('click', (event) => {
-        event.stopPropagation();
-
-        const title = getPageTitleContent();
-        geojsonFeatures.saveAllPoints(title);
-    });
+    pageTitleClear();
+    addActionOnSavePage();
 
     const getConfiguredHelperDialog = () => {
         const dialog = document.getElementsByTagName('dialog')[0];
