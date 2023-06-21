@@ -78,22 +78,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         });
     }
 
-    const pageTitle = () => document.getElementById('title');
-    const pageTitleClear = () => pageTitle().value = '';
-    const pageTitleContent = () => {
-        const titleEl = pageTitle();
-        return titleEl.value || titleEl.placeholder;
-    }
-    const pageTitleSet = title => pageTitle().value = title;
-
-    const savingArea = () => document.getElementById('saving-area');
-    const savingAreaHide = () => savingArea().style.display = 'none'
-    const savingAreaShow = () => savingArea().style.display = 'flex'
-
-    pageTitleClear();
-    addActionOnSavePage();
-
-    const getConfiguredHelperDialog = () => {
+    const addHelperDialogAndGetIt = () => {
         const dialog = document.getElementsByTagName('dialog')[0];
         dialog.addEventListener('close', event => {
             event.stopPropagation();
@@ -108,6 +93,23 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
 
         return dialog;
     }
-    const helperDialog = getConfiguredHelperDialog();
+
+    const pageTitle = () => document.getElementById('title');
+    const pageTitleClear = () => pageTitle().value = '';
+    const pageTitleContent = () => {
+        const titleEl = pageTitle();
+        return titleEl.value || titleEl.placeholder;
+    }
+    const pageTitleSet = title => pageTitle().value = title;
+
+    const savingArea = () => document.getElementById('saving-area');
+    const savingAreaHide = () => savingArea().style.display = 'none'
+    const savingAreaShow = () => savingArea().style.display = 'flex'
+
+    pageTitleClear();
+
+    const helperDialog = addHelperDialogAndGetIt();
     helperDialog.show();
+
+    addActionOnSavePage();
 }
