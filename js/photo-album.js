@@ -34,7 +34,7 @@ window.onload = () => {
     document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
-            const feature = geojsonFeatures.addPhoto(data);
+            geojsonFeatures.addPhoto(data);
         }
         else {
             alert(`The added photo '${data.name}' has no geolocation data`);
