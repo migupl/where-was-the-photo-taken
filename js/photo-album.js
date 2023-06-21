@@ -72,6 +72,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const refreshTitle = title => titleEl.value = title;
 
     const clearPageTitle = () => titleEl.value = '';
+    const getPageTitleContent = () => titleEl.value || titleEl.placeholder;
     clearPageTitle();
 
     const saving = document.getElementById('saving-area');
@@ -82,7 +83,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     save.addEventListener('click', (event) => {
         event.stopPropagation();
 
-        const title = titleEl.value || titleEl.placeholder
+        const title = getPageTitleContent();
         geojsonFeatures.saveAllPoints(title);
     });
 
