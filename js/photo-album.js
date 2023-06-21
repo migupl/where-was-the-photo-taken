@@ -19,7 +19,7 @@ window.onload = () => {
             points--;
             if (!points) {
                 hideSavingArea();
-                titleEl.value = '';
+                clearPageTitle();
             }
         }
     );
@@ -71,7 +71,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const titleEl = document.getElementById('title');
     const refreshTitle = title => titleEl.value = title;
 
-    titleEl.value = '';
+    const clearPageTitle = () => titleEl.value = '';
+    clearPageTitle();
 
     const saving = document.getElementById('saving-area');
     const showSavingArea = () => saving.style.display = 'flex'
