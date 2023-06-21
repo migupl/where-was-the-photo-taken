@@ -31,13 +31,14 @@ window.onload = () => {
         'x-leaflet-map:marker-removed'
     ].forEach(eventName => document.addEventListener(eventName, e => e.stopPropagation()))
 
+    let imagesWithouLocation = [];
     document.addEventListener('drop-photo-for-exif:image', (event) => {
         const data = event.detail;
         if (data.location) {
             geojsonFeatures.addPhoto(data);
         }
         else {
-            alert(`The added photo '${data.name}' has no geolocation data`);
+            imagesWithouLocation.push(data.name);
         }
     });
 
@@ -45,6 +46,17 @@ window.onload = () => {
         const file = event.detail;
         geojsonFeatures.add(file, refreshTitle);
     });
+
+    document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
+        if (imagesWithouLocation.length > 0) {
+            const imagesStr = imagesWithouLocation.map(name => `'${name}'`).join(', ');
+            alert(`Added photos without geolocation metadata: ${imagesStr}.
+
+You can check the images metadata at
+https://migupl.github.io/drop-photo-get-exif-data/`);
+            imagesWithouLocation = [];
+        }
+    })
 
     document.addEventListener('x-leaflet-map:marker-removed', (event) => {
         const { feature } = event.detail;
