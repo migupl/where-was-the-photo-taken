@@ -44,7 +44,7 @@ window.onload = () => {
 
     document.addEventListener('drop-photo-for-exif:file', (event) => {
         const file = event.detail;
-        geojsonFeatures.add(file, refreshTitle);
+        geojsonFeatures.add(file, refreshPageTitle);
     });
 
     document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
@@ -68,16 +68,19 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         geojsonFeatures.addPoint(latlng);
     })
 
-    const titleEl = document.getElementById('title');
-    const refreshTitle = title => titleEl.value = title;
+    const clearPageTitle = () => getPageTitle().value = '';
+    const getPageTitle = () => document.getElementById('title');
+    const getPageTitleContent = () => {
+        const titleEl = getPageTitle();
+        return titleEl.value || titleEl.placeholder;
+    }
+    const getSavingArea = () => document.getElementById('saving-area');
+    const refreshPageTitle = title => getPageTitle().value = title;
 
-    const clearPageTitle = () => titleEl.value = '';
-    const getPageTitleContent = () => titleEl.value || titleEl.placeholder;
     clearPageTitle();
 
-    const saving = document.getElementById('saving-area');
-    const showSavingArea = () => saving.style.display = 'flex'
-    const hideSavingArea = () => saving.style.display = 'none'
+    const showSavingArea = () => getSavingArea().style.display = 'flex'
+    const hideSavingArea = () => getSavingArea().style.display = 'none'
 
     const save = document.getElementById('save-all');
     save.addEventListener('click', (event) => {
