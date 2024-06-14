@@ -20,18 +20,14 @@ export const saveFeatures = (() => {
     }
 
     const saveFileWithoutFSAApi = (blob, filename) => {
-        const blobURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = blobURL;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.append(a);
-        a.click();
+        a.href = URL.createObjectURL(blob)
+        a.download = filename
+        a.style.display = 'none'
 
-        setTimeout(() => {
-            URL.revokeObjectURL(blobURL);
-            a.remove();
-        }, 1000);
+        a.onClick = () => URL.revokeObjectURL(a.href)
+        a.click();
+        a.remove();
     }
 
     const saveFileUsingFSAApi = async (blob, filename) => {
@@ -49,8 +45,7 @@ export const saveFeatures = (() => {
         }
     }
 
-    const toFile = (features, suggestedName = 'photos.zip') => {
-        const filename = suggestedName.endsWith('.zip') ? suggestedName : (suggestedName + '.zip');
+    const toFile = (features, name) => {
         const getGeojsonFile = (features, name) => {
             const featureCollection = {
                 type: "FeatureCollection",
@@ -66,7 +61,6 @@ export const saveFeatures = (() => {
             });
             return file;
         };
-        const name = filename.split('.').slice(0, -1).join('.');
 
         const geojsonFile = getGeojsonFile(features, name);
 

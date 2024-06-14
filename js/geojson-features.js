@@ -81,12 +81,12 @@ class GeoJSONFeatures {
         this.#removeFromMap(feature)
     }
 
-    saveAllPoints = async (title) => {
+    saveAllPoints = (title) => {
         const points = this.#pointsArray()
             .map(point => point.feature());
 
         if (points.length > 0) {
-            await saveFeatures.toFile(points, title);
+            saveFeatures.toFile(points, title);
         }
     }
 
