@@ -1,4 +1,4 @@
-import { Card } from "./card.js";
+import { card } from "./card.js";
 
 const point = (image, latlng, geojson) => {
     const feature = JSON.parse(JSON.stringify(geojson));
@@ -12,11 +12,12 @@ const point = (image, latlng, geojson) => {
 
     feature.properties = feature.properties || {}
 
-    const card = new Card(feature);
 
     const has = f => feature.id == f.id;
-    const updatePopupWith = feature => card.updatePopup(feature);
-    const wasUpdated = () => card.wasUpdated();
+
+    const c = card(feature);
+    const updatePopupWith = feature => c.updatePopup(feature);
+    const wasUpdated = () => c.wasUpdated();
 
     return {
         id: feature.id,
