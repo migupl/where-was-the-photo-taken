@@ -22,7 +22,7 @@ export const card = features => {
             event.stopPropagation();
 
             const { value: description } = event.target;
-            setDescription(description);
+            if(description) feature.properties.description = description
             updated = true;
         });
     }
@@ -52,12 +52,6 @@ export const card = features => {
             if (name) feature.properties.name = name
             updated = true
         });
-    }
-
-    const setDescription = description => {
-        if (description) {
-            feature.properties.description = description;
-        }
     }
 
     const setPopup = () => {
