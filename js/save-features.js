@@ -18,10 +18,6 @@ export const saveFeatures = (() => {
 
     const saveGeoJsonFile = (file, name) => {
         const filename = name + '.geojson';
-        saveFile(file, filename);
-    }
-
-    const saveFile = (blob, filename) => {
         const supportsApi = 'showSaveFilePicker' in window &&
                 (() => {
                     try {
@@ -31,12 +27,8 @@ export const saveFeatures = (() => {
                     }
                 })();
 
-        if (supportsApi) {
-            saveFileUsingFSAApi(blob, filename);
-        }
-        else {
-            saveFileWithoutFSAApi(blob, filename);
-        }
+        const saveFile = supportsApi? saveFileUsingFSAApi : saveFileWithoutFSAApi;
+        saveFile(file, filename)
     }
 
     const saveFileWithoutFSAApi = (blob, filename) => {
