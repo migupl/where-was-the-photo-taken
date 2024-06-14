@@ -1,5 +1,5 @@
 import { Point } from './point.js'
-import { SaveFeatures } from "./save-features.js";
+import { saveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
 
@@ -86,7 +86,7 @@ class GeoJSONFeatures {
             .map(point => point.feature());
 
         if (points.length > 0) {
-            await SaveFeatures.toFile(points, title);
+            await saveFeatures.toFile(points, title);
         }
     }
 
