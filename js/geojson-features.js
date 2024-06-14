@@ -209,7 +209,7 @@ class GeoJSONFeatures {
     }
 }
 
-const geojson = ((
+const geojson = (
     addToMap = feature => console.log('Action for adding to map'),
     removeFromMap = feature => console.log('Action for removing from map')
 ) => {
@@ -409,10 +409,9 @@ const geojson = ((
     const pointsMap = new Map();
     let geojson;
 
-    return GeoJSONFeatures;
     return {
         add, addPoint, addPhoto, remove, saveAllPoints
     }
-})();
+};
 
 export { geojson as GeoJSONFeatures }

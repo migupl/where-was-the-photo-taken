@@ -80,7 +80,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const getGeojsonFeatures = () => {
         let points = 0;
         const map = document.querySelector('leaflet-map');
-        const features = new GeoJSONFeatures(
+        const features = GeoJSONFeatures(
             feature => {
                 map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
                     detail: {
