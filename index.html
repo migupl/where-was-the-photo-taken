@@ -43,7 +43,7 @@
 
         header {
             margin: auto;
-            overflow:auto;
+            overflow: auto;
             width: 100%;
             min-height: 75px;
             border-radius: 10px;
@@ -174,8 +174,9 @@
         <drop-photo-for-exif></drop-photo-for-exif>
     </header>
     <main>
-        <leaflet-map allowAddMarker flyToBounds
-            customStyle="custom-leaflet-popup:styles/custom-leaflet-popup.css"></leaflet-map>
+        <leaflet-map fly-to-bounds allows-add-marker add-marker-custom-text="Click to adding a point at :"
+            custom-style="custom-leaflet-popup:styles/custom-leaflet-popup.css">
+        </leaflet-map>
         <div id="saving-area" class="container" style="display: none;">
             <div class="item">
                 <input type="text" id="title" name="title" placeholder="A title to group all photos">
@@ -205,9 +206,9 @@
 
     <script src="https://cdn.jsdelivr.net/gh/migupl/yagc/dist/yagc-0.2.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/migupl/drop-photo-get-exif-data/dist/drop-photo-for-exif-0.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/migupl/vanilla-js-web-component-leaflet-geojson/dist/leaflet-map-0.1.0.min.js"></script>
 
     <script type="module" src="./js/photo-album.js"></script>
-    <script type="module" src="./js/components/leaflet-map-component/leaflet-map.js"></script>
 </body>
 
 </html>
