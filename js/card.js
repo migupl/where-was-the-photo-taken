@@ -79,8 +79,6 @@ class Card {
             .createRange()
             .createContextualFragment(this.#template);
 
-        const { id, properties, data: { image } } = this.#feature;
-
         this.#addImageTo(cardEl);
         this.#addTitleTo(cardEl);
         this.#addDescriptionTo(cardEl);
