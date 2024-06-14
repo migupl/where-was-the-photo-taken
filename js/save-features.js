@@ -1,21 +1,5 @@
 export const saveFeatures = (() => {
 
-    const getGeojsonFile = (features, name) => {
-        const featureCollection = {
-            type: "FeatureCollection",
-            features: features
-        };
-
-        const text = JSON.stringify(featureCollection);
-        const blob = new Blob([text], { type: 'text/plain' });
-
-        const filename = name + '.geojson';
-        const file = new File([blob], filename, {
-            type: blob.type,
-        });
-        return file;
-    }
-
     const saveGeoJsonFile = (file, name) => {
         const filename = name + '.geojson';
         const supportsApi = 'showSaveFilePicker' in window &&
@@ -65,6 +49,21 @@ export const saveFeatures = (() => {
 
     const toFile = (features, suggestedName = 'photos.zip') => {
         const filename = suggestedName.endsWith('.zip') ? suggestedName : (suggestedName + '.zip');
+        const getGeojsonFile = (features, name) => {
+            const featureCollection = {
+                type: "FeatureCollection",
+                features: features
+            };
+
+            const text = JSON.stringify(featureCollection);
+            const blob = new Blob([text], { type: 'text/plain' });
+
+            const filename = name + '.geojson';
+            const file = new File([blob], filename, {
+                type: blob.type,
+            });
+            return file;
+        };
         const name = filename.split('.').slice(0, -1).join('.');
 
         const geojsonFile = getGeojsonFile(features, name);
