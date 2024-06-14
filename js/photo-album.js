@@ -1,4 +1,4 @@
-import { GeoJSONFeatures } from './geojson-features.js';
+import { mapActions } from './map-actions.js';
 
 window.onload = () => {
 
@@ -15,7 +15,7 @@ window.onload = () => {
         document.addEventListener('drop-photo-for-exif:image', (event) => {
             const data = event.detail;
             if (data.location) {
-                geojsonFeatures.addPhoto(data);
+                actions.addPhoto(data);
             }
             else {
                 imagesWithouLocation.push(data.name);
@@ -24,7 +24,7 @@ window.onload = () => {
 
         document.addEventListener('drop-photo-for-exif:file', (event) => {
             const file = event.detail;
-            geojsonFeatures.add(file, pageTitleSet);
+            actions.addGeojson(file, pageTitleSet);
         });
 
         document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
@@ -42,12 +42,12 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
 
         document.addEventListener('x-leaflet-map:marker-removed', (event) => {
             const { feature } = event.detail;
-            geojsonFeatures.remove(feature);
+            actions.remove(feature);
         })
 
         document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
             const { detail: { latlng } } = event;
-            geojsonFeatures.addPoint(latlng);
+            actions.addPoint(latlng);
         })
     }
 
@@ -57,7 +57,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
             event.stopPropagation();
 
             const title = pageTitleContent();
-            geojsonFeatures.saveAllPoints(title);
+            actions.saveAllPoints(title);
         });
     }
 
@@ -77,10 +77,10 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         return dialog;
     }
 
-    const getGeojsonFeatures = () => {
+    const getMapActions = () => {
         let points = 0;
         const map = document.querySelector('leaflet-map');
-        const features = GeoJSONFeatures(
+        const features = mapActions(
             feature => {
                 map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
                     detail: {
@@ -115,7 +115,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const savingAreaHide = () => savingArea().style.display = 'none'
     const savingAreaShow = () => savingArea().style.display = 'flex'
 
-    const geojsonFeatures = getGeojsonFeatures();
+    const actions = getMapActions();
 
     pageTitleClear();
 

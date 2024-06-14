@@ -1,12 +1,12 @@
 import { point } from './point.js'
 import { saveFeatures } from "./save-features.js";
 
-const geojson = (
+export const mapActions = (
     addToMap = feature => console.log('Action for adding to map'),
     removeFromMap = feature => console.log('Action for removing from map')
 ) => {
 
-    const add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
+    const addGeojson = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
         if ('application/geo+json' === file.type) {
             try {
                 if (geojson) error('Only a GeoJSON file is allowed');
@@ -193,8 +193,6 @@ const geojson = (
     let geojson;
 
     return {
-        add, addPoint, addPhoto, remove, saveAllPoints
+        addGeojson, addPoint, addPhoto, remove, saveAllPoints
     }
 };
-
-export { geojson as GeoJSONFeatures }
