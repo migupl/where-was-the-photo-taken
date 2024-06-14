@@ -13,6 +13,8 @@ window.onload = () => {
 
         let imagesWithouLocation = [];
         document.addEventListener('drop-photo-for-exif:image', (event) => {
+            helperDialog.close()
+
             const data = event.detail;
             if (data.location) {
                 geojsonFeatures.addPhoto(data);
