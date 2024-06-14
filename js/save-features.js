@@ -89,5 +89,7 @@ class SaveFeatures {
     }
 }
 
-const saveFeatures = new SaveFeatures();
+const saveFeatures = (() => {
+    return new SaveFeatures()
+})()
 export { saveFeatures as SaveFeatures }
