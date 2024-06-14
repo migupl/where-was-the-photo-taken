@@ -1,18 +1,22 @@
 export const saveFeatures = (() => {
 
-    const saveGeoJsonFile = (file, name) => {
+    const saveGeoJsonFile = async (file, name) => {
         const filename = name + '.geojson';
         const supportsApi = 'showSaveFilePicker' in window &&
-                (() => {
-                    try {
-                        return window.self === window.top;
-                    } catch {
-                        return false;
-                    }
-                })();
+            (() => {
+                try {
+                    return window.self === window.top;
+                } catch {
+                    return false;
+                }
+            })();
 
-        const saveFile = supportsApi? saveFileUsingFSAApi : saveFileWithoutFSAApi;
-        saveFile(file, filename)
+        if (supportsApi) {
+            await saveFileUsingFSAApi(file, filename)
+        }
+        else {
+            saveFileWithoutFSAApi(file, filename)
+        }
     }
 
     const saveFileWithoutFSAApi = (blob, filename) => {
@@ -38,11 +42,9 @@ export const saveFeatures = (() => {
             const writable = await handle.createWritable();
             await writable.write(blob);
             await writable.close();
-            return;
         } catch (err) {
             if (err.name !== 'AbortError') {
                 console.error(err.name, err.message);
-                return;
             }
         }
     }
