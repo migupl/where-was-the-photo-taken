@@ -7,9 +7,40 @@ const geojson = (
 ) => {
 
     const add = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
-        if (isGeojson(file)) {
+        if ('application/geo+json' === file.type) {
             try {
-                readGeojsonFile(file, doAfter);
+                if (geojson) error('Only a GeoJSON file is allowed');
+
+                const checkIsValid = json => {
+                    if (!json.hasOwnProperty('type')) {
+                        error('Invalid GeoJSON format')
+                    }
+                }
+
+                const composeTitle = filename => {
+                    const separator = '.';
+                    if (filename.includes(separator)) {
+                        const texts = filename.split(separator);
+                        texts.pop();
+                        return texts.join(separator);
+                    }
+
+                    return filename;
+                }
+
+                const reader = new FileReader();
+                reader.addEventListener('loadend', () => {
+                    const json = JSON.parse(reader.result);
+                    checkIsValid(json);
+
+                    geojson = json;
+                    const title = composeTitle(file.name);
+
+                    doAfter(title);
+                    updateUsingGeojson();
+                });
+
+                reader.readAsText(file);
 
             } catch (err) {
                 alert(err);
@@ -37,6 +68,16 @@ const geojson = (
     }
 
     const addPhoto = metadata => {
+        const DMS2Decimal = (latitude, longitude) => {
+            let lat = extractNumeric(latitude);
+            let lng = extractNumeric(longitude);
+
+            if (latitude.toUpperCase().indexOf('S') > -1) lat = -lat;
+            if (longitude.toUpperCase().indexOf('W') > -1) lng = -lng;
+
+            return [lat, lng];
+        }
+
         try {
             const { image, location: { latitude, longitude, altitude }, exif } = metadata;
             const [lat, lng] = DMS2Decimal(latitude, longitude);
@@ -72,6 +113,11 @@ const geojson = (
     }
 
     const saveAllPoints = (title) => {
+        const pointsArray = () => {
+            const points = pointsMap.values();
+            return points ? Array.from(points) : [];
+        }
+
         const points = pointsArray()
             .map(point => point.feature);
 
@@ -81,6 +127,12 @@ const geojson = (
     }
 
     const addPointProperties = ({ image, latlng, geojson }) => {
+        const checkExisting = filename => {
+            if (pointsMap.get(filename)) {
+                error(`The image '${filename}' already exists`);
+            }
+        }
+
         const p = point(image, latlng, geojson);
         checkExisting(p.id);
 
@@ -88,31 +140,6 @@ const geojson = (
 
         addToMap(p.feature);
         updateUsingGeojson(p);
-    }
-
-    const areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
-
-    const checkExisting = filename => {
-        if (pointsMap.get(filename)) {
-            error(`The image '${filename}' already exists`);
-        }
-    }
-
-    const checkIsValid = json => {
-        if (!json.hasOwnProperty('type')) {
-            error('Invalid GeoJSON format')
-        }
-    }
-
-    const composeTitle = filename => {
-        const separator = '.';
-        if (filename.includes(separator)) {
-            const texts = filename.split(separator);
-            texts.pop();
-            return texts.join(separator);
-        }
-
-        return filename;
     }
 
     const error = message => {
@@ -123,55 +150,7 @@ const geojson = (
         }
     }
 
-    const DMS2Decimal = (latitude, longitude) => {
-        let lat = extractNumeric(latitude);
-        let lng = extractNumeric(longitude);
-
-        if (latitude.toUpperCase().indexOf('S') > -1) lat = -lat;
-        if (longitude.toUpperCase().indexOf('W') > -1) lng = -lng;
-
-        return [lat, lng];
-    }
-
     const extractNumeric = text => text.match(/[0-9.]/g).join('')
-
-    const hasElements = array => array && array.length > 0;
-
-    const isGeojson = file => 'application/geo+json' === file.type;
-
-    const isAPointWithoutPhoto = feature => !feature.data.image
-
-    const pointsArray = () => {
-        const points = pointsMap.values();
-        return points ? Array.from(points) : [];
-    }
-
-    const readGeojsonFile = (file, doAfter) => {
-        if (geojson) error('Only a GeoJSON file is allowed');
-
-        const reader = new FileReader();
-        reader.addEventListener('loadend', () => {
-            const json = JSON.parse(reader.result);
-            checkIsValid(json);
-
-            geojson = json;
-            const title = composeTitle(file.name);
-
-            doAfter(title);
-            updateUsingGeojson();
-        });
-
-        reader.readAsText(file);
-    }
-
-    const updatePoint = (data, point) => {
-        if (hasElements(data)) {
-            const newerGeojson = data[0];
-            if (!areGeojsonEqual(newerGeojson, point.feature)) {
-                point.updatePopupWith(newerGeojson);
-            }
-        }
-    }
 
     const updateUsingGeojson = pointOnMap => {
         if (geojson) {
@@ -190,9 +169,21 @@ const geojson = (
 
     const updateWithGeojson = (point, feature) => {
         if (point) {
+            const updatePoint = (data, point) => {
+                const areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
+                const hasElements = array => array && array.length > 0;
+
+                if (hasElements(data)) {
+                    const newerGeojson = data[0];
+                    if (!areGeojsonEqual(newerGeojson, point.feature)) {
+                        point.updatePopupWith(newerGeojson);
+                    }
+                }
+            }
+
             !point.wasUpdated && updatePoint([feature], point);
         }
-        else if (isAPointWithoutPhoto(feature)) {
+        else if (!feature.data.image) {
             const [lng, lat] = feature.geometry.coordinates;
             addPointProperties({ latlng: { lat: lat, lng: lng }, geojson: feature });
         }
