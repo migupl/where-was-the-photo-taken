@@ -13,8 +13,6 @@ window.onload = () => {
 
         let imagesWithouLocation = [];
         document.addEventListener('drop-photo-for-exif:image', (event) => {
-            helperDialog.close()
-
             const data = event.detail;
             if (data.location) {
                 geojsonFeatures.addPhoto(data);
@@ -30,6 +28,8 @@ window.onload = () => {
         });
 
         document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
+            helperDialog.close()
+
             if (imagesWithouLocation.length > 0) {
                 const imagesStr = imagesWithouLocation.map(name => `'${name}'`).join(', ');
                 alert(`Added photos without geolocation metadata: ${imagesStr}.
