@@ -200,7 +200,7 @@ class GeoJSONFeatures {
 
     #updateWithGeojson(point, feature) {
         if (point) {
-            !point.wasUpdated() && this.#updatePoint([feature], point);
+            !point.wasUpdated && this.#updatePoint([feature], point);
         }
         else if (this.#isAPointWithoutPhoto(feature)) {
             const [lng, lat] = feature.geometry.coordinates;

@@ -3,17 +3,12 @@ export const card = features => {
     const updatePopup = feature => {
         const { name, description } = feature.properties;
 
-        setTitle(name);
-        setDescription(description);
-
         const titleEl = popupEl.querySelector('input');
         titleEl.value = name;
 
         const descriptionEl = popupEl.querySelector('textarea');
         descriptionEl.value = description;
     }
-
-    const wasUpdated = () => updated
 
     const addDescriptionTo = cardEl => {
         const { properties } = feature;
@@ -54,8 +49,8 @@ export const card = features => {
             event.stopPropagation();
 
             const { value: name } = event.target;
-            setTitle(name);
-            updated = true;
+            if (name) feature.properties.name = name
+            updated = true
         });
     }
 
@@ -84,12 +79,6 @@ export const card = features => {
         properties.popupContent = popupEl;
     }
 
-    const setTitle = title => {
-        if (title) {
-            feature.properties.name = title;
-        }
-    }
-
     const template = `
 <div>
     <img src="" alt="">
@@ -105,6 +94,7 @@ export const card = features => {
     setPopup()
 
     return {
-        updatePopup, wasUpdated
+        updatePopup,
+        wasUpdated: updated
     }
 };

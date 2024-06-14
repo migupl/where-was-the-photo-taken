@@ -17,7 +17,7 @@ const point = (image, latlng, geojson) => {
 
     const c = card(feature);
     const updatePopupWith = feature => c.updatePopup(feature);
-    const wasUpdated = () => c.wasUpdated();
+    const wasUpdated = c.wasUpdated;
 
     return {
         id: feature.id,
