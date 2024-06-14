@@ -73,7 +73,7 @@ class GeoJSONFeatures {
     }
 
     remove = ({ id }) => {
-        const feature = this.#pointsMap.get(id).feature();
+        const feature = this.#pointsMap.get(id).feature;
         if (!this.#pointsMap.delete(id)) {
             this.#error(`Sorry, something went wrong deleting the photo '${id}'`)
         }
@@ -83,7 +83,7 @@ class GeoJSONFeatures {
 
     saveAllPoints = (title) => {
         const points = this.#pointsArray()
-            .map(point => point.feature());
+            .map(point => point.feature);
 
         if (points.length > 0) {
             saveFeatures.toFile(points, title);
@@ -91,12 +91,12 @@ class GeoJSONFeatures {
     }
 
     #addPoint = ({ image, latlng, geojson }) => {
-        const point = new Point({ image, latlng, geojson });
-        this.#checkExisting(point.id());
+        const point = Point(image, latlng, geojson);
+        this.#checkExisting(point.id);
 
-        this.#pointsMap.set(point.id(), point);
+        this.#pointsMap.set(point.id, point);
 
-        this.#addToMap(point.feature());
+        this.#addToMap(point.feature);
         this.#updateUsingGeojson(point);
     }
 
@@ -177,7 +177,7 @@ class GeoJSONFeatures {
     #updatePoint(data, point) {
         if (this.#hasElements(data)) {
             const newerGeojson = data[0];
-            if (!this.#areGeojsonEqual(newerGeojson, point.feature())) {
+            if (!this.#areGeojsonEqual(newerGeojson, point.feature)) {
                 point.updatePopupWith(newerGeojson);
             }
         }
@@ -188,7 +188,7 @@ class GeoJSONFeatures {
             this.#geojson.features
                 .forEach(feature => {
                     if (pointOnMap) {
-                        pointOnMap.id() === feature.id && this.#updateWithGeojson(pointOnMap, feature)
+                        pointOnMap.id === feature.id && this.#updateWithGeojson(pointOnMap, feature)
                     }
                     else {
                         const point = this.#pointsMap.get(feature.id);
