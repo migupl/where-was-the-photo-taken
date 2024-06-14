@@ -119,4 +119,4 @@ const card = features => {
     }
 };
 
-export { point as Point }
+export { point }

@@ -1,4 +1,4 @@
-import { Point } from './point.js'
+import { point } from './point.js'
 import { saveFeatures } from "./save-features.js";
 
 class GeoJSONFeatures {
@@ -91,13 +91,13 @@ class GeoJSONFeatures {
     }
 
     #addPoint = ({ image, latlng, geojson }) => {
-        const point = Point(image, latlng, geojson);
-        this.#checkExisting(point.id);
+        const p = point(image, latlng, geojson);
+        this.#checkExisting(p.id);
 
-        this.#pointsMap.set(point.id, point);
+        this.#pointsMap.set(p.id, p);
 
-        this.#addToMap(point.feature);
-        this.#updateUsingGeojson(point);
+        this.#addToMap(p.feature);
+        this.#updateUsingGeojson(p);
     }
 
     #areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
