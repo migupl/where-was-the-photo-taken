@@ -33,7 +33,7 @@ const geojson = (
             }
         };
 
-        _addPoint({ latlng: latlng, geojson: feature });
+        addPointProperties({ latlng: latlng, geojson: feature });
     }
 
     const addPhoto = metadata => {
@@ -55,7 +55,7 @@ const geojson = (
                 }
             };
 
-            _addPoint({ image: image, geojson: feature });
+            addPointProperties({ image: image, geojson: feature });
 
         } catch (err) {
             alert(err);
@@ -80,7 +80,7 @@ const geojson = (
         }
     }
 
-    const _addPoint = ({ image, latlng, geojson }) => {
+    const addPointProperties = ({ image, latlng, geojson }) => {
         const p = point(image, latlng, geojson);
         checkExisting(p.id);
 
@@ -194,7 +194,7 @@ const geojson = (
         }
         else if (isAPointWithoutPhoto(feature)) {
             const [lng, lat] = feature.geometry.coordinates;
-            _addPoint({ latlng: { lat: lat, lng: lng }, geojson: feature });
+            addPointProperties({ latlng: { lat: lat, lng: lng }, geojson: feature });
         }
     }
 
