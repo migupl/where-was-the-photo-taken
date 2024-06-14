@@ -209,4 +209,8 @@ class GeoJSONFeatures {
     }
 }
 
-export { GeoJSONFeatures }
+const geojson = (() => {
+    return GeoJSONFeatures
+})();
+
+export { geojson as GeoJSONFeatures }
