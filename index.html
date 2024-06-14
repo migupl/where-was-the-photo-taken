@@ -42,16 +42,16 @@
         }
 
         header {
-            height: 81px;
+            margin: auto;
+            overflow:auto;
+            width: 100%;
+            min-height: 75px;
+            border-radius: 10px;
+            border-style: dashed;
         }
 
         main {
             flex: auto;
-        }
-
-        drop-photo-for-exif {
-            width: 100%;
-            margin: 1px;
         }
 
         .container {
@@ -204,9 +204,9 @@
     <ya-gc url="https://github.com/migupl/where-was-the-photo-taken" target-new-window></ya-gc>
 
     <script src="https://cdn.jsdelivr.net/gh/migupl/yagc/dist/yagc-0.2.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/migupl/drop-photo-get-exif-data/dist/drop-photo-for-exif-0.1.1.min.js"></script>
 
     <script type="module" src="./js/photo-album.js"></script>
-    <script type="module" src="./js/components/drop-photo-for-exif-component/drop-photo-for-exif.js"></script>
     <script type="module" src="./js/components/leaflet-map-component/leaflet-map.js"></script>
 </body>
 
