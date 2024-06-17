@@ -77,10 +77,22 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         return dialog;
     }
 
-    const getMapActions = () => {
+    const pageTitle = () => document.getElementById('title');
+    const pageTitleClear = () => pageTitle().value = '';
+    const pageTitleContent = () => {
+        const titleEl = pageTitle();
+        return titleEl.value || titleEl.placeholder;
+    }
+    const pageTitleSet = title => pageTitle().value = title;
+
+    const savingArea = () => document.getElementById('saving-area');
+    const savingAreaHide = () => savingArea().style.display = 'none'
+    const savingAreaShow = () => savingArea().style.display = 'flex'
+
+    const actions = (() => {
         let points = 0;
         const map = document.querySelector('leaflet-map');
-        const features = mapActions(
+        return mapActions(
             feature => {
                 map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
                     detail: {
@@ -98,24 +110,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
                     pageTitleClear();
                 }
             }
-        );
-
-        return features;
-    }
-
-    const pageTitle = () => document.getElementById('title');
-    const pageTitleClear = () => pageTitle().value = '';
-    const pageTitleContent = () => {
-        const titleEl = pageTitle();
-        return titleEl.value || titleEl.placeholder;
-    }
-    const pageTitleSet = title => pageTitle().value = title;
-
-    const savingArea = () => document.getElementById('saving-area');
-    const savingAreaHide = () => savingArea().style.display = 'none'
-    const savingAreaShow = () => savingArea().style.display = 'flex'
-
-    const actions = getMapActions();
+        )
+    })();
 
     pageTitleClear();
 
