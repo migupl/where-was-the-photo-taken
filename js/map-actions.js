@@ -106,16 +106,10 @@ export const mapActions = (
     }
 
     const saveAllPoints = (title) => {
-        const pointsArray = () => {
-            const points = pointsMap.values();
-            return points ? Array.from(points) : [];
-        }
-
-        const points = pointsArray()
-            .map(point => point.feature);
-
-        if (points.length > 0) {
-            saveFeatures.toFile(points, title);
+        if (pointsMap.size > 0) {
+            let features = [];
+            pointsMap.values().forEach(point => features.push(point.feature));
+            saveFeatures.toFile(features, title);
         }
     }
 
