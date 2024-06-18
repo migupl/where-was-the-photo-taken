@@ -143,11 +143,7 @@ export const mapActions = (
     }
 
     const error = message => {
-        throw {
-            toString() {
-                return message;
-            },
-        }
+        throw new Error(message)
     }
 
     const extractNumeric = text => text.match(/[0-9.]/g).join('')
