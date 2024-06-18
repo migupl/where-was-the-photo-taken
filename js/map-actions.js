@@ -11,30 +11,22 @@ export const mapActions = (
             try {
                 if (geojson) error('Only a GeoJSON file is allowed');
 
-                const checkIsValid = json => {
-                    if (!json.hasOwnProperty('type')) {
-                        error('Invalid GeoJSON format')
-                    }
-                }
-
-                const composeTitle = filename => {
-                    const separator = '.';
-                    if (filename.includes(separator)) {
-                        const texts = filename.split(separator);
-                        texts.pop();
-                        return texts.join(separator);
-                    }
-
-                    return filename;
-                }
-
                 const reader = new FileReader();
                 reader.addEventListener('loadend', () => {
                     const json = JSON.parse(reader.result);
-                    checkIsValid(json);
+                    if (!json.hasOwnProperty('type')) error('Invalid GeoJSON format')
 
                     geojson = json;
-                    const title = composeTitle(file.name);
+                    const title = (filename => {
+                        const separator = '.';
+                        if (filename.includes(separator)) {
+                            const texts = filename.split(separator);
+                            texts.pop();
+                            return texts.join(separator);
+                        }
+
+                        return filename;
+                    })(file.name);
 
                     doWith(title);
                     updateUsingGeojson();
@@ -51,20 +43,21 @@ export const mapActions = (
     const addPoint = latlng => {
         const { lat, lng } = latlng;
 
-        const feature = {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: [lng, lat]
-            },
-            data: {
-            },
-            properties: {
-                draggable: true
+        addPointProperties({
+            latlng: latlng,
+            feature: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [lng, lat]
+                },
+                data: {
+                },
+                properties: {
+                    draggable: true
+                }
             }
-        };
-
-        addPointProperties({ latlng: latlng, geojson: feature });
+        });
     }
 
     const addPhoto = metadata => {
@@ -85,18 +78,19 @@ export const mapActions = (
             const lnglatalt = [lng, lat, altitude]
                 .filter((value) => !isNaN(value));
 
-            const feature = {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: lnglatalt
-                },
-                data: {
-                    exif: exif
+            addPointProperties({
+                image: image,
+                feature: {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: lnglatalt
+                    },
+                    data: {
+                        exif: exif
+                    }
                 }
-            };
-
-            addPointProperties({ image: image, geojson: feature });
+            });
 
         } catch (err) {
             alert(err);
@@ -125,14 +119,14 @@ export const mapActions = (
         }
     }
 
-    const addPointProperties = ({ image, latlng, geojson }) => {
+    const addPointProperties = ({ image, latlng, feature }) => {
         const checkExisting = filename => {
             if (pointsMap.get(filename)) {
                 error(`The image '${filename}' already exists`);
             }
         }
 
-        const p = point(image, latlng, geojson);
+        const p = point(image, latlng, feature);
         checkExisting(p.id);
 
         pointsMap.set(p.id, p);
@@ -166,7 +160,7 @@ export const mapActions = (
             }
             else if (!feature.data.image) {
                 const [lng, lat] = feature.geometry.coordinates;
-                addPointProperties({ latlng: { lat: lat, lng: lng }, geojson: feature });
+                addPointProperties({ latlng: { lat: lat, lng: lng }, feature });
             }
         }
 
