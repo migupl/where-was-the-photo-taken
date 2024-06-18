@@ -3,6 +3,28 @@ import { mapActions } from './map-actions.js';
 window.onload = () => {
 
     const addActionsOnDocumentEvents = () => {
+        const actions = (() => {
+            return mapActions(
+                savingAreaShow,
+                () => {
+                    savingAreaHide();
+                    pageTitleClear();
+                }
+            )
+        })();
+
+        const addActionOnSavePage = () => {
+            const save = document.getElementById('save-all');
+            save.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                const title = pageTitleContent();
+                actions.saveAllPoints(title);
+            });
+        };
+
+        addActionOnSavePage();
+
         [
             'drop-photo-for-exif:image',
             'drop-photo-for-exif:file',
@@ -51,16 +73,6 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         })
     }
 
-    const addActionOnSavePage = () => {
-        const save = document.getElementById('save-all');
-        save.addEventListener('click', (event) => {
-            event.stopPropagation();
-
-            const title = pageTitleContent();
-            actions.saveAllPoints(title);
-        });
-    }
-
     const addHelperDialogAndGetIt = () => {
         const dialog = document.getElementsByTagName('dialog')[0];
         dialog.addEventListener('close', event => {
@@ -89,21 +101,10 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const savingAreaHide = () => savingArea().style.display = 'none'
     const savingAreaShow = () => savingArea().style.display = 'flex'
 
-    const actions = (() => {
-        return mapActions(
-            savingAreaShow,
-            () => {
-                savingAreaHide();
-                pageTitleClear();
-            }
-        )
-    })();
-
-    pageTitleClear();
+        pageTitleClear();
 
     const helperDialog = addHelperDialogAndGetIt();
     helperDialog.show();
 
-    addActionOnSavePage();
     addActionsOnDocumentEvents();
 }
