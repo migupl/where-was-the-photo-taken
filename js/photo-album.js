@@ -5,9 +5,9 @@ window.onload = () => {
     const setMapActions = () => {
         const actions = (() => {
             return mapActions(
-                savingAreaShow,
+                projectArea.show,
                 () => {
-                    savingAreaHide();
+                    projectArea.hide();
                     projectTitle.clear();
                 }
             )
@@ -123,9 +123,16 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         }
     })();
 
-    const savingArea = () => document.getElementById('saving-area');
-    const savingAreaHide = () => savingArea().style.display = 'none'
-    const savingAreaShow = () => savingArea().style.display = 'flex'
+    const projectArea = (() => {
+        const node =  document.getElementById('saving-area');
+
+        const hide = () => node.style.display = 'none'
+        const show = () => node.style.display = 'flex'
+
+        return {
+            hide, show
+        }
+    })();
 
     projectTitle.clear();
 
