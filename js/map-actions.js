@@ -103,7 +103,7 @@ export const mapActions = (
         }
     }
 
-    const remove = ({ id }) => {
+    const removePoint = ({ id }) => {
         if (!pointsMap.delete(id)) {
             error(`Sorry, something went wrong deleting the photo '${id}'`)
         }
@@ -200,6 +200,6 @@ export const mapActions = (
     }
 
     return {
-        addGeojson, addPoint, addPhoto, remove, saveAllPoints
+        addGeojson, addPoint, addPhoto, removePoint, saveAllPoints
     }
 };

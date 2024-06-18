@@ -94,7 +94,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         const onRemovingPoint = () => {
             document.addEventListener('x-leaflet-map:marker-removed', (event) => {
                 const { feature } = event.detail;
-                actions.remove(feature);
+                actions.removePoint(feature);
             })
         };
 
