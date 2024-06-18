@@ -2,7 +2,7 @@ import { mapActions } from './map-actions.js';
 
 window.onload = () => {
 
-    const addActionsOnDocumentEvents = () => {
+    const setMapActions = () => {
         const actions = (() => {
             return mapActions(
                 savingAreaShow,
@@ -13,7 +13,58 @@ window.onload = () => {
             )
         })();
 
-        const addActionOnSavePage = () => {
+        const atDropEnds = () => {
+            document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
+                helperDialog.close()
+
+                if (imagesWithoutLocation.length > 0) {
+                    const imagesStr = imagesWithoutLocation.map(name => `'${name}'`).join(', ');
+                    alert(`Added photos without geolocation metadata: ${imagesStr}.
+
+You can check the images metadata at
+https://migupl.github.io/drop-photo-get-exif-data/`);
+                    imagesWithoutLocation = [];
+                }
+            })
+
+        };
+
+        let imagesWithoutLocation = [];
+
+        const onAddingPoint = () => {
+            document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
+                const { detail: { latlng } } = event;
+                actions.addPoint(latlng);
+            })
+        };
+
+        const onDroppingGeojsonFile = () => {
+            document.addEventListener('drop-photo-for-exif:file', (event) => {
+                const file = event.detail;
+                actions.addGeojson(file, pageTitleSet);
+            });
+        };
+
+        const onDroppingPhoto = () => {
+            document.addEventListener('drop-photo-for-exif:image', (event) => {
+                const data = event.detail;
+                if (data.location) {
+                    actions.addPhoto(data);
+                }
+                else {
+                    imagesWithoutLocation.push(data.name);
+                }
+            });
+        };
+
+        const onRemovingPoint = () => {
+            document.addEventListener('x-leaflet-map:marker-removed', (event) => {
+                const { feature } = event.detail;
+                actions.remove(feature);
+            })
+        };
+
+        const onSavingPage = () => {
             const save = document.getElementById('save-all');
             save.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -23,54 +74,25 @@ window.onload = () => {
             });
         };
 
-        addActionOnSavePage();
-
-        [
+        const stopEventsPropagation = () =>  [
             'drop-photo-for-exif:image',
             'drop-photo-for-exif:file',
             'drop-photo-for-exif:completed-batch',
             'x-leaflet-map:marker-removed',
             'x-leaflet-map:marker-pointed-out'
-        ].forEach(eventName => document.addEventListener(eventName, e => e.stopPropagation()))
-
-        let imagesWithouLocation = [];
-        document.addEventListener('drop-photo-for-exif:image', (event) => {
-            const data = event.detail;
-            if (data.location) {
-                actions.addPhoto(data);
-            }
-            else {
-                imagesWithouLocation.push(data.name);
-            }
+        ].forEach(eventName => { 
+            document.addEventListener(eventName, e => e.stopPropagation())
         });
 
-        document.addEventListener('drop-photo-for-exif:file', (event) => {
-            const file = event.detail;
-            actions.addGeojson(file, pageTitleSet);
-        });
+        stopEventsPropagation()
 
-        document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
-            helperDialog.close()
+        onDroppingGeojsonFile()
+        onDroppingPhoto()
+        atDropEnds()
 
-            if (imagesWithouLocation.length > 0) {
-                const imagesStr = imagesWithouLocation.map(name => `'${name}'`).join(', ');
-                alert(`Added photos without geolocation metadata: ${imagesStr}.
-
-You can check the images metadata at
-https://migupl.github.io/drop-photo-get-exif-data/`);
-                imagesWithouLocation = [];
-            }
-        })
-
-        document.addEventListener('x-leaflet-map:marker-removed', (event) => {
-            const { feature } = event.detail;
-            actions.remove(feature);
-        })
-
-        document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
-            const { detail: { latlng } } = event;
-            actions.addPoint(latlng);
-        })
+        onAddingPoint()
+        onRemovingPoint()
+        onSavingPage()
     }
 
     const addHelperDialogAndGetIt = () => {
@@ -106,5 +128,5 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const helperDialog = addHelperDialogAndGetIt();
     helperDialog.show();
 
-    addActionsOnDocumentEvents();
+    setMapActions();
 }
