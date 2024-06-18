@@ -8,7 +8,7 @@ window.onload = () => {
                 savingAreaShow,
                 () => {
                     savingAreaHide();
-                    pageTitleClear();
+                    projectTitle.clear();
                 }
             )
         })();
@@ -41,7 +41,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         const onDroppingGeojsonFile = () => {
             document.addEventListener('drop-photo-for-exif:file', (event) => {
                 const file = event.detail;
-                actions.addGeojson(file, pageTitleSet);
+                actions.addGeojson(file, projectTitle.set);
             });
         };
 
@@ -69,7 +69,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
             save.addEventListener('click', (event) => {
                 event.stopPropagation();
 
-                const title = pageTitleContent();
+                const title = projectTitle.get();
                 actions.saveAllPoints(title);
             });
         };
@@ -111,19 +111,23 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         return dialog;
     }
 
-    const pageTitle = () => document.getElementById('title');
-    const pageTitleClear = () => pageTitle().value = '';
-    const pageTitleContent = () => {
-        const titleEl = pageTitle();
-        return titleEl.value || titleEl.placeholder;
-    }
-    const pageTitleSet = title => pageTitle().value = title;
+    const projectTitle = (() => {
+        const node = document.getElementById('title');
+
+        const clear = () => set('');
+        const get = () => node.value || node.placeholder;
+        const set = title => node.value = title;
+
+        return {
+            clear, get, set
+        }
+    })();
 
     const savingArea = () => document.getElementById('saving-area');
     const savingAreaHide = () => savingArea().style.display = 'none'
     const savingAreaShow = () => savingArea().style.display = 'flex'
 
-        pageTitleClear();
+    projectTitle.clear();
 
     const helperDialog = addHelperDialogAndGetIt();
     helperDialog.show();
