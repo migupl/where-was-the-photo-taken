@@ -2,7 +2,7 @@ import { point } from './point.js'
 import { saveFeatures } from "./save-features.js";
 
 export const mapActions = (
-    addToMap = feature => console.log('Action for adding to map'),
+    onNoEmptyMap = () => console.log('Things to do when map is not empty'),
     onMapEmpties = () => console.log('Things to do when map empties')
 ) => {
 
@@ -137,7 +137,7 @@ export const mapActions = (
 
         pointsMap.set(p.id, p);
 
-        addToMap(p.feature);
+        addPointToMap(p.feature);
         updateUsingGeojson(p);
     }
 
@@ -187,6 +187,17 @@ export const mapActions = (
 
     const pointsMap = new Map();
     let geojson;
+
+    const addPointToMap = feature => {
+        const map = document.querySelector('leaflet-map');
+        map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+            detail: {
+                geojson: feature
+            }
+        }));
+
+        onNoEmptyMap()
+    }
 
     return {
         addGeojson, addPoint, addPhoto, remove, saveAllPoints

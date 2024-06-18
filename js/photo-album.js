@@ -90,17 +90,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const savingAreaShow = () => savingArea().style.display = 'flex'
 
     const actions = (() => {
-        const map = document.querySelector('leaflet-map');
         return mapActions(
-            feature => {
-                map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
-                    detail: {
-                        geojson: feature
-                    }
-                }));
-
-                savingAreaShow();
-            },
+            savingAreaShow,
             () => {
                 savingAreaHide();
                 pageTitleClear();
