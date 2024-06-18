@@ -109,7 +109,7 @@ export const mapActions = (
             error(`Sorry, something went wrong deleting the photo '${id}'`)
         }
 
-        removeFromMap(feature)
+        if (!pointsMap.size) removeFromMap(feature)
     }
 
     const saveAllPoints = (title) => {

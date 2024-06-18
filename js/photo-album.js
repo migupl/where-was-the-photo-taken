@@ -90,7 +90,6 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     const savingAreaShow = () => savingArea().style.display = 'flex'
 
     const actions = (() => {
-        let points = 0;
         const map = document.querySelector('leaflet-map');
         return mapActions(
             feature => {
@@ -100,15 +99,11 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
                     }
                 }));
 
-                points++;
                 savingAreaShow();
             },
             () => {
-                points--;
-                if (!points) {
                     savingAreaHide();
                     pageTitleClear();
-                }
             }
         )
     })();
