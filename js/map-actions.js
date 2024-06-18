@@ -153,6 +153,28 @@ export const mapActions = (
     const extractNumeric = text => text.match(/[0-9.]/g).join('')
 
     const updateUsingGeojson = pointOnMap => {
+        const updatePoint = (data, point) => {
+            const areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
+            const hasElements = array => array && array.length > 0;
+
+            if (hasElements(data)) {
+                const newerGeojson = data[0];
+                if (!areGeojsonEqual(newerGeojson, point.feature)) {
+                    point.updatePopupWith(newerGeojson);
+                }
+            }
+        }
+
+        const updateWithGeojson = (point, feature) => {
+            if (point) {
+                !point.wasUpdated && updatePoint([feature], point);
+            }
+            else if (!feature.data.image) {
+                const [lng, lat] = feature.geometry.coordinates;
+                addPointProperties({ latlng: { lat: lat, lng: lng }, geojson: feature });
+            }
+        }
+
         if (geojson) {
             geojson.features
                 .forEach(feature => {
@@ -167,27 +189,6 @@ export const mapActions = (
         }
     }
 
-    const updateWithGeojson = (point, feature) => {
-        if (point) {
-            const updatePoint = (data, point) => {
-                const areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
-                const hasElements = array => array && array.length > 0;
-
-                if (hasElements(data)) {
-                    const newerGeojson = data[0];
-                    if (!areGeojsonEqual(newerGeojson, point.feature)) {
-                        point.updatePopupWith(newerGeojson);
-                    }
-                }
-            }
-
-            !point.wasUpdated && updatePoint([feature], point);
-        }
-        else if (!feature.data.image) {
-            const [lng, lat] = feature.geometry.coordinates;
-            addPointProperties({ latlng: { lat: lat, lng: lng }, geojson: feature });
-        }
-    }
 
     const pointsMap = new Map();
     let geojson;
