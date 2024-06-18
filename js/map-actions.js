@@ -3,7 +3,7 @@ import { saveFeatures } from "./save-features.js";
 
 export const mapActions = (
     addToMap = feature => console.log('Action for adding to map'),
-    removeFromMap = feature => console.log('Action for removing from map')
+    onMapEmpties = () => console.log('Things to do when map empties')
 ) => {
 
     const addGeojson = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
@@ -104,12 +104,11 @@ export const mapActions = (
     }
 
     const remove = ({ id }) => {
-        const feature = pointsMap.get(id).feature;
         if (!pointsMap.delete(id)) {
             error(`Sorry, something went wrong deleting the photo '${id}'`)
         }
 
-        if (!pointsMap.size) removeFromMap(feature)
+        if (!pointsMap.size) onMapEmpties()
     }
 
     const saveAllPoints = (title) => {

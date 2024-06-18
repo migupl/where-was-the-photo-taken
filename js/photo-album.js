@@ -102,8 +102,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
                 savingAreaShow();
             },
             () => {
-                    savingAreaHide();
-                    pageTitleClear();
+                savingAreaHide();
+                pageTitleClear();
             }
         )
     })();
