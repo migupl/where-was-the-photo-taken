@@ -67,6 +67,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
 
         const onAddingPoint = () => {
             document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
+                dialog.close()
+
                 const { detail: { latlng } } = event;
                 actions.addPoint(latlng);
             })
