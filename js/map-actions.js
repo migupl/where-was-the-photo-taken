@@ -6,7 +6,7 @@ export const mapActions = (
     onMapEmpties = () => console.log('Things to do when map empties')
 ) => {
 
-    const addGeojson = (file, doAfter = (title) => console.error(`Doing something with title: '${title}'`)) => {
+    const addGeojson = (file, doWith = (title) => console.error(`Doing something with title: '${title}'`)) => {
         if ('application/geo+json' === file.type) {
             try {
                 if (geojson) error('Only a GeoJSON file is allowed');
@@ -36,7 +36,7 @@ export const mapActions = (
                     geojson = json;
                     const title = composeTitle(file.name);
 
-                    doAfter(title);
+                    doWith(title);
                     updateUsingGeojson();
                 });
 
