@@ -15,7 +15,7 @@ window.onload = () => {
 
         const atDropEnds = () => {
             document.addEventListener('drop-photo-for-exif:completed-batch', _ => {
-                helperDialog.close()
+                dialog.close()
 
                 if (imagesWithoutLocation.length > 0) {
                     const imagesStr = imagesWithoutLocation.map(name => `'${name}'`).join(', ');
@@ -95,21 +95,22 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         onSavingPage()
     }
 
-    const addHelperDialogAndGetIt = () => {
-        const dialog = document.getElementsByTagName('dialog')[0];
-        dialog.addEventListener('close', event => {
+    const dialog = (() => {
+        const node = document.getElementsByTagName('dialog')[0];
+
+        node.addEventListener('close', event => {
             event.stopPropagation();
-            dialog.style = 'display: none;'
+            node.style = 'display: none;'
         });
 
-        const closeDialog = dialog.getElementsByTagName('button')[0];
-        closeDialog.addEventListener('click', event => {
+        const button = node.getElementsByTagName('button')[0];
+        button.addEventListener('click', event => {
             event.stopPropagation();
-            dialog.close()
+            node.close()
         });
 
-        return dialog;
-    }
+        return node;
+    })();
 
     const projectTitle = (() => {
         const node = document.getElementById('title');
@@ -135,9 +136,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
     })();
 
     projectTitle.clear();
-
-    const helperDialog = addHelperDialogAndGetIt();
-    helperDialog.show();
+    dialog.show();
 
     setMapActions();
 }
