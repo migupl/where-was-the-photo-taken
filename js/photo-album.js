@@ -2,6 +2,35 @@ import { mapActions } from './map-actions.js';
 
 window.onload = () => {
 
+    const dialog = (() => {
+        const node = document.getElementsByTagName('dialog')[0];
+
+        node.addEventListener('close', event => {
+            event.stopPropagation();
+            node.style = 'display: none;'
+        });
+
+        const button = node.getElementsByTagName('button')[0];
+        button.addEventListener('click', event => {
+            event.stopPropagation();
+            node.close()
+        });
+
+        return node;
+    })();
+
+    const projectTitle = (() => {
+        const node = document.getElementById('title');
+
+        const clear = () => set('');
+        const get = () => node.value || node.placeholder;
+        const set = title => node.value = title;
+
+        return {
+            clear, get, set
+        }
+    })();
+
     const setMapActions = () => {
         const actions = (() => {
             const node =  document.getElementById('saving-area');
@@ -100,37 +129,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         onSavingPage()
     }
 
-    const dialog = (() => {
-        const node = document.getElementsByTagName('dialog')[0];
-
-        node.addEventListener('close', event => {
-            event.stopPropagation();
-            node.style = 'display: none;'
-        });
-
-        const button = node.getElementsByTagName('button')[0];
-        button.addEventListener('click', event => {
-            event.stopPropagation();
-            node.close()
-        });
-
-        return node;
-    })();
-
-    const projectTitle = (() => {
-        const node = document.getElementById('title');
-
-        const clear = () => set('');
-        const get = () => node.value || node.placeholder;
-        const set = title => node.value = title;
-
-        return {
-            clear, get, set
-        }
-    })();
+    setMapActions();
 
     projectTitle.clear();
     dialog.show();
-
-    setMapActions();
 }
