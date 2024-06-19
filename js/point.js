@@ -40,7 +40,6 @@ const card = jsonFeature => {
             const { properties } = jsonFeature;
 
             const description = cardEl.querySelector('textarea');
-            description.placeholder = 'A description about...';
             if (properties.description) {
                 description.value = properties.description;
             }
@@ -96,6 +95,26 @@ const card = jsonFeature => {
         addTitleTo(cardEl);
         addDescriptionTo(cardEl);
         setPopupContent(cardEl);
+
+        const node = document.createElement('div');
+        const img = document.createElement('img');
+        img.alt = 'No source image'
+        img.hidden = true
+
+        const title = document.createElement('input');
+        title.id = 'card-title'
+        title.type = 'text'
+        title.name = 'title'
+        title.placeholder = 'Some text as title'
+
+        const description = document.createElement('textarea');
+        description.id = 'card-description'
+        description.name = 'description'
+        description.placeholder = 'A description about...'
+
+        node.appendChild(img)
+        node.appendChild(title)
+        node.appendChild(description)
     }
 
     const template = `
