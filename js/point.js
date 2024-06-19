@@ -10,14 +10,12 @@ const point = (image, latlng, jsonFeature) => {
     feature.properties = feature.properties || {}
     const c = card(feature);
 
-    const has = f => feature.id == f.id;
     const updatePopupWith = feature => c.updatePopup(feature);
     const wasUpdated = c.wasUpdated;
 
     return {
         id: feature.id,
         feature,
-        has,
         updatePopupWith,
         wasUpdated,
     }
