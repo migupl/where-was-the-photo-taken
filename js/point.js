@@ -1,12 +1,11 @@
 const point = (image, latlng, jsonFeature) => {
     const feature = JSON.parse(JSON.stringify(jsonFeature));
 
-    if (image) {
-        feature.id = image.name
-        feature.data.image = image
-    } else {
-        feature.id = `lat: ${latlng.lat}, lng: ${latlng.lng}`
-    }
+    feature.id = feature.id || (
+        image? image.name : `lat: ${latlng.lat}, lng: ${latlng.lng}`
+    )
+
+    if (image) feature.data.image = image
 
     feature.properties = feature.properties || {}
     const c = card(feature);
