@@ -1,5 +1,5 @@
-const point = (image, latlng, geojson) => {
-    const feature = JSON.parse(JSON.stringify(geojson));
+const point = (image, latlng, jsonFeature) => {
+    const feature = JSON.parse(JSON.stringify(jsonFeature));
 
     if (image) {
         feature.id = image.name
@@ -24,7 +24,7 @@ const point = (image, latlng, geojson) => {
     }
 };
 
-const card = features => {
+const card = jsonFeature => {
 
     const updatePopup = feature => {
         const { name, description } = feature.properties;
@@ -38,7 +38,7 @@ const card = features => {
 
     const setPopup = () => {
         const addDescriptionTo = cardEl => {
-            const { properties } = feature;
+            const { properties } = jsonFeature;
 
             const description = cardEl.querySelector('textarea');
             description.placeholder = 'A description about...';
@@ -49,13 +49,13 @@ const card = features => {
                 event.stopPropagation();
 
                 const { value: description } = event.target;
-                if(description) feature.properties.description = description
+                if(description) jsonFeature.properties.description = description
                 updated = true;
             });
         }
 
         const addImageTo = cardEl => {
-            const { id, data: { image } } = feature;
+            const { id, data: { image } } = jsonFeature;
 
             if (image) {
                 const img = cardEl.querySelector('img');
@@ -65,7 +65,7 @@ const card = features => {
         }
 
         const addTitleTo = cardEl => {
-            const { id, properties } = feature;
+            const { id, properties } = jsonFeature;
 
             const title = cardEl.querySelector('input');
             title.placeholder = id;
@@ -76,7 +76,7 @@ const card = features => {
                 event.stopPropagation();
 
                 const { value: name } = event.target;
-                if (name) feature.properties.name = name
+                if (name) jsonFeature.properties.name = name
                 updated = true
             });
         }
@@ -85,7 +85,7 @@ const card = features => {
             popupEl = document.createElement('div');
             popupEl.appendChild(cardEl);
 
-            const { properties } = feature;
+            const { properties } = jsonFeature;
             properties.popupContent = popupEl;
         }
 
@@ -107,7 +107,6 @@ const card = features => {
 </div>
 `;
 
-    const feature = features;
     let popupEl;
     let updated = false;
 
