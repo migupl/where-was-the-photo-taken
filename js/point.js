@@ -96,21 +96,53 @@ const card = jsonFeature => {
         addDescriptionTo(cardEl);
         setPopupContent(cardEl);
 
+
         const node = document.createElement('div');
         const img = document.createElement('img');
         img.alt = 'No source image'
         img.hidden = true
 
+        const { id, data: { image }, properties } = jsonFeature;
+        if (image) {
+            img.src = URL.createObjectURL(image)
+            img.alt = id
+            img.hidden =false
+        }
+
         const title = document.createElement('input');
         title.id = 'card-title'
         title.type = 'text'
         title.name = 'title'
-        title.placeholder = 'Some text as title'
+        title.placeholder = id || 'Some text as title'
+
+        if (properties.name) {
+            title.value = properties.name
+        }
+
+        title.addEventListener('input', ev => {
+            ev.stopPropagation()
+
+            const { value: name } = ev.target;
+            if (name) jsonFeature.properties.name = name
+            updated = true
+        });
 
         const description = document.createElement('textarea');
         description.id = 'card-description'
         description.name = 'description'
         description.placeholder = 'A description about...'
+
+        if (properties.description) {
+            description.value = properties.description;
+        }
+
+        description.addEventListener('input', ev => {
+            ev.stopPropagation()
+
+            const { value: description } = ev.target;
+            if(description) jsonFeature.properties.description = description
+            updated = true
+        });
 
         node.appendChild(img)
         node.appendChild(title)
