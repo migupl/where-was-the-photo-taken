@@ -113,7 +113,7 @@ const card = jsonFeature => {
         title.id = 'card-title'
         title.type = 'text'
         title.name = 'title'
-        title.placeholder = id || 'Some text as title'
+        title.placeholder = 'Some text as title'
 
         if (properties.name) {
             title.value = properties.name
