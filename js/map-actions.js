@@ -114,14 +114,15 @@ export const mapActions = (
     }
 
     const addPointProperties = ({ image, latlng, feature }) => {
-        const checkExisting = filename => {
-            if (pointsMap.get(filename)) {
-                error(`The image '${filename}' already exists`);
+        const checkExisting = point => {
+            const { id } = point;
+            if (pointsMap.get(id)) {
+                error(`The image '${id}' already exists`);
             }
         }
 
         const p = point(image, latlng, feature);
-        checkExisting(p.id);
+        checkExisting(p);
 
         pointsMap.set(p.id, p);
 
