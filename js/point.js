@@ -6,6 +6,7 @@ const point = (image, latlng, jsonFeature) => {
     )
 
     if (image) feature.data.image = image
+    const hasImage = image instanceof File;
 
     feature.properties = feature.properties || {}
     const c = card(feature);
@@ -16,6 +17,7 @@ const point = (image, latlng, jsonFeature) => {
     return {
         id: feature.id,
         feature,
+        hasImage,
         updatePopupWith,
         wasUpdated,
     }
