@@ -1,29 +1,36 @@
 const point = (image, latlng, jsonFeature) => {
-    const feature = JSON.parse(JSON.stringify(jsonFeature));
+    let feature = JSON.parse(JSON.stringify(jsonFeature));
 
     feature.id = feature.id || (
         image? image.name : `lat: ${latlng.lat}, lng: ${latlng.lng}`
     )
 
     if (image) feature.data.image = image
-    const hasImage = image instanceof File;
+    let hasImage = image instanceof File;
 
     feature.properties = feature.properties || {}
-    const c = card(feature);
+    let c = card(feature, hasImage);
 
     const updatePopupWith = feature => c.updatePopup(feature);
     const wasUpdated = c.wasUpdated;
+
+    const update = point => {
+        if (!hasImage) feature.data.image = point.feature.data.image
+        hasImage ||= point.hasImage
+        c.updateEmpties(point)
+    }
 
     return {
         id: feature.id,
         feature,
         hasImage,
+        update,
         updatePopupWith,
         wasUpdated,
     }
 };
 
-const card = jsonFeature => {
+const card = (jsonFeature, hasImage) => {
 
     const { id, data: { image }, properties } = jsonFeature;
     let updated = false;
@@ -35,7 +42,7 @@ const card = jsonFeature => {
         img.alt = 'No source image'
         img.hidden = true
 
-        if (image) {
+        if (hasImage) {
             img.src = URL.createObjectURL(image)
             img.alt = id
             img.hidden = false
@@ -87,18 +94,32 @@ const card = jsonFeature => {
         return title
     })();
 
-    node.appendChild(img)
-    node.appendChild(title)
-    node.appendChild(description)
+    const updateEmpties = point => {
+        const { id, feature: { properties, data }, hasImage } = point;
+
+        if (hasImage) {
+            img.src = URL.createObjectURL(data.image)
+            img.alt = id
+            img.hidden = false
+        }
+
+        title.value ||= properties.name
+        description.value ||= properties.description
+    }
 
     const updatePopup = feature => {
         title.value = feature.properties.name;
         description.value = feature.properties.description;
     }
 
+    node.appendChild(img)
+    node.appendChild(title)
+    node.appendChild(description)
+
     properties.popupContent = node;
 
     return {
+        updateEmpties,
         updatePopup,
         wasUpdated: updated
     }
