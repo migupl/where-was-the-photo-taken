@@ -126,8 +126,6 @@ export const mapActions = (
 
         const pointOnTheMap = pointsMap.get(id);
         if (pointOnTheMap) {
-            if (p.hasImage && pointOnTheMap.hasImage) error(`The image '${id}' already exists`);
-
             pointOnTheMap.update(p)
         }
         else {
