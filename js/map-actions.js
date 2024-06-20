@@ -29,7 +29,14 @@ export const mapActions = (
                     })(file.name);
 
                     doWith(title);
-                    updateUsingGeojson();
+                    if (geojson) {
+                        geojson.features
+                            .forEach(feature => {
+                                addPointProperties({
+                                    feature
+                                });
+                            })
+                    }
                 });
 
                 reader.readAsText(file);
@@ -114,20 +121,19 @@ export const mapActions = (
     }
 
     const addPointProperties = ({ image, latlng, feature }) => {
-        const checkExisting = point => {
-            const { id } = point;
-            if (pointsMap.get(id)) {
-                error(`The image '${id}' already exists`);
-            }
-        }
-
         const p = point(image, latlng, feature);
-        checkExisting(p);
+        const { id } = p;
 
-        pointsMap.set(p.id, p);
+        const pointOnTheMap = pointsMap.get(id);
+        if (pointOnTheMap) {
+            if (p.hasImage && pointOnTheMap.hasImage) error(`The image '${id}' already exists`);
 
-        addPointToMap(p.feature);
-        updateUsingGeojson(p);
+            pointOnTheMap.update(p)
+        }
+        else {
+            pointsMap.set(p.id, p)
+            addPointToMap(p.feature)
+        }
     }
 
     const error = message => {
@@ -135,44 +141,6 @@ export const mapActions = (
     }
 
     const extractNumeric = text => text.match(/[0-9.]/g).join('')
-
-    const updateUsingGeojson = pointOnMap => {
-        const updatePoint = (data, point) => {
-            const areGeojsonEqual = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2)
-            const hasElements = array => array && array.length > 0;
-
-            if (hasElements(data)) {
-                const newerGeojson = data[0];
-                if (!areGeojsonEqual(newerGeojson, point.feature)) {
-                    point.updatePopupWith(newerGeojson);
-                }
-            }
-        }
-
-        const updateWithGeojson = (point, feature) => {
-            if (point) {
-                !point.wasUpdated && updatePoint([feature], point);
-            }
-            else if (!feature.data.image) {
-                const [lng, lat] = feature.geometry.coordinates;
-                addPointProperties({ latlng: { lat: lat, lng: lng }, feature });
-            }
-        }
-
-        if (geojson) {
-            geojson.features
-                .forEach(feature => {
-                    if (pointOnMap) {
-                        pointOnMap.id === feature.id && updateWithGeojson(pointOnMap, feature)
-                    }
-                    else {
-                        const point = pointsMap.get(feature.id);
-                        updateWithGeojson(point, feature);
-                    }
-                })
-        }
-    }
-
 
     const pointsMap = new Map();
     let geojson;

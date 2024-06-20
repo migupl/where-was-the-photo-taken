@@ -11,9 +11,6 @@ const point = (image, latlng, jsonFeature) => {
     feature.properties = feature.properties || {}
     let c = card(feature, hasImage);
 
-    const updatePopupWith = feature => c.updatePopup(feature);
-    const wasUpdated = c.wasUpdated;
-
     const update = point => {
         if (!hasImage) feature.data.image = point.feature.data.image
         hasImage ||= point.hasImage
@@ -24,18 +21,13 @@ const point = (image, latlng, jsonFeature) => {
         id: feature.id,
         feature,
         hasImage,
-        update,
-        updatePopupWith,
-        wasUpdated,
+        update
     }
 };
 
 const card = (jsonFeature, hasImage) => {
 
     const { id, data: { image }, properties } = jsonFeature;
-    let updated = false;
-
-    const node = document.createElement('div');
 
     const img = (() => {
         const img = document.createElement('img');
@@ -66,7 +58,6 @@ const card = (jsonFeature, hasImage) => {
 
             const { value: description } = ev.target;
             if (description) jsonFeature.properties.description = description
-            updated = true
         });
 
         return description
@@ -88,7 +79,6 @@ const card = (jsonFeature, hasImage) => {
 
             const { value: name } = ev.target;
             if (name) jsonFeature.properties.name = name
-            updated = true
         })
 
         return title
@@ -107,10 +97,7 @@ const card = (jsonFeature, hasImage) => {
         description.value ||= properties.description
     }
 
-    const updatePopup = feature => {
-        title.value = feature.properties.name;
-        description.value = feature.properties.description;
-    }
+    const node = document.createElement('div');
 
     node.appendChild(img)
     node.appendChild(title)
@@ -119,9 +106,7 @@ const card = (jsonFeature, hasImage) => {
     properties.popupContent = node;
 
     return {
-        updateEmpties,
-        updatePopup,
-        wasUpdated: updated
+        updateEmpties
     }
 };
 
