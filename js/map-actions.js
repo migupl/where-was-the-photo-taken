@@ -144,8 +144,8 @@ export const mapActions = (
     let geojson;
 
     const addPointToMap = feature => {
-        const map = document.querySelector('leaflet-map');
-        map.dispatchEvent(new CustomEvent('x-leaflet-map-geojson-add', {
+        const map = document.querySelector('leaflet-geojson-map');
+        map.dispatchEvent(new CustomEvent('x-leaflet-geojson-map:add', {
             detail: {
                 geojson: feature
             }

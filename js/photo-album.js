@@ -66,7 +66,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         let imagesWithoutLocation = [];
 
         const onAddingPoint = () => {
-            document.addEventListener('x-leaflet-map:marker-pointed-out', event => {
+            document.addEventListener('x-leaflet-geojson-map:marker-added', event => {
                 dialog.close()
 
                 const { detail: { latlng } } = event;
@@ -94,7 +94,7 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
         };
 
         const onRemovingPoint = () => {
-            document.addEventListener('x-leaflet-map:marker-removed', (event) => {
+            document.addEventListener('x-leaflet-geojson-map:marker-removed', (event) => {
                 const { feature } = event.detail;
                 actions.removePoint(feature);
             })
@@ -114,8 +114,8 @@ https://migupl.github.io/drop-photo-get-exif-data/`);
             'drop-photo-for-exif:image',
             'drop-photo-for-exif:file',
             'drop-photo-for-exif:completed-batch',
-            'x-leaflet-map:marker-removed',
-            'x-leaflet-map:marker-pointed-out'
+            'x-leaflet-geojson-map:marker-removed',
+            'x-leaflet-geojson-map:marker-added'
         ].forEach(eventName => { 
             document.addEventListener(eventName, e => e.stopPropagation())
         });

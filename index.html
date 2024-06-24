@@ -113,7 +113,7 @@
             color: #ccc;
         }
 
-        leaflet-map {
+        leaflet-geojson-map {
             z-index: 1;
             display: block;
             position: relative;
@@ -174,9 +174,9 @@
         <drop-photo-for-exif drag-text="Drag photos and/or Geojson file here or" upload-text="upload files" drop-text="Drop files here"></drop-photo-for-exif>
     </header>
     <main>
-        <leaflet-map fly-to-bounds allows-add-marker add-marker-custom-text="Click to adding a point at :"
+        <leaflet-geojson-map fly-to-bounds allows-add-marker add-marker-custom-text="Click to adding a point at :"
             custom-style="custom-leaflet-popup:styles/custom-leaflet-popup.css">
-        </leaflet-map>
+        </leaflet-geojson-map>
         <div id="saving-area" class="container" style="display: none;">
             <div class="item">
                 <input type="text" id="title" name="title" placeholder="A title to group all photos">
@@ -208,9 +208,9 @@
 
     <ya-gc url="https://github.com/migupl/where-was-the-photo-taken" target-new-window></ya-gc>
 
-    <script src="https://cdn.jsdelivr.net/gh/migupl/yagc/dist/yagc-0.2.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/migupl/drop-photo-get-exif-data/dist/drop-photo-for-exif-0.1.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/migupl/vanilla-js-web-component-leaflet-geojson/dist/leaflet-map-0.1.0.min.js"></script>
+    <script src="./js/wc/yagc.min.js"></script>
+    <script src="./js/wc/drop-photo-for-exif.min.js"></script>
+    <script src="./js/wc/leaflet-geojson-map.min.js"></script>
 
     <script type="module" src="./js/photo-album.js"></script>
 </body>
