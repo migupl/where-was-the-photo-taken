@@ -1,4 +1,4 @@
-const point = (image, latlng, jsonFeature) => {
+export const point = (image, latlng, jsonFeature) => {
     let feature = JSON.parse(JSON.stringify(jsonFeature));
 
     feature.id = feature.id || (
@@ -109,5 +109,3 @@ const card = (jsonFeature, hasImage) => {
         updateEmpties
     }
 };
-
-export { point }
