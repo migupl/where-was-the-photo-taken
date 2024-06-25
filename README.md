@@ -10,15 +10,17 @@ Let's suppose we have some photos of a trip
 
 and we want to add information to have in the future.
 
-As we can see in the animation below, the information will be saved in a [GeoJSON](https://geojson.org/) file for later use.
+As we can see in the video below,
 
 https://github.com/migupl/where-was-the-photo-taken/assets/1670474/ae540af7-3a8e-4dd9-bc30-d59f51d55c3b
 
-The name for the saved file will be the text of the main input field. *Madrid trip* in this example.
+The information will be saved in a [GeoJSON](https://geojson.org/) file for later use. *Madrid.geojson* in this case where the name corresponds to the text of the main text field
 
-If the browser supports the showSaveFilePicker() method of the Window interface, such as Chrome, you could choose the folder where the GeoJSON will be saved.
+The videos show the existing functionality although the actual layout is a bit different. As you can see below, files can be dragged or selected for uploading.
 
-Then, by adding this GeoJSON file and the photos we can continue adding information to them as we can see below
+<img src="./docs/new_layout.webp" width="75%" style="" alt="New Layout">
+
+Some time later we can retrieve the information by adding this GeoJSON file and the photos to work on them as we can see below
 
 https://github.com/migupl/where-was-the-photo-taken/assets/1670474/0f442c0f-e4e4-4147-8ba6-bf7d749d901b
 
@@ -34,7 +36,7 @@ https://github.com/migupl/where-was-the-photo-taken/assets/1670474/4b8ce691-5d9c
 
 ## Remove a marker from the map
 
-Any of the markers added to the map can be deleted by double clicking on it and confirming the deletion.
+Any of the markers on the map can be deleted by double clicking on it and confirming the deletion.
 
 https://github.com/migupl/where-was-the-photo-taken/assets/1670474/eecc83b4-5137-421f-bd50-0bab800fac09
 
@@ -47,3 +49,4 @@ Web Components behind this idea are:
 - [Locate the photo on a Leaflet map](https://github.com/migupl/vanilla-js-web-component-leaflet-geojson)
 - [Yet Another GitHub Corner](https://github.com/migupl/yagc)
 
+I hope you enjoy it!!!
